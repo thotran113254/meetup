@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/*
+ * Theme customization - UPDATE these CSS variables per project.
+ * All components reference these variables for consistent theming.
+ */
+:root {
+  /* Brand colors */
+  --color-primary: #6366f1;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
+  --color-accent: #e0e7ff;
+  --color-accent-foreground: #3730a3;
+
+  /* Semantic colors */
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-ring: #6366f1;
+
+  /* Card */
+  --color-card: #ffffff;
+  --color-card-foreground: #0a0a0a;
+
+  /* Destructive */
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  /* Radius */
+  --radius: 0.625rem;
+}
+
+.dark {
+  --color-primary: #818cf8;
+  --color-primary-foreground: #0a0a0a;
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f8fafc;
+  --color-accent: #312e81;
+  --color-accent-foreground: #c7d2fe;
+
+  --color-background: #0a0a0a;
+  --color-foreground: #f8fafc;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-border: #1e293b;
+  --color-ring: #818cf8;
+
+  --color-card: #111111;
+  --color-card-foreground: #f8fafc;
+
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Section spacing utility */
+.section-padding {
+  @apply py-16 md:py-24 lg:py-32;
+}
+
+/* Container utility */
+.container-narrow {
+  @apply mx-auto max-w-4xl px-4 sm:px-6 lg:px-8;
+}
+
+.container-wide {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Accordion animations for Radix UI */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@utility animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+@utility animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@utility animate-gradient-shift {
+  animation: gradient-shift 3s linear infinite;
+}

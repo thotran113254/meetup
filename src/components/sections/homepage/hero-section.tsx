@@ -8,16 +8,16 @@ import Image from "next/image";
  */
 export function HeroSection() {
   return (
-    <section className="relative w-full bg-[var(--color-background)]">
-      {/* Full-width hero banner from Figma */}
-      <div className="relative w-full" style={{ aspectRatio: "1600 / 524" }}>
+    <section className="w-full bg-[var(--color-background)] px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+      {/* Hero banner with rounded corners and padding — matches Figma frame */}
+      <div className="relative w-full max-w-7xl mx-auto overflow-hidden rounded-xl" style={{ aspectRatio: "1546 / 487" }}>
         <Image
           src="/images/hero-banner.png"
           alt="Welcome to Meetup — Where local experts craft a journey uniquely yours"
           fill
           className="object-cover"
           priority
-          sizes="100vw"
+          sizes="(max-width: 1280px) 100vw, 1280px"
         />
       </div>
 

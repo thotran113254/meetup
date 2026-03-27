@@ -1,52 +1,53 @@
 /**
- * Central site configuration - UPDATE THIS for each project.
+ * Central site configuration — Meetup Travel.
  * All SEO metadata, navigation, and branding derive from this file.
  */
 
 export const siteConfig = {
   // Core identity
-  name: "YourBrand",
-  shortName: "YB",
+  name: "Meetup Travel",
+  shortName: "Meetup",
   description:
-    "A modern website template built with Next.js, Magic UI, and optimized for SEO & GEO.",
-  tagline: "Build beautiful, high-converting websites",
+    "Where local experts craft a journey uniquely yours",
+  tagline: "Welcome to Meetup",
 
   // URLs
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://yourbrand.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://meetuptravel.vn",
   ogImage: "/images/og-default.png",
 
-  // Contact & socials
-  email: "hello@yourbrand.com",
-  phone: "+84 123 456 789",
+  // Contact
+  email: "vn.meetup.travel@gmail.com",
+  phone: "+84 97 266 49 31",
   address: {
-    street: "123 Main Street",
-    city: "Ho Chi Minh City",
+    street: "No. 22C, Thanh Cong Street",
+    city: "Ba Dinh District, Hanoi",
     country: "Vietnam",
-    zip: "700000",
+    zip: "100000",
   },
 
   // Social links
   socials: {
-    twitter: "https://twitter.com/yourbrand",
-    facebook: "https://facebook.com/yourbrand",
-    linkedin: "https://linkedin.com/company/yourbrand",
-    github: "https://github.com/yourbrand",
-    youtube: "",
+    instagram: "https://instagram.com/meetuptravel",
+    facebook: "https://facebook.com/meetuptravel",
+    tiktok: "https://tiktok.com/@meetuptravel",
+    youtube: "https://youtube.com/@meetuptravel",
+    whatsapp: "https://wa.me/84972664931",
   },
 
   // SEO defaults
   seo: {
-    titleTemplate: "%s | YourBrand",
-    defaultTitle: "YourBrand - Build Beautiful Websites",
-    locale: "vi_VN",
-    alternateLocales: ["en_US"],
+    titleTemplate: "%s | Meetup Travel",
+    defaultTitle:
+      "Meetup Travel - Where Local Experts Craft A Journey Uniquely Yours",
+    locale: "en_US",
+    alternateLocales: ["vi_VN"],
     type: "website" as const,
-    twitterHandle: "@yourbrand",
+    twitterHandle: "",
   },
 
-  // Theme colors for manifest and meta tags
+  // Theme colors
   theme: {
-    primary: "#6366f1", // indigo-500
+    primary: "#2CBCB3",
     background: "#ffffff",
     foreground: "#0a0a0a",
   },
@@ -54,27 +55,35 @@ export const siteConfig = {
   // Navigation items
   navigation: {
     main: [
-      { label: "Trang chu", href: "/" },
-      { label: "Dich vu", href: "/services" },
-      { label: "Ve chung toi", href: "/about" },
-      { label: "Blog", href: "/blog" },
-      { label: "Lien he", href: "/contact" },
+      { label: "Tour", href: "/tours", hasDropdown: true },
+      { label: "Services", href: "/services", hasDropdown: true },
+      { label: "eTickets", href: "/etickets", hasDropdown: false },
+      { label: "Destination", href: "/destination", hasDropdown: false },
+      { label: "Blog", href: "/blog", hasDropdown: false },
+      { label: "About Meetup", href: "/about", hasDropdown: true },
     ],
     footer: {
       company: [
-        { label: "Ve chung toi", href: "/about" },
-        { label: "Doi ngu", href: "/about#team" },
-        { label: "Tuyen dung", href: "/careers" },
+        { label: "Home", href: "/" },
+        { label: "Tours", href: "/tours" },
+        { label: "Hotel", href: "/hotel" },
+        { label: "Services", href: "/services" },
+        { label: "e-Tickets", href: "/etickets" },
       ],
-      services: [
-        { label: "Thiet ke website", href: "/services#web-design" },
-        { label: "Phat trien ung dung", href: "/services#app-dev" },
-        { label: "SEO & Marketing", href: "/services#seo" },
+      about: [
+        { label: "About Us", href: "/about" },
+        { label: "Recruitment", href: "/recruitment" },
+        { label: "Terms & Policy", href: "/terms" },
+        { label: "Contact Us", href: "/contact" },
       ],
-      legal: [
-        { label: "Chinh sach bao mat", href: "/privacy" },
-        { label: "Dieu khoan su dung", href: "/terms" },
-      ],
+      contact: {
+        whatsapp: [
+          { name: "Grace", phone: "+84 97 266 49 31" },
+          { name: "Sunny", phone: "+84 90 624 49 14" },
+        ],
+        email: "vn.meetup.travel@gmail.com",
+        office: "No. 22C, Thanh Cong Street, Ba Dinh District, Hanoi",
+      },
     },
   },
 } as const;

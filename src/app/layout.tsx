@@ -1,15 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site-config";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { FloatingSocial } from "@/components/layout/floating-social";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
   display: "swap",
   variable: "--font-inter",
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  variable: "--font-script",
 });
 
 export const metadata: Metadata = {
@@ -39,7 +46,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.seo.defaultTitle,
     description: siteConfig.description,
-    creator: siteConfig.seo.twitterHandle,
     images: [siteConfig.ogImage],
   },
 };
@@ -50,12 +56,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" suppressHydrationWarning className={inter.variable}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${dancingScript.variable}`}>
       <body className="min-h-screen flex flex-col font-sans antialiased bg-[var(--color-background)] text-[var(--color-foreground)]">
         <ThemeProvider>
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />
+          <FloatingSocial />
         </ThemeProvider>
       </body>
     </html>

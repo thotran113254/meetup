@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 /*
- * Theme customization - UPDATE these CSS variables per project.
+ * Meetup Travel theme — teal/turquoise primary, orange accent.
  * All components reference these variables for consistent theming.
  */
 :root {
   /* Brand colors */
-  --color-primary: #6366f1;
+  --color-primary: #2CBCB3;
+  --color-primary-dark: #239A93;
   --color-primary-foreground: #ffffff;
-  --color-secondary: #f1f5f9;
-  --color-secondary-foreground: #0f172a;
-  --color-accent: #e0e7ff;
-  --color-accent-foreground: #3730a3;
+  --color-secondary: #f0fdfb;
+  --color-secondary-foreground: #134e4a;
+  --color-accent: #E87C3E;
+  --color-accent-foreground: #ffffff;
 
   /* Semantic colors */
   --color-background: #ffffff;
   --color-foreground: #0a0a0a;
   --color-muted: #f1f5f9;
   --color-muted-foreground: #64748b;
-  --color-border: #e2e8f0;
-  --color-ring: #6366f1;
+  --color-border: #e5e7eb;
+  --color-ring: #2CBCB3;
 
   /* Card */
   --color-card: #ffffff;
@@ -30,23 +31,24 @@
   --color-destructive-foreground: #ffffff;
 
   /* Radius */
-  --radius: 0.625rem;
+  --radius: 0.75rem;
 }
 
 .dark {
-  --color-primary: #818cf8;
+  --color-primary: #5DD5CD;
+  --color-primary-dark: #2CBCB3;
   --color-primary-foreground: #0a0a0a;
   --color-secondary: #1e293b;
   --color-secondary-foreground: #f8fafc;
-  --color-accent: #312e81;
-  --color-accent-foreground: #c7d2fe;
+  --color-accent: #F0976E;
+  --color-accent-foreground: #0a0a0a;
 
   --color-background: #0a0a0a;
   --color-foreground: #f8fafc;
   --color-muted: #1e293b;
   --color-muted-foreground: #94a3b8;
   --color-border: #1e293b;
-  --color-ring: #818cf8;
+  --color-ring: #5DD5CD;
 
   --color-card: #111111;
   --color-card-foreground: #f8fafc;

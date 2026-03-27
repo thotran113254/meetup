@@ -2,14 +2,18 @@
 
 /**
  * NewsletterSection — Email subscription card.
- * Light teal card: heading + quote on the left, stacked form inputs on the right.
+ * Figma node 13713:14439.
+ * Card: bg-[#EBF8F8] rounded-[12px] p-[60px], max-w-[928px] centered.
+ * Left: bold title + italic quote. Right: stacked name/email inputs + subscribe button.
  * Client component for form state.
  */
 
 import { useState } from "react";
+import { SubscribePopup } from "@/components/ui/subscribe-popup";
 
 export function NewsletterSection() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "" });
+  const [popup, setPopup] = useState<{ open: boolean; variant: "success" | "fail" | "unsubscribe" }>({ open: false, variant: "success" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -17,51 +21,119 @@ export function NewsletterSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: wire up real subscription endpoint
+    // Validate email format — show success or fail popup
+    const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+    setPopup({ open: true, variant: isValid ? "success" : "fail" });
   };
 
-  return (
-    <section className="py-10 md:py-14 bg-[var(--color-background)]">
-      <div className="container-wide">
-        {/* Card with light teal/mint background */}
-        <div className="rounded-2xl bg-[var(--color-secondary)] px-8 py-10 md:px-12 md:py-12">
-          <div className="flex flex-col md:flex-row gap-10 items-center">
+  // White inputs, no border — sit cleanly on the light teal card
+  const inputClass =
+    "w-full bg-white h-[40px] rounded-[12px] px-[12px] py-[8px] text-xs text-[var(--color-foreground)] placeholder:text-[#BDBDBD] focus:outline-none focus:ring-2 focus:ring-[#3BBCB7]";
 
-            {/* Left: heading + quote */}
+  return (
+    <section className="py-[50px] bg-[var(--color-background)]">
+      <div className="container-wide">
+        {/* Card — max 928px, light teal bg, 60px padding per Figma */}
+        <div
+          className="max-w-[928px] mx-auto rounded-[12px] px-4 py-8 sm:p-[60px]"
+          style={{ background: "#EBF8F8" }}
+        >
+          <div className="flex flex-col md:flex-row gap-5 items-start">
+
+            {/* Left: title + quote */}
             <div className="flex-1 min-w-0">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-foreground)] leading-tight mb-4">
+              <h2
+                className="font-bold text-[#1D1D1D] mb-4"
+                style={{
+                  fontSize: "32px",
+                  lineHeight: 1.2,
+                  letterSpacing: "0.08px",
+                }}
+              >
                 Like a travel expert<br />in your inbox
               </h2>
-              <p className="text-[var(--color-muted-foreground)] text-sm sm:text-base italic max-w-sm">
-                &ldquo;Friendship, integrity and a spirit of self-improvement forge the strength of an
-                organization that continues to grow.&rdquo;
+              <p
+                className="text-[#828282] italic"
+                style={{
+                  fontSize: "16px",
+                  lineHeight: 1.5,
+                  letterSpacing: "0.04px",
+                  maxWidth: "323px",
+                }}
+              >
+                &ldquo;Friendship, integrity and a spirit of self-improvement
+                forge the strength of an organization that continues to grow.&rdquo;
               </p>
             </div>
 
             {/* Right: subscription form */}
-            <form onSubmit={handleSubmit} className="flex-1 w-full max-w-sm flex flex-col gap-3">
-              <div>
-                <label htmlFor="nl-first" className="sr-only">First name</label>
-                <input id="nl-first" type="text" name="firstName" value={form.firstName} onChange={handleChange} placeholder="First name" required className="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 text-sm text-[var(--color-foreground)] placeholder:text-[var(--color-muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]" />
+            <form onSubmit={handleSubmit} className="flex-1 w-full flex flex-col">
+              {/* First name + Last name stacked with gap-[8px] */}
+              <div className="flex flex-col gap-[8px]">
+                <div>
+                  <label htmlFor="nl-first" className="sr-only">First name</label>
+                  <input
+                    id="nl-first"
+                    type="text"
+                    name="firstName"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    placeholder="First name"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="nl-last" className="sr-only">Last name</label>
+                  <input
+                    id="nl-last"
+                    type="text"
+                    name="lastName"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    placeholder="Last name"
+                    required
+                    className={inputClass}
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor="nl-last" className="sr-only">Last name</label>
-                <input id="nl-last" type="text" name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last name" required className="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 text-sm text-[var(--color-foreground)] placeholder:text-[var(--color-muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]" />
-              </div>
-              <div>
+
+              {/* Email — gap-[12px] below name group */}
+              <div className="mt-[12px]">
                 <label htmlFor="nl-email" className="sr-only">Email address</label>
-                <input id="nl-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="Your e-mail address" required className="w-full bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg px-4 py-2.5 text-sm text-[var(--color-foreground)] placeholder:text-[var(--color-muted-foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]" />
+                <input
+                  id="nl-email"
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="Your e-mail address"
+                  required
+                  className={inputClass}
+                />
               </div>
-              <button
-                type="submit"
-                className="w-fit bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white font-semibold px-8 py-2.5 rounded-full transition-colors text-sm"
-              >
-                Subscribe
-              </button>
+
+              {/* Subscribe button — teal bg, rounded-[12px], intentional Figma typo "Subcribe" */}
+              <div className="mt-[12px]">
+                <button
+                  type="submit"
+                  className="h-[40px] rounded-[12px] px-[32px] text-white font-bold text-sm transition-opacity hover:opacity-90"
+                  style={{ background: "#3BBCB7" }}
+                >
+                  Subcribe
+                </button>
+              </div>
             </form>
+
           </div>
         </div>
       </div>
+
+      <SubscribePopup
+        variant={popup.variant}
+        open={popup.open}
+        onClose={() => setPopup((p) => ({ ...p, open: false }))}
+      />
     </section>
   );
 }

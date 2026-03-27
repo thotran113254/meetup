@@ -1,14 +1,15 @@
 "use client";
 
-/**
- * ServicesSection — "Service phụ" horizontal carousel.
- * 4 service cards with real images, snap-scroll and prev/next arrow navigation.
- * Client component for scroll interactivity.
- */
-
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
+
+/**
+ * ServicesSection — "Service phụ" horizontal carousel.
+ * Figma: 4 service cards 338x338, full-image bg, rounded-[12px],
+ * teal gradient price badge overlay, service name below image.
+ * Arrows: bg-black/50 40px round, same style as TourPackageSection.
+ */
 
 type ServiceCard = {
   id: number;
@@ -25,68 +26,79 @@ const SERVICES: ServiceCard[] = [
 ];
 
 export function ServicesSection() {
-  const { ref: scrollRef, scroll } = useHorizontalScroll(280);
+  const { ref: scrollRef, scroll } = useHorizontalScroll(354); // 338px + 16px gap
 
   return (
-    <section className="py-10 md:py-14 bg-[var(--color-background)]">
+    <section className="py-[50px] bg-[var(--color-background)]">
       <div className="container-wide">
-        {/* Heading */}
-        <h2 className="text-2xl sm:text-3xl font-bold text-[var(--color-foreground)] mb-6">
+        <h2 className="text-[32px] font-bold leading-[1.2] tracking-[0.08px] text-[var(--color-foreground)] mb-6">
           Service phụ
         </h2>
 
         {/* Carousel wrapper */}
         <div className="relative">
-          {/* Left arrow */}
+          {/* Left arrow — bg-black/50, 40px round */}
           <button
             onClick={() => scroll("left")}
-            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow border border-[var(--color-border)] flex items-center justify-center hover:bg-gray-50 transition-colors"
             aria-label="Scroll left"
+            className="absolute -left-10 top-[169px] -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
           >
-            <ChevronLeft className="w-5 h-5 text-[var(--color-foreground)]" />
+            <ChevronLeft className="w-5 h-5 text-white" />
           </button>
 
           {/* Scrollable track */}
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
+            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory"
             style={{ scrollbarWidth: "none" }}
           >
             {SERVICES.map((service) => (
               <div
                 key={service.id}
-                className="snap-start flex-shrink-0 w-60 rounded-xl overflow-hidden border border-[var(--color-border)] shadow-sm hover:shadow-md transition-shadow"
+                className="snap-start flex-none w-[338px] rounded-[12px] overflow-hidden cursor-pointer group"
               >
-                {/* Service image */}
-                <div className="relative w-full h-44">
+                {/* Image area 338x338 with gradient overlay + price badge */}
+                <div className="relative w-[338px] h-[338px]">
                   <Image
                     src={service.image}
                     alt={service.name}
                     fill
-                    className="object-cover"
-                    sizes="240px"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="338px"
                   />
-                  {/* Price badge */}
-                  <span className="absolute bottom-3 left-3 bg-white/90 text-[var(--color-foreground)] text-sm font-semibold px-2 py-0.5 rounded">
-                    From {service.price}
-                  </span>
+                  {/* Bottom gradient for readability */}
+                  <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-gradient-to-t from-black/60 to-transparent" />
+                  {/* Teal gradient price badge — bottom-left */}
+                  <div
+                    className="absolute bottom-3 left-3 flex items-center gap-0.5 px-[6px] py-[5px] rounded-[4px]"
+                    style={{ background: "linear-gradient(260.5deg, #3BBCB7 20%, #B1FFFC 71%)" }}
+                  >
+                    <span className="text-[10px] font-medium leading-[1.3]" style={{ color: "rgba(29,29,29,0.5)" }}>
+                      From
+                    </span>
+                    <span className="text-[20px] font-bold text-[#194F4D] leading-[1.2]">
+                      {service.price}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Service name */}
-                <div className="p-3 bg-[var(--color-card)]">
-                  <p className="text-sm font-medium text-[var(--color-foreground)]">{service.name}</p>
+                {/* Service name below image */}
+                <div className="px-4 py-3 bg-[var(--color-background)]">
+                  <p className="text-sm font-semibold text-[var(--color-foreground)]">
+                    {service.name}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Right arrow */}
+          {/* Right arrow — bg-black/50, 40px round */}
           <button
             onClick={() => scroll("right")}
-            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow border border-[var(--color-border)] flex items-center justify-center hover:bg-gray-50 transition-colors"
             aria-label="Scroll right"
+            className="absolute -right-10 top-[169px] -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
           >
-            <ChevronRight className="w-5 h-5 text-[var(--color-foreground)]" />
+            <ChevronRight className="w-5 h-5 text-white" />
           </button>
         </div>
       </div>

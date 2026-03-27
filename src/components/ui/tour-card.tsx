@@ -1,11 +1,11 @@
 import Image from "next/image";
-import { Eye } from "lucide-react";
+import { Eye, Calendar, MapPin } from "lucide-react";
 import Link from "next/link";
 
 /**
- * TourCard — reusable card for tour packages and experience listings.
- * Shows image with price overlay, tag pills, and truncated title.
- * Server component — no interactivity required.
+ * TourCard — Figma spec 338x516px card with teal gradient price badge.
+ * Full-bleed image, gradient overlay at bottom 206px, white tag pills,
+ * eye icon top-right, price badge with teal gradient background.
  */
 
 export type TourCardProps = {
@@ -22,51 +22,66 @@ export function TourCard({ image, title, price, duration, spots, tags, slug }: T
   return (
     <Link
       href={`/tours/${slug}`}
-      className="group flex-none w-[260px] sm:w-[280px] snap-start rounded-2xl overflow-hidden bg-[var(--color-card)] border border-[var(--color-border)] shadow-sm hover:shadow-md transition-shadow"
+      className="group relative flex-none w-[338px] h-[516px] snap-start rounded-[12px] overflow-hidden block"
     >
-      {/* Image container with overlays */}
-      <div className="relative h-[180px] bg-gray-200">
-        <Image
-          src={image}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="280px"
-        />
+      {/* Full-height background image */}
+      <Image
+        src={image}
+        alt={title}
+        fill
+        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        sizes="338px"
+      />
 
-        {/* Eye icon — top right */}
-        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow">
-          <Eye className="w-4 h-4 text-[var(--color-foreground)]" />
-        </div>
-
-        {/* Price badge — bottom left */}
-        <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white text-sm font-semibold px-3 py-1 rounded-full">
-          From ${price}
-        </div>
+      {/* Eye icon button — top-right, white rounded square 36x36 */}
+      <div className="absolute top-3.5 right-3.5 bg-white size-[36px] rounded-[8px] flex items-center justify-center z-10">
+        <Eye className="w-5 h-5 text-[#1D1D1D]" />
       </div>
 
-      {/* Card body */}
-      <div className="p-3">
-        {/* Tag pills row */}
-        <div className="flex flex-wrap gap-1.5 mb-2">
-          <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-muted)] text-[var(--color-muted-foreground)] font-medium">
+      {/* Gradient overlay — transparent to #1B5654 at bottom 206px */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[206px]"
+        style={{ background: "linear-gradient(to bottom, transparent 0%, #1B5654 71%)" }}
+      />
+
+      {/* Bottom content — price badge, tags, title */}
+      <div className="absolute bottom-0 left-0 right-0 p-[16px] flex flex-col gap-[10px] z-10">
+        {/* Price badge — teal gradient */}
+        <div
+          className="flex items-center gap-0.5 px-[6px] py-[5px] rounded-[4px] w-fit"
+          style={{ background: "linear-gradient(260.5deg, #3BBCB7 20%, #B1FFFC 71%)" }}
+        >
+          <span className="text-[10px] font-medium leading-[1.3]" style={{ color: "rgba(29,29,29,0.5)" }}>
+            From
+          </span>
+          <span className="text-[20px] font-bold text-[#194F4D] leading-[1.2] tracking-[0.05px]">
+            ${price}
+          </span>
+        </div>
+
+        {/* Tag pills — white bg, h-20px, icon 12x12 */}
+        <div className="flex flex-wrap gap-1">
+          <span className="bg-white rounded-[4px] h-[20px] px-[4px] flex items-center gap-[4px] text-[10px] font-medium text-[#1D1D1D]">
+            <Calendar className="w-3 h-3 flex-none" />
             {duration}
           </span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-muted)] text-[var(--color-muted-foreground)] font-medium">
+          <span className="bg-white rounded-[4px] h-[20px] px-[4px] flex items-center gap-[4px] text-[10px] font-medium text-[#1D1D1D]">
+            <MapPin className="w-3 h-3 flex-none" />
             {spots} Spots
           </span>
           {tags.map((tag) => (
             <span
               key={tag}
-              className="text-xs px-2 py-0.5 rounded-full bg-[var(--color-muted)] text-[var(--color-muted-foreground)] font-medium"
+              className="bg-white rounded-[4px] h-[20px] px-[4px] flex items-center gap-[4px] text-[10px] font-medium text-[#1D1D1D]"
             >
+              <MapPin className="w-3 h-3 flex-none" />
               {tag}
             </span>
           ))}
         </div>
 
-        {/* Title — truncated to 2 lines */}
-        <p className="text-sm font-semibold text-[var(--color-foreground)] line-clamp-2 leading-snug">
+        {/* Title — bold 12px white, single line truncated */}
+        <p className="text-[12px] font-bold text-white leading-[1.3] truncate">
           {title}
         </p>
       </div>

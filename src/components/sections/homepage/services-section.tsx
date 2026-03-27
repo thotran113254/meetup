@@ -2,10 +2,11 @@
 
 /**
  * ServicesSection — "Service phụ" horizontal carousel.
- * 4 service cards with snap-scroll and prev/next arrow navigation.
+ * 4 service cards with real images, snap-scroll and prev/next arrow navigation.
  * Client component for scroll interactivity.
  */
 
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 
@@ -13,14 +14,14 @@ type ServiceCard = {
   id: number;
   name: string;
   price: string;
-  bgColor: string;
+  image: string;
 };
 
 const SERVICES: ServiceCard[] = [
-  { id: 1, name: "Fast track service", price: "$669", bgColor: "bg-gray-200" },
-  { id: 2, name: "eVisa service", price: "$669", bgColor: "bg-[var(--color-primary)]" },
-  { id: 3, name: "Airport Pickup service", price: "$669", bgColor: "bg-gray-300" },
-  { id: 4, name: "eSim service", price: "$669", bgColor: "bg-gray-800" },
+  { id: 1, name: "Fast track service", price: "$669", image: "/images/service-fast-track.png" },
+  { id: 2, name: "eVisa service", price: "$669", image: "/images/service-evisa.png" },
+  { id: 3, name: "Airport Pickup service", price: "$669", image: "/images/service-airport-pickup.png" },
+  { id: 4, name: "eSim service", price: "$669", image: "/images/service-esim.png" },
 ];
 
 export function ServicesSection() {
@@ -56,8 +57,15 @@ export function ServicesSection() {
                 key={service.id}
                 className="snap-start flex-shrink-0 w-60 rounded-xl overflow-hidden border border-[var(--color-border)] shadow-sm hover:shadow-md transition-shadow"
               >
-                {/* Image placeholder with distinct background */}
-                <div className={`w-full h-44 ${service.bgColor} relative flex items-center justify-center`}>
+                {/* Service image */}
+                <div className="relative w-full h-44">
+                  <Image
+                    src={service.image}
+                    alt={service.name}
+                    fill
+                    className="object-cover"
+                    sizes="240px"
+                  />
                   {/* Price badge */}
                   <span className="absolute bottom-3 left-3 bg-white/90 text-[var(--color-foreground)] text-sm font-semibold px-2 py-0.5 rounded">
                     From {service.price}

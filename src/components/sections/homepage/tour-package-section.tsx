@@ -12,7 +12,7 @@ import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
 
 const TOUR_PACKAGES: TourCardProps[] = [
   {
-    image: "/images/placeholder.svg",
+    image: "/images/tour-1-floating-market.png",
     title: "Cu Chi Tunnels and Mekong Delta Full Day Tour Starting from Ho Chi Minh",
     price: 669,
     duration: "4D3N",
@@ -21,7 +21,7 @@ const TOUR_PACKAGES: TourCardProps[] = [
     slug: "cu-chi-tunnels",
   },
   {
-    image: "/images/placeholder.svg",
+    image: "/images/tour-2-hoi-an.png",
     title: "Cu Chi Tunnels and Mekong Delta Full Day Tour Starting from Ho Chi Minh",
     price: 669,
     duration: "4D3N",
@@ -30,7 +30,7 @@ const TOUR_PACKAGES: TourCardProps[] = [
     slug: "cu-chi-tunnels-2",
   },
   {
-    image: "/images/placeholder.svg",
+    image: "/images/tour-3-mekong.png",
     title: "Cu Chi Tunnels and Mekong Delta Full Day Tour Starting from Ho Chi Minh",
     price: 669,
     duration: "4D3N",
@@ -39,7 +39,7 @@ const TOUR_PACKAGES: TourCardProps[] = [
     slug: "cu-chi-tunnels-3",
   },
   {
-    image: "/images/placeholder.svg",
+    image: "/images/tour-4-palm-trees.png",
     title: "Cu Chi Tunnels and Mekong Delta Full Day Tour Starting from Ho Chi Minh",
     price: 669,
     duration: "4D3N",

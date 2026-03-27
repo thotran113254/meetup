@@ -16,6 +16,8 @@ type Review = {
   date: string;
   title: string;
   body: string;
+  /** Top card photo — experience image reused as review photo */
+  photo: string;
 };
 
 const REVIEWS: Review[] = [
@@ -25,6 +27,7 @@ const REVIEWS: Review[] = [
     date: "2023.11.30",
     title: "Excelence",
     body: "Tigit works with the best freelance guides that we can find. Each guide we work with specializes in a specific niche. Fr...",
+    photo: "/images/exp-north-1.png",
   },
   {
     id: 2,
@@ -32,6 +35,7 @@ const REVIEWS: Review[] = [
     date: "2023.11.30",
     title: "Excelence",
     body: "Tigit works with the best freelance guides that we can find. Each guide we work with specializes in a specific niche. Fr...",
+    photo: "/images/exp-north-2.png",
   },
   {
     id: 3,
@@ -39,6 +43,7 @@ const REVIEWS: Review[] = [
     date: "2023.11.30",
     title: "Excelence",
     body: "Tigit works with the best freelance guides that we can find. Each guide we work with specializes in a specific niche. Fr...",
+    photo: "/images/exp-north-3.png",
   },
   {
     id: 4,
@@ -46,6 +51,7 @@ const REVIEWS: Review[] = [
     date: "2023.11.30",
     title: "Excelence",
     body: "Tigit works with the best freelance guides that we can find. Each guide we work with specializes in a specific niche. Fr...",
+    photo: "/images/exp-north-4.png",
   },
   {
     id: 5,
@@ -53,6 +59,7 @@ const REVIEWS: Review[] = [
     date: "2023.11.30",
     title: "Excelence",
     body: "Tigit works with the best freelance guides that we can find. Each guide we work with specializes in a specific niche. Fr...",
+    photo: "/images/exp-north-5.png",
   },
 ];
 
@@ -105,10 +112,10 @@ export function ReviewsSection() {
                 key={review.id}
                 className="flex-none w-[220px] sm:w-[240px] snap-start rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] overflow-hidden shadow-sm"
               >
-                {/* Top image — group/landmark photo placeholder */}
-                <div className="relative h-[120px] bg-gray-200">
+                {/* Top image — experience photo used as review card header */}
+                <div className="relative h-[120px]">
                   <Image
-                    src="/images/placeholder.svg"
+                    src={review.photo}
                     alt="Review photo"
                     fill
                     className="object-cover"
@@ -120,14 +127,11 @@ export function ReviewsSection() {
                 <div className="p-3">
                   {/* Avatar row */}
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-300 flex-none border-2 border-white shadow">
-                      <Image
-                        src="/images/placeholder.svg"
-                        alt={review.name}
-                        fill
-                        className="object-cover"
-                        sizes="32px"
-                      />
+                    {/* Avatar initials fallback — no dedicated avatar image available */}
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden bg-[var(--color-primary)] flex-none border-2 border-white shadow flex items-center justify-center">
+                      <span className="text-white text-xs font-bold leading-none">
+                        {review.name.charAt(0)}
+                      </span>
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-[var(--color-foreground)] leading-none">

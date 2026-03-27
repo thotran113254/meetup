@@ -4,21 +4,22 @@
  * Server component — static data, no interactivity.
  */
 
+import Image from "next/image";
 import { Play } from "lucide-react";
 
 type VideoCard = {
   id: number;
   label: string;
-  bgColor: string;
+  image: string;
   hasPlayButton: boolean;
 };
 
 const VIDEOS: VideoCard[] = [
-  { id: 1, label: "Our team", bgColor: "bg-gray-400", hasPlayButton: false },
-  { id: 2, label: "Travel guide", bgColor: "bg-gray-500", hasPlayButton: false },
-  { id: 3, label: "Internet vs. Local expert", bgColor: "bg-gray-600", hasPlayButton: true },
-  { id: 4, label: "Choice of expert", bgColor: "bg-red-700", hasPlayButton: false },
-  { id: 5, label: "Travel essentials", bgColor: "bg-amber-700", hasPlayButton: false },
+  { id: 1, label: "Our team", image: "/images/yt-our-team.png", hasPlayButton: false },
+  { id: 2, label: "Travel guide", image: "/images/yt-travel-guide.png", hasPlayButton: false },
+  { id: 3, label: "Internet vs. Local expert", image: "/images/yt-internet-vs-local.png", hasPlayButton: true },
+  { id: 4, label: "Choice of expert", image: "/images/yt-choice-expert.png", hasPlayButton: false },
+  { id: 5, label: "Travel essentials", image: "/images/yt-travel-essentials.png", hasPlayButton: false },
 ];
 
 export function YoutubeSection() {
@@ -44,9 +45,18 @@ export function YoutubeSection() {
           {VIDEOS.map((video) => (
             <div
               key={video.id}
-              className={`flex-shrink-0 relative rounded-xl overflow-hidden ${video.bgColor} cursor-pointer group`}
+              className="flex-shrink-0 relative rounded-xl overflow-hidden cursor-pointer group"
               style={{ width: "180px", height: "300px" }}
             >
+              {/* Thumbnail image */}
+              <Image
+                src={video.image}
+                alt={video.label}
+                fill
+                className="object-cover"
+                sizes="180px"
+              />
+
               {/* Dark gradient overlay at bottom */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 

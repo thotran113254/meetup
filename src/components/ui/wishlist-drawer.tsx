@@ -49,6 +49,9 @@ export function WishlistDrawer({ open, onClose, items, onRemove }: WishlistDrawe
 
       {/* Drawer panel */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Wishlist"
         className={`fixed top-0 right-0 z-[70] h-full w-[550px] max-w-full bg-white shadow-2xl transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Header */}

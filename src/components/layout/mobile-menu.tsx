@@ -37,7 +37,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const { navigation, socials } = siteConfig;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-white overflow-y-auto">
+    <div role="dialog" aria-modal="true" aria-label="Navigation menu" className="fixed inset-0 z-[60] bg-white overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#ECECEC]">
         <Link href="/" onClick={onClose} className="flex flex-col leading-none">

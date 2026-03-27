@@ -104,7 +104,7 @@ export function ReviewsSection() {
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll reviews left"
-            className="absolute -left-10 top-1/2 -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+            className="absolute left-2 lg:-left-10 top-1/2 -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
           >
             <ChevronLeft className="w-5 h-5 text-white" />
           </button>
@@ -176,7 +176,7 @@ export function ReviewsSection() {
           <button
             onClick={() => scroll("right")}
             aria-label="Scroll reviews right"
-            className="absolute -right-10 top-1/2 -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+            className="absolute right-2 lg:-right-10 top-1/2 -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
           >
             <ChevronRight className="w-5 h-5 text-white" />
           </button>

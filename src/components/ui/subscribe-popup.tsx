@@ -32,6 +32,9 @@ export function SubscribePopup({ variant, open, onClose, onConfirm }: SubscribeP
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40"
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={variant === "success" ? "Subscription successful" : variant === "fail" ? "Subscription failed" : "Unsubscribe confirmation"}
     >
       <div
         className="relative w-[400px] max-w-[calc(100vw-32px)] rounded-[12px] p-8 shadow-xl"

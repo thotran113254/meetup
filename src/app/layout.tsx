@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Dancing_Script } from "next/font/google";
+import { Inter, Dancing_Script, Phudu } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site-config";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -17,6 +17,12 @@ const dancingScript = Dancing_Script({
   subsets: ["latin", "vietnamese"],
   display: "swap",
   variable: "--font-script",
+});
+
+const phudu = Phudu({
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  variable: "--font-phudu",
 });
 
 export const metadata: Metadata = {
@@ -56,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${dancingScript.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${dancingScript.variable} ${phudu.variable}`}>
       <body className="min-h-screen flex flex-col font-sans antialiased bg-[var(--color-background)] text-[var(--color-foreground)]">
         <ThemeProvider>
           <SiteHeader />

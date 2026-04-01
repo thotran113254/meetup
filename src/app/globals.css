@@ -116,6 +116,23 @@ html {
   animation: accordion-up 0.2s ease-out;
 }
 
+/* Gradient text utilities for Vietnam intro section */
+.text-gradient-gold {
+  background: linear-gradient(to bottom, #FFBB1E, #FFD36D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-red {
+  background: linear-gradient(to right, #FC765B, #E20505);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
 /* Cross-browser scrollbar hiding for carousels */
 @utility scrollbar-hide {
   scrollbar-width: none;

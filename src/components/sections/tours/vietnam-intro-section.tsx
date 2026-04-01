@@ -112,14 +112,14 @@ export function VietnamIntroSection() {
             </div>
           </div>
 
-          {/* Stats row — separate row below, aligned left */}
-          <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 mt-6 lg:mt-8">
+          {/* Stats row — 3 equal columns matching Figma gap-24 w-170 */}
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-[24px] mt-6 lg:mt-8">
             {STATS.map((stat) => (
-              <div key={stat.value} className="w-full sm:w-[170px]">
-                <p className="text-[14px] lg:text-[16px] font-bold text-[#1D1D1D] leading-[1.3] tracking-[0.32px]">
+              <div key={stat.value} className="sm:w-[170px] sm:shrink-0 flex flex-col gap-2">
+                <p className="text-[16px] font-bold text-[#1D1D1D] leading-[1.3] tracking-[0.32px]">
                   {stat.value}
                 </p>
-                <p className="text-[10px] lg:text-[12px] text-[#828282] leading-[1.5] mt-1 lg:mt-2">
+                <p className="text-[12px] text-[#828282] leading-[1.5]">
                   {stat.description}
                 </p>
               </div>

@@ -14,8 +14,7 @@ export function ToursHeroSection() {
     <section className="w-full bg-[var(--color-background)] px-4 sm:px-6 lg:px-[27px] pt-4 sm:pt-[37px]">
       {/* Hero banner with image + gradient + marquee */}
       <motion.div
-        className="relative w-full max-w-[1546px] mx-auto overflow-hidden rounded-xl"
-        style={{ aspectRatio: "1546 / 487" }}
+        className="relative w-full max-w-[1546px] mx-auto overflow-hidden rounded-xl aspect-[343/257] md:aspect-[1546/487]"
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, ease: "easeOut" }}

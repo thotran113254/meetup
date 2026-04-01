@@ -14,7 +14,12 @@ interface TourGalleryPopupProps {
 
 function DesktopGalleryView({ images, initialIndex, onClose }: TourGalleryPopupProps) {
   const [current, setCurrent] = useState(initialIndex ?? 0);
+  const [isOpen, setIsOpen] = useState(false);
   const total = images.length;
+
+  useEffect(() => {
+    requestAnimationFrame(() => setIsOpen(true));
+  }, []);
 
   const goTo = useCallback(
     (i: number) => setCurrent((i + total) % total),
@@ -33,12 +38,12 @@ function DesktopGalleryView({ images, initialIndex, onClose }: TourGalleryPopupP
   }, [current, goTo, onClose]);
 
   return (
-    <div className="hidden md:flex items-center justify-center fixed inset-0 z-50">
+    <div className={`hidden md:flex items-center justify-center fixed inset-0 z-50 transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0"}`}>
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
       {/* Popup card */}
-      <div className="relative bg-white rounded-xl max-w-[1024px] w-[90vw] max-h-[90vh] p-8 overflow-hidden">
+      <div className={`relative bg-white rounded-xl max-w-[1024px] w-[90vw] max-h-[90vh] p-8 overflow-hidden transition-transform duration-200 ${isOpen ? "scale-100" : "scale-95"}`}>
         {/* Close button */}
         <button
           onClick={onClose}
@@ -116,53 +121,65 @@ function DesktopGalleryView({ images, initialIndex, onClose }: TourGalleryPopupP
 /* ── Mobile: full-screen vertical scroll ── */
 
 function MobileGalleryView({ images, onClose }: TourGalleryPopupProps) {
-  /* Lock body scroll when popup open */
+  const [isOpen, setIsOpen] = useState(false);
+
+  /* Lock body scroll + trigger entrance animation */
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => setIsOpen(true));
     return () => { document.body.style.overflow = ""; };
   }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  });
+
+  function handleClose() {
+    setIsOpen(false);
+    setTimeout(onClose, 250);
+  }
 
   return (
-    <div className="md:hidden fixed inset-0 z-50 bg-white">
-      {/* Close button */}
-      <button
-        onClick={onClose}
-        className="fixed top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center shadow-sm cursor-pointer"
-        aria-label="Close gallery"
-      >
-        <X className="w-5 h-5 text-[#1D1D1D]" />
-      </button>
+    <div className={`md:hidden fixed inset-0 z-50 bg-black/90 transition-opacity duration-250 ${isOpen ? "opacity-100" : "opacity-0"}`}>
+      {/* Header bar */}
+      <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-black/60 backdrop-blur-sm">
+        <span className="text-white text-[14px] font-bold">
+          Gallery ({images.length})
+        </span>
+        <button
+          onClick={handleClose}
+          className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center cursor-pointer"
+          aria-label="Close gallery"
+        >
+          <X className="w-5 h-5 text-white" />
+        </button>
+      </div>
 
-      {/* Scrollable images */}
-      <div className="h-full overflow-y-auto">
-        {images.map((src, i) => (
-          <div key={i} className="relative w-full aspect-[4/3]">
-            <Image
-              src={src}
-              alt={`Photo ${i + 1}`}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority={i < 3}
-            />
-          </div>
-        ))}
-
-        {/* Counter badge — sticky at bottom */}
-        <div className="sticky bottom-4 flex justify-center pointer-events-none">
-          <div className="bg-[#F2F2F2] px-3 py-1 rounded-full pointer-events-auto">
-            <span className="text-[12px] font-semibold text-[#2E2E2E] tracking-[0.5px]">
-              1/{images.length}
-            </span>
-          </div>
+      {/* Scrollable images with padding */}
+      <div className={`h-[calc(100%-52px)] overflow-y-auto transition-transform duration-250 ${isOpen ? "translate-y-0" : "translate-y-8"}`}>
+        <div className="flex flex-col gap-1 pb-16">
+          {images.map((src, i) => (
+            <div key={i} className="relative w-full aspect-[4/3]">
+              <Image
+                src={src}
+                alt={`Photo ${i + 1}`}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority={i < 3}
+              />
+              {/* Per-image counter at bottom-center */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 px-2.5 py-0.5 rounded-full">
+                <span className="text-[11px] font-semibold text-white tracking-[0.5px]">
+                  {i + 1}/{images.length}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

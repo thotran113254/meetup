@@ -2,9 +2,9 @@ import Image from "next/image";
 import { ScrollReveal } from "@/components/ui/scroll-animations";
 
 /**
- * VietnamIntroSection — "Introduce About Vietnam" section on /tours page.
- * Desktop: 3-column (title+Vietnam | map | video+desc) with stats row below.
- * Matches Figma node 13561:7611.
+ * VietnamIntroSection — "Introduce About Vietnam" on /tours page.
+ * Figma node 13561:7611 — overlapping layout where map spans full height,
+ * stats sit under "Vietnam" text, and video+desc on the right.
  */
 
 const STATS = [
@@ -30,11 +30,11 @@ export function VietnamIntroSection() {
     <section className="section-padding bg-[var(--color-background)]">
       <div className="container-wide">
         <ScrollReveal>
-          {/* Main 3-column layout */}
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0">
-            {/* Left column — title + "Vietnam" */}
-            <div className="lg:w-[42%] lg:shrink-0">
-              {/* Gold gradient title: Introduce / about */}
+          {/* Desktop: relative container, map spans full height */}
+          <div className="flex flex-col lg:relative lg:min-h-[460px]">
+            {/* ─── Left: title + Vietnam + stats ─── */}
+            <div className="lg:w-[42%] lg:relative lg:z-10">
+              {/* Gold gradient title */}
               <div className="flex flex-col gap-3">
                 <p
                   className="text-gradient-gold text-[24px] lg:text-[37px] font-medium uppercase leading-[0.92]"
@@ -57,10 +57,24 @@ export function VietnamIntroSection() {
               >
                 Vietnam
               </h2>
+
+              {/* Stats row — directly below Vietnam text */}
+              <div className="flex flex-col sm:flex-row gap-6 sm:gap-[24px] mt-6 lg:mt-10">
+                {STATS.map((stat) => (
+                  <div key={stat.value} className="sm:w-[170px] sm:shrink-0 flex flex-col gap-2">
+                    <p className="text-[16px] font-bold text-[#1D1D1D] leading-[1.3] tracking-[0.32px]">
+                      {stat.value}
+                    </p>
+                    <p className="text-[12px] text-[#828282] leading-[1.5]">
+                      {stat.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Center column — Vietnam map */}
-            <div className="relative h-[320px] lg:h-[460px] lg:w-[25%] lg:shrink-0 mt-6 lg:mt-0 mx-auto lg:mx-0">
+            {/* ─── Center: Vietnam map (full height, behind text) ─── */}
+            <div className="relative h-[350px] lg:absolute lg:left-[30%] lg:top-0 lg:bottom-0 lg:w-[35%] lg:h-auto mt-6 lg:mt-0 mx-auto lg:mx-0">
               <Image
                 src="/images/ban-do-viet-nam.png"
                 alt="Map of Vietnam with tour destinations"
@@ -70,8 +84,8 @@ export function VietnamIntroSection() {
               />
             </div>
 
-            {/* Right column — video thumbnail + description */}
-            <div className="flex flex-col gap-5 mt-6 lg:mt-0 lg:w-[33%] lg:shrink-0 lg:ml-auto">
+            {/* ─── Right: video + description ─── */}
+            <div className="flex flex-col gap-5 mt-6 lg:mt-0 lg:absolute lg:right-0 lg:top-0 lg:w-[33%]">
               {/* Video thumbnail with YouTube play button */}
               <div className="relative w-full h-[200px] lg:h-[256px] rounded-[12px] overflow-hidden">
                 <Image
@@ -81,7 +95,6 @@ export function VietnamIntroSection() {
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 458px"
                 />
-                {/* YouTube play button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg
                     width="56"
@@ -100,7 +113,7 @@ export function VietnamIntroSection() {
               </div>
 
               {/* Description text */}
-              <p className="text-[11px] lg:text-[12px] leading-[1.5] text-[#828282]">
+              <p className="text-[12px] leading-[1.5] text-[#828282]">
                 Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum
                 aliquet convallis turpis lectus orci arcu ultrices viverra.
                 Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus.
@@ -110,20 +123,6 @@ export function VietnamIntroSection() {
                 sed at. Arcu sem sed
               </p>
             </div>
-          </div>
-
-          {/* Stats row — 3 equal columns matching Figma gap-24 w-170 */}
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-[24px] mt-6 lg:mt-8">
-            {STATS.map((stat) => (
-              <div key={stat.value} className="sm:w-[170px] sm:shrink-0 flex flex-col gap-2">
-                <p className="text-[16px] font-bold text-[#1D1D1D] leading-[1.3] tracking-[0.32px]">
-                  {stat.value}
-                </p>
-                <p className="text-[12px] text-[#828282] leading-[1.5]">
-                  {stat.description}
-                </p>
-              </div>
-            ))}
           </div>
         </ScrollReveal>
       </div>

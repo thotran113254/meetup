@@ -11,8 +11,7 @@ export function HeroSection() {
   return (
     <section className="w-full bg-[var(--color-background)] px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
       <motion.div
-        className="relative w-full max-w-7xl mx-auto overflow-hidden rounded-xl"
-        style={{ aspectRatio: "1546 / 487" }}
+        className="relative w-full max-w-7xl mx-auto overflow-hidden rounded-xl aspect-[343/257] md:aspect-[1546/487]"
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, ease: "easeOut" }}

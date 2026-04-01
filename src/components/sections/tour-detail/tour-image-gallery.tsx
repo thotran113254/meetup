@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Images } from "lucide-react";
@@ -18,52 +19,152 @@ const BREADCRUMB_ITEMS = [
   { label: "Adventures", href: "/tours" },
 ];
 
-export function TourImageGallery() {
+/* ── Mobile swipeable slider ── */
+
+function MobileImageSlider() {
+  const [current, setCurrent] = useState(0);
+  const touchStartX = useRef(0);
+  const touchDeltaX = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const total = GALLERY_IMAGES.length;
+
+  const goTo = useCallback(
+    (index: number) => {
+      setCurrent(Math.max(0, Math.min(index, total - 1)));
+    },
+    [total]
+  );
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  }
+
+  function handleTouchEnd() {
+    const threshold = 50;
+    if (touchDeltaX.current < -threshold) {
+      goTo(current + 1);
+    } else if (touchDeltaX.current > threshold) {
+      goTo(current - 1);
+    }
+  }
+
   return (
     <div>
-      {/* Image grid */}
-      <div className="flex gap-[14px] h-[211px] md:h-[393px]">
-        {/* Large image — left */}
-        <div className="relative flex-[1.015] md:rounded-xl overflow-hidden">
-          <Image
-            src={GALLERY_IMAGES[0]}
-            alt="Tour main photo"
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 768px) 100vw, 698px"
-          />
-          {/* Photo count badge */}
-          <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-1.5 shadow-sm">
-            <span className="text-[12px] md:text-[14px] font-medium text-[#1D1D1D]">
-              2/30
-            </span>
-            <Images className="w-3 h-3 md:w-4 md:h-4 text-[#1D1D1D]" />
-          </div>
-        </div>
-
-        {/* 2x2 grid — right (hidden on mobile) */}
-        <div className="hidden md:grid flex-1 grid-cols-2 grid-rows-2 gap-[14px]">
-          {GALLERY_IMAGES.slice(1).map((src, i) => (
-            <div key={i} className="relative rounded-xl overflow-hidden">
+      {/* Slider viewport */}
+      <div
+        ref={containerRef}
+        className="relative h-[211px] overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Slide track */}
+        <div
+          className="flex h-full transition-transform duration-300 ease-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {GALLERY_IMAGES.map((src, i) => (
+            <div key={i} className="relative w-full h-full shrink-0">
               <Image
                 src={src}
-                alt={`Tour photo ${i + 2}`}
+                alt={`Tour photo ${i + 1}`}
                 fill
                 className="object-cover"
-                sizes="337px"
+                priority={i === 0}
+                sizes="100vw"
               />
             </div>
           ))}
         </div>
+
+        {/* Photo count badge */}
+        <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-sm">
+          <span className="text-[12px] font-medium text-[#1D1D1D]">
+            {current + 1}/{total}
+          </span>
+          <Images className="w-3 h-3 text-[#1D1D1D]" />
+        </div>
       </div>
 
-      {/* Mobile: image tab indicators */}
-      <div className="flex items-center justify-center gap-1 mt-2 md:hidden">
-        <div className="w-4 h-1 bg-[#1D1D1D] rounded-full" />
-        <div className="w-1 h-1 bg-[#BDBDBD] rounded-full" />
-        <div className="w-1 h-1 bg-[#BDBDBD] rounded-full" />
-        <div className="w-1 h-1 bg-[#BDBDBD] rounded-full" />
+      {/* Tab indicators */}
+      <div className="flex items-center justify-center gap-1 mt-2">
+        {GALLERY_IMAGES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Go to photo ${i + 1}`}
+            className={`rounded-full transition-all duration-200 ${
+              i === current
+                ? "w-4 h-1 bg-[#1D1D1D]"
+                : "w-1 h-1 bg-[#BDBDBD]"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Desktop grid gallery ── */
+
+function DesktopImageGrid() {
+  return (
+    <div className="flex gap-[14px] h-[393px]">
+      {/* Large image — left */}
+      <div className="relative flex-[1.015] rounded-xl overflow-hidden">
+        <Image
+          src={GALLERY_IMAGES[0]}
+          alt="Tour main photo"
+          fill
+          className="object-cover"
+          priority
+          sizes="698px"
+        />
+        {/* Photo count badge */}
+        <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
+          <span className="text-[14px] font-medium text-[#1D1D1D]">
+            2/30
+          </span>
+          <Images className="w-4 h-4 text-[#1D1D1D]" />
+        </div>
+      </div>
+
+      {/* 2x2 grid — right */}
+      <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-[14px]">
+        {GALLERY_IMAGES.slice(1).map((src, i) => (
+          <div key={i} className="relative rounded-xl overflow-hidden">
+            <Image
+              src={src}
+              alt={`Tour photo ${i + 2}`}
+              fill
+              className="object-cover"
+              sizes="337px"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Main component ── */
+
+export function TourImageGallery() {
+  return (
+    <div>
+      {/* Mobile: swipeable slider */}
+      <div className="md:hidden">
+        <MobileImageSlider />
+      </div>
+
+      {/* Desktop: grid layout */}
+      <div className="hidden md:block">
+        <DesktopImageGrid />
       </div>
 
       {/* Breadcrumb */}

@@ -47,11 +47,23 @@ function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => vo
 
   function handleTouchEnd() {
     const threshold = 50;
-    if (touchDeltaX.current < -threshold) {
+    const delta = touchDeltaX.current;
+    if (delta < -threshold) {
       goTo(current + 1);
-    } else if (touchDeltaX.current > threshold) {
+    } else if (delta > threshold) {
       goTo(current - 1);
     }
+    /* Mark as swipe so onClick doesn't fire */
+    wasSwiped.current = Math.abs(delta) > 10;
+  }
+
+  const wasSwiped = useRef(false);
+
+  function handleImageClick(index: number) {
+    if (!wasSwiped.current) {
+      onOpenPopup(index);
+    }
+    wasSwiped.current = false;
   }
 
   return (
@@ -70,7 +82,11 @@ function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => vo
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
           {GALLERY_IMAGES.map((src, i) => (
-            <div key={i} className="relative w-full h-full shrink-0">
+            <div
+              key={i}
+              className="relative w-full h-full shrink-0 cursor-pointer"
+              onClick={() => handleImageClick(i)}
+            >
               <Image
                 src={src}
                 alt={`Tour photo ${i + 1}`}
@@ -120,7 +136,7 @@ function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => voi
   return (
     <div className="flex gap-[14px] h-[393px]">
       {/* Large image — left */}
-      <button onClick={() => onOpenPopup(0)} className="relative flex-[1.015] rounded-xl overflow-hidden cursor-pointer">
+      <div onClick={() => onOpenPopup(0)} className="relative flex-[1.015] rounded-xl overflow-hidden cursor-pointer" role="button" tabIndex={0}>
         <Image
           src={GALLERY_IMAGES[0]}
           alt="Tour main photo"
@@ -136,12 +152,12 @@ function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => voi
           </span>
           <Images className="w-4 h-4 text-[#1D1D1D]" />
         </div>
-      </button>
+      </div>
 
       {/* 2x2 grid — right */}
       <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-[14px]">
         {GALLERY_IMAGES.slice(1).map((src, i) => (
-          <button key={i} onClick={() => onOpenPopup(i + 1)} className="relative rounded-xl overflow-hidden cursor-pointer">
+          <div key={i} onClick={() => onOpenPopup(i + 1)} className="relative rounded-xl overflow-hidden cursor-pointer" role="button" tabIndex={0}>
             <Image
               src={src}
               alt={`Tour photo ${i + 2}`}
@@ -149,7 +165,7 @@ function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => voi
               className="object-cover"
               sizes="337px"
             />
-          </button>
+          </div>
         ))}
       </div>
     </div>

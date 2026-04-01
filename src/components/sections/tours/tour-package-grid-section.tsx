@@ -96,7 +96,7 @@ export function TourPackageGridSection() {
 
         {/* Grid — 1 col mobile, 2 col tablet, 4 col desktop */}
         <ScrollReveal delay={0.15}>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 lg:gap-x-4 lg:gap-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-x-4 lg:gap-y-5">
             {ALL_TOURS.map((tour) => (
               <TourCard
                 key={tour.slug}

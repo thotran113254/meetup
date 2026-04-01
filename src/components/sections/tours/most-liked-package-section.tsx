@@ -163,7 +163,7 @@ function FeaturedCard({
 
 export function MostLikedPackageSection() {
   return (
-    <section className="py-8 md:py-12 bg-white relative">
+    <section className="py-8 md:py-12 bg-white relative overflow-x-hidden">
       <div className="max-w-[1400px] mx-auto px-4 lg:px-[100px] flex flex-col gap-4 md:gap-5">
         <ScrollReveal>
           <h2 className="text-[20px] md:text-[32px] font-bold leading-[1.2] text-[#1D1D1D]">

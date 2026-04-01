@@ -44,9 +44,9 @@ const RELATED_TOURS = [
 
 export function TourRelatedPackages() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-x-hidden">
       {/* You Might Like These Packages */}
-      <section className="py-8 md:py-12 bg-white">
+      <section className="py-8 md:py-12 bg-white overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-[100px] flex flex-col gap-4 md:gap-5">
           <ScrollReveal>
             <div className="flex items-center justify-between">
@@ -68,12 +68,13 @@ export function TourRelatedPackages() {
                 <ChevronLeft className="w-5 h-5 text-white" />
               </button>
 
-              <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:grid md:grid-cols-4">
+              {/* Mobile: horizontal snap scroll. Desktop: 4-col grid */}
+              <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:grid md:grid-cols-4 md:gap-4">
                 {RELATED_TOURS.map((tour) => (
                   <TourCard
                     key={tour.slug}
                     {...tour}
-                    className="group relative flex-none w-[294px] h-[294px] md:w-auto md:h-[360px] snap-start rounded-[12px] overflow-hidden block"
+                    className="group relative flex-none w-[294px] h-[294px] snap-start rounded-[12px] overflow-hidden block md:flex-initial md:w-full md:h-[360px]"
                   />
                 ))}
               </div>

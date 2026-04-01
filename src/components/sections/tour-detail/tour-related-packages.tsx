@@ -68,9 +68,13 @@ export function TourRelatedPackages() {
                 <ChevronLeft className="w-5 h-5 text-white" />
               </button>
 
-              <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:overflow-visible md:snap-none">
+              <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:grid md:grid-cols-4">
                 {RELATED_TOURS.map((tour) => (
-                  <TourCard key={tour.slug} {...tour} />
+                  <TourCard
+                    key={tour.slug}
+                    {...tour}
+                    className="group relative flex-none w-[294px] h-[294px] md:w-auto md:h-[360px] snap-start rounded-[12px] overflow-hidden block"
+                  />
                 ))}
               </div>
 

@@ -199,20 +199,20 @@ export function TourImageGallery() {
       </div>
 
       {/* Breadcrumb */}
-      <nav className="mt-3 px-4 md:px-0" aria-label="Breadcrumb">
-        <ol className="flex items-center gap-1.5 text-[12px] font-medium">
+      <nav className="mt-3 px-4 md:px-0 overflow-x-auto" aria-label="Breadcrumb">
+        <ol className="flex items-center gap-1.5 text-[12px] font-medium whitespace-nowrap">
           {BREADCRUMB_ITEMS.map((item) => (
-            <li key={item.label} className="flex items-center gap-1.5">
+            <li key={item.label} className="flex items-center gap-1.5 shrink-0">
               <Link
                 href={item.href}
                 className="text-[#BDBDBD] hover:text-[#828282] transition-colors"
               >
                 {item.label}
               </Link>
-              <ChevronRight className="w-3 h-3 text-[#BDBDBD]" />
+              <ChevronRight className="w-3 h-3 text-[#BDBDBD] shrink-0" />
             </li>
           ))}
-          <li className="text-[#1D1D1D]">Name of packages</li>
+          <li className="text-[#1D1D1D] truncate max-w-[140px] md:max-w-none">Name of packages</li>
         </ol>
       </nav>
     </div>

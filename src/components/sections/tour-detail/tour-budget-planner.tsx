@@ -64,7 +64,7 @@ export function TourBudgetPlanner() {
   const total = base * (numAdults + numChildren * 0.5) * days;
 
   return (
-    <div className="bg-white rounded-[12px] p-[20px] flex flex-col gap-3" style={{ boxShadow: "0 0 40px rgba(0,0,0,0.06)" }}>
+    <div className="bg-white rounded-none md:rounded-[12px] p-4 md:p-5 flex flex-col gap-2 shadow-[0_0_40px_rgba(0,0,0,0.06)]">
       <h3 className="text-[14px] font-bold text-[#1D1D1D]">Travel Budget Planner</h3>
 
       {/* Star level dropdown */}
@@ -76,29 +76,31 @@ export function TourBudgetPlanner() {
         onChange={setStarLevel}
       />
 
-      {/* Three selects in a row */}
+      {/* Adults + Children side by side */}
       <div className="flex gap-2">
         <SelectField label="Number of Adult" options={ADULT_OPTIONS} value={adults} onChange={setAdults} />
         <SelectField label="Number of Child" options={CHILD_OPTIONS} value={children} onChange={setChildren} />
-        <SelectField label="Length of stay" options={STAY_OPTIONS} value={stay} onChange={setStay} />
       </div>
 
+      {/* Length of stay full width */}
+      <SelectField label="Length of stay" options={STAY_OPTIONS} value={stay} onChange={setStay} />
+
       {/* Total bar */}
-      <div className="flex items-center justify-between bg-[#3BBCB7] rounded-[8px] h-[40px] px-4">
-        <span className="text-white text-[14px]">Total around:</span>
-        <span className="text-white text-[21px] font-bold">${total.toLocaleString()}</span>
+      <div className="flex items-center justify-between bg-[#1A6670] rounded-[12px] h-[40px] px-3">
+        <span className="text-white text-[12px]">Total around:</span>
+        <span className="text-white text-[16px] font-bold">${total.toLocaleString()}</span>
       </div>
 
       {/* Important Notice */}
-      <div className="bg-[#F8F8F8] rounded-[12px] p-[10px] flex flex-col gap-2">
-        <div className="flex items-center gap-1.5">
+      <div className="bg-[#FFFAED] rounded-[12px] p-[10px] flex flex-col gap-2">
+        <div className="flex items-center gap-2">
           <AlertTriangle className="w-[18px] h-[18px] text-[#6B5420] flex-none" />
-          <span className="text-[14px] font-bold text-[#1D1D1D]">Important Notice:</span>
+          <span className="text-[14px] font-bold text-[#6B5420]">Important Notice:</span>
         </div>
-        <ul className="text-[12px] text-[#1D1D1D] leading-[1.6] list-disc pl-4 flex flex-col gap-1">
-          <li>All refund requests must be submitted <span className="font-bold">in writing</span> via email.</li>
-          <li>Refunds will be processed within <span className="font-bold">7-10 business days</span> after approval.</li>
-          <li>Non-refundable deposits and service fees <span className="font-bold">are not eligible</span> for refund.</li>
+        <ul className="text-[12px] text-[#1D1D1D] leading-[1.5] list-disc pl-4 flex flex-col gap-0.5">
+          <li>Refund processing times depend on the respective airline, hotel, cruise, or service provider.</li>
+          <li>Meetup Travel will always assist customers in ensuring a smooth and transparent process.</li>
+          <li>Meetup Travel will always assist customers in ensuring a smooth and transparent process.</li>
         </ul>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, AlertTriangle, Baby } from "lucide-react";
+import { AlertTriangle, Baby } from "lucide-react";
 import { TourBudgetPlanner } from "./tour-budget-planner";
 
 /** Price row — label left, price right */
@@ -31,7 +31,7 @@ function PriceGroup({ title, rows }: { title: string; rows: { label: string; pri
 /** Card wrapper with consistent shadow */
 function SidebarCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-[12px] p-[20px] flex flex-col gap-3" style={{ boxShadow: "0 0 40px rgba(0,0,0,0.06)" }}>
+    <div className="bg-white rounded-none md:rounded-[12px] p-4 md:p-5 flex flex-col gap-2 shadow-[0_0_40px_rgba(0,0,0,0.06)]">
       {children}
     </div>
   );
@@ -90,13 +90,14 @@ export function TourPricingSidebar() {
       {/* Card 2: Additional Service */}
       <SidebarCard>
         <h3 className="text-[14px] font-bold text-[#1D1D1D]">Additional service</h3>
-        <div className="flex flex-col">
-          <div className="flex items-center justify-between py-2 border-b border-[#ECECEC]">
-            <span className="text-[14px] text-[#1D1D1D]">Vip Private tour</span>
+        <div className="bg-[#F8F8F8] rounded-[6px] px-[10px] py-[8px] flex flex-col gap-[6px]">
+          <div className="flex items-center justify-between">
+            <span className="text-[12px] font-bold text-[#828282]">Vip Private tour</span>
             <span className="text-[14px] font-bold text-[#1D1D1D]">$25/guests</span>
           </div>
-          <div className="flex items-center justify-between py-2">
-            <span className="text-[14px] text-[#1D1D1D]">Book Scooter</span>
+          <div className="h-px bg-[#ECECEC]" />
+          <div className="flex items-center justify-between">
+            <span className="text-[12px] font-bold text-[#828282]">Book Scooter</span>
             <span className="text-[14px] font-bold text-[#1D1D1D]">$50/verhicle</span>
           </div>
         </div>
@@ -106,15 +107,12 @@ export function TourPricingSidebar() {
       <TourBudgetPlanner />
 
       {/* Action Buttons */}
-      <div className="flex gap-3 p-[20px]">
-        <button className="flex-1 h-[40px] border border-[#3BBCB7] text-[#3BBCB7] rounded-[12px] text-[14px] font-medium hover:bg-[#3BBCB7]/5 transition-colors cursor-pointer">
+      <div className="flex gap-[6px] px-4 md:px-5">
+        <button className="flex-1 h-[40px] bg-[#FEDA86] text-[#1D1D1D] rounded-[12px] text-[14px] font-bold hover:bg-[#fdd05e] transition-colors cursor-pointer">
           Contact Expert
         </button>
-        <button className="flex-1 h-[40px] bg-[#3BBCB7] text-white rounded-[12px] text-[14px] font-medium hover:bg-[#2fa9a4] transition-colors cursor-pointer">
+        <button className="flex-1 h-[40px] bg-[#3BBCB7] text-white rounded-[12px] text-[14px] font-bold hover:bg-[#2fa9a4] transition-colors cursor-pointer">
           Book Now
-        </button>
-        <button className="w-[40px] h-[40px] border border-[#ECECEC] rounded-[12px] flex items-center justify-center hover:border-[#3BBCB7] transition-colors cursor-pointer" aria-label="Add to wishlist">
-          <Heart className="w-5 h-5 text-[#3BBCB7]" />
         </button>
       </div>
     </div>

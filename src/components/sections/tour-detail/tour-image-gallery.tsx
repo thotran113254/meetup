@@ -22,9 +22,9 @@ export function TourImageGallery() {
   return (
     <div>
       {/* Image grid */}
-      <div className="flex gap-[14px] h-[280px] md:h-[393px]">
+      <div className="flex gap-[14px] h-[211px] md:h-[393px]">
         {/* Large image — left */}
-        <div className="relative flex-[1.015] rounded-xl overflow-hidden">
+        <div className="relative flex-[1.015] md:rounded-xl overflow-hidden">
           <Image
             src={GALLERY_IMAGES[0]}
             alt="Tour main photo"
@@ -34,15 +34,15 @@ export function TourImageGallery() {
             sizes="(max-width: 768px) 100vw, 698px"
           />
           {/* Photo count badge */}
-          <div className="absolute bottom-3 right-3 bg-white rounded-lg px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
-            <span className="text-[14px] font-medium text-[#1D1D1D]">
+          <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-2 py-1 md:px-3 md:py-1.5 flex items-center gap-1.5 shadow-sm">
+            <span className="text-[12px] md:text-[14px] font-medium text-[#1D1D1D]">
               2/30
             </span>
-            <Images className="w-4 h-4 text-[#1D1D1D]" />
+            <Images className="w-3 h-3 md:w-4 md:h-4 text-[#1D1D1D]" />
           </div>
         </div>
 
-        {/* 2x2 grid — right */}
+        {/* 2x2 grid — right (hidden on mobile) */}
         <div className="hidden md:grid flex-1 grid-cols-2 grid-rows-2 gap-[14px]">
           {GALLERY_IMAGES.slice(1).map((src, i) => (
             <div key={i} className="relative rounded-xl overflow-hidden">
@@ -58,8 +58,16 @@ export function TourImageGallery() {
         </div>
       </div>
 
+      {/* Mobile: image tab indicators */}
+      <div className="flex items-center justify-center gap-1 mt-2 md:hidden">
+        <div className="w-4 h-1 bg-[#1D1D1D] rounded-full" />
+        <div className="w-1 h-1 bg-[#BDBDBD] rounded-full" />
+        <div className="w-1 h-1 bg-[#BDBDBD] rounded-full" />
+        <div className="w-1 h-1 bg-[#BDBDBD] rounded-full" />
+      </div>
+
       {/* Breadcrumb */}
-      <nav className="mt-3" aria-label="Breadcrumb">
+      <nav className="mt-3 px-4 md:px-0" aria-label="Breadcrumb">
         <ol className="flex items-center gap-1.5 text-[12px] font-medium">
           {BREADCRUMB_ITEMS.map((item) => (
             <li key={item.label} className="flex items-center gap-1.5">

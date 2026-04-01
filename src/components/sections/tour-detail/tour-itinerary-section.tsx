@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import {
   TourItineraryDayItem,
   type ItineraryDay,
@@ -119,25 +119,24 @@ export function TourItinerarySection() {
   }
 
   return (
-    <div className="rounded-xl p-5 shadow-[0_0_40px_rgba(0,0,0,0.06)] bg-white">
+    <div className="rounded-none md:rounded-xl p-4 md:p-5 shadow-[0_0_40px_rgba(0,0,0,0.06)] bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4 md:mb-6">
         <h2 className="text-[20px] font-bold text-[#1D1D1D]">Itinerary</h2>
         <button
           onClick={toggleAll}
-          className="flex items-center gap-1 text-[14px] font-medium text-[#3BBCB7] hover:text-[#2fa09b] transition-colors"
+          className="flex flex-col items-center text-[14px] font-bold text-[#1D1D1D] hover:text-[#2fa09b] transition-colors"
         >
-          {allOpen ? "Collapse all" : "Expand all"}
-          {allOpen ? (
-            <ChevronUp className="w-4 h-4" />
-          ) : (
-            <ChevronDown className="w-4 h-4" />
-          )}
+          <span className="flex items-center gap-1">
+            {allOpen ? "Collapse all" : "Expand all"}
+            <ChevronDown className={`w-4 h-4 transition-transform ${allOpen ? "" : "rotate-180"}`} />
+          </span>
+          <span className="w-full h-[2px] bg-[#1D1D1D] mt-0.5" />
         </button>
       </div>
 
-      {/* Timeline container */}
-      <div className="relative pl-[12px] border-l-2 border-[#3BBCB7]">
+      {/* Timeline container — no left border on mobile */}
+      <div className="relative md:pl-[12px] md:border-l-2 md:border-[#3BBCB7]">
         {ITINERARY_DATA.map((day, i) => (
           <TourItineraryDayItem
             key={i}

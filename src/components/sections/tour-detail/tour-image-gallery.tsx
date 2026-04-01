@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Images } from "lucide-react";
+import { TourGalleryPopup } from "./tour-gallery-popup";
 
 const GALLERY_IMAGES = [
   "/images/tour-1-floating-market.png",
@@ -21,7 +22,7 @@ const BREADCRUMB_ITEMS = [
 
 /* ── Mobile swipeable slider ── */
 
-function MobileImageSlider() {
+function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => void }) {
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef(0);
   const touchDeltaX = useRef(0);
@@ -82,13 +83,16 @@ function MobileImageSlider() {
           ))}
         </div>
 
-        {/* Photo count badge */}
-        <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-sm">
+        {/* Photo count badge — opens popup */}
+        <button
+          onClick={() => onOpenPopup(current)}
+          className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-2 py-1 flex items-center gap-1.5 shadow-sm cursor-pointer"
+        >
           <span className="text-[12px] font-medium text-[#1D1D1D]">
             {current + 1}/{total}
           </span>
           <Images className="w-3 h-3 text-[#1D1D1D]" />
-        </div>
+        </button>
       </div>
 
       {/* Tab indicators */}
@@ -112,11 +116,11 @@ function MobileImageSlider() {
 
 /* ── Desktop grid gallery ── */
 
-function DesktopImageGrid() {
+function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => void }) {
   return (
     <div className="flex gap-[14px] h-[393px]">
       {/* Large image — left */}
-      <div className="relative flex-[1.015] rounded-xl overflow-hidden">
+      <button onClick={() => onOpenPopup(0)} className="relative flex-[1.015] rounded-xl overflow-hidden cursor-pointer">
         <Image
           src={GALLERY_IMAGES[0]}
           alt="Tour main photo"
@@ -128,16 +132,16 @@ function DesktopImageGrid() {
         {/* Photo count badge */}
         <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
           <span className="text-[14px] font-medium text-[#1D1D1D]">
-            2/30
+            2/{GALLERY_IMAGES.length}
           </span>
           <Images className="w-4 h-4 text-[#1D1D1D]" />
         </div>
-      </div>
+      </button>
 
       {/* 2x2 grid — right */}
       <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-[14px]">
         {GALLERY_IMAGES.slice(1).map((src, i) => (
-          <div key={i} className="relative rounded-xl overflow-hidden">
+          <button key={i} onClick={() => onOpenPopup(i + 1)} className="relative rounded-xl overflow-hidden cursor-pointer">
             <Image
               src={src}
               alt={`Tour photo ${i + 2}`}
@@ -145,7 +149,7 @@ function DesktopImageGrid() {
               className="object-cover"
               sizes="337px"
             />
-          </div>
+          </button>
         ))}
       </div>
     </div>
@@ -155,16 +159,27 @@ function DesktopImageGrid() {
 /* ── Main component ── */
 
 export function TourImageGallery() {
+  const [popupIndex, setPopupIndex] = useState<number | null>(null);
+
   return (
     <div>
+      {/* Gallery popup */}
+      {popupIndex !== null && (
+        <TourGalleryPopup
+          images={GALLERY_IMAGES}
+          initialIndex={popupIndex}
+          onClose={() => setPopupIndex(null)}
+        />
+      )}
+
       {/* Mobile: swipeable slider */}
       <div className="md:hidden">
-        <MobileImageSlider />
+        <MobileImageSlider onOpenPopup={setPopupIndex} />
       </div>
 
       {/* Desktop: grid layout */}
       <div className="hidden md:block">
-        <DesktopImageGrid />
+        <DesktopImageGrid onOpenPopup={setPopupIndex} />
       </div>
 
       {/* Breadcrumb */}

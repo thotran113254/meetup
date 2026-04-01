@@ -46,14 +46,14 @@ export function TourRelatedPackages() {
   return (
     <div className="flex flex-col">
       {/* You Might Like These Packages */}
-      <section className="section-padding bg-white">
-        <div className="container-wide flex flex-col gap-5">
+      <section className="py-8 md:py-12 bg-white">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-[100px] flex flex-col gap-4 md:gap-5">
           <ScrollReveal>
             <div className="flex items-center justify-between">
-              <h2 className="text-xl md:text-[32px] font-bold italic leading-[1.2] tracking-[0.08px] text-[#1D1D1D] font-[family-name:var(--font-italianno)]">
+              <h2 className="text-[20px] md:text-[32px] font-bold leading-[1.2] text-[#1D1D1D]">
                 You Might Like These Packages
               </h2>
-              <button className="bg-[#3BBCB7] text-white text-[14px] font-medium px-5 h-[40px] rounded-[12px] hover:bg-[#2fa9a4] transition-colors cursor-pointer">
+              <button className="bg-[#3BBCB7] text-white text-[14px] font-bold px-5 h-[40px] rounded-[12px] hover:bg-[#2fa9a4] transition-colors cursor-pointer shrink-0 ml-4">
                 View all
               </button>
             </div>
@@ -61,7 +61,6 @@ export function TourRelatedPackages() {
 
           <ScrollReveal delay={0.15}>
             <div className="relative">
-              {/* Left arrow */}
               <button
                 aria-label="Previous"
                 className="hidden md:flex absolute -left-5 lg:-left-[60px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 items-center justify-center z-10 cursor-pointer"
@@ -69,14 +68,12 @@ export function TourRelatedPackages() {
                 <ChevronLeft className="w-5 h-5 text-white" />
               </button>
 
-              {/* Tour cards row */}
-              <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:overflow-visible md:snap-none">
+              <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:overflow-visible md:snap-none">
                 {RELATED_TOURS.map((tour) => (
                   <TourCard key={tour.slug} {...tour} />
                 ))}
               </div>
 
-              {/* Right arrow */}
               <button
                 aria-label="Next"
                 className="hidden md:flex absolute -right-5 lg:-right-[60px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 items-center justify-center z-10 cursor-pointer"

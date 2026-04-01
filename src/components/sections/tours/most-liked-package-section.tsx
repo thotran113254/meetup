@@ -163,17 +163,16 @@ function FeaturedCard({
 
 export function MostLikedPackageSection() {
   return (
-    <section className="section-padding bg-white relative">
-      <div className="container-wide flex flex-col gap-5">
+    <section className="py-8 md:py-12 bg-white relative">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-[100px] flex flex-col gap-4 md:gap-5">
         <ScrollReveal>
-          <h2 className="text-xl md:text-[32px] font-bold leading-[1.2] tracking-[0.08px] text-[var(--color-foreground)]">
+          <h2 className="text-[20px] md:text-[32px] font-bold leading-[1.2] text-[#1D1D1D]">
             Most Liked Package
           </h2>
         </ScrollReveal>
 
         <ScrollReveal delay={0.15}>
           <div className="relative">
-            {/* Carousel arrows — hidden on mobile */}
             <button
               aria-label="Previous"
               className="hidden md:flex absolute -left-5 lg:-left-[60px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 items-center justify-center z-10 cursor-pointer"
@@ -181,8 +180,7 @@ export function MostLikedPackageSection() {
               <ChevronLeft className="w-5 h-5 text-white" />
             </button>
 
-            {/* Mobile: horizontal scroll with snap. Desktop: side-by-side */}
-            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:overflow-visible md:snap-none">
+            <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide md:overflow-visible md:snap-none">
               {FEATURED_TOURS.map((tour, i) => (
                 <FeaturedCard
                   key={tour.id}

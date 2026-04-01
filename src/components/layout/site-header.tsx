@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Menu, Globe, Heart } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { siteConfig } from "@/config/site-config";
 import { MobileMenu } from "./mobile-menu";
 import { CurrencySwitcher } from "@/components/ui/currency-switcher";
@@ -31,22 +31,12 @@ export function SiteHeader() {
         className="bg-white rounded-bl-[12px] rounded-br-[12px] shadow-[0px_0px_40px_0px_rgba(0,0,0,0.06)]"
         style={{ maxWidth: "1400px", margin: "0 auto" }}
       >
-        <div className="flex h-16 items-center justify-between px-6 lg:px-[100px]">
+        <div className="flex h-12 md:h-16 items-center justify-between px-4 lg:px-[100px]">
 
           {/* Left: Logo */}
-          <Link href="/" className="flex flex-col items-start leading-none">
-            <span
-              className="text-2xl font-bold"
-              style={{ fontFamily: "var(--font-script, cursive)", color: "#2CBCB3" }}
-            >
-              Meetup
-            </span>
-            <span
-              className="text-[9px] font-semibold tracking-[0.3em] text-[#2CBCB3] uppercase"
-              style={{ marginTop: "-2px" }}
-            >
-              Travel
-            </span>
+          <Link href="/">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/meetup-logo-blue.svg" alt="Meetup Travel" className="h-[22px] md:h-[29px] w-auto" />
           </Link>
 
           {/* Center: Desktop nav */}
@@ -67,16 +57,17 @@ export function SiteHeader() {
 
           {/* Right: Action icons + mobile toggle */}
           <div className="flex items-center gap-2">
-            {/* Desktop icon buttons */}
-            <div className="hidden md:flex items-center gap-2">
+            {/* Icon buttons — visible on all screen sizes, smaller on mobile */}
+            <div className="flex items-center gap-2">
               {/* Currency / Language icon */}
               <div className="relative">
                 <button
                   aria-label="Language / Currency"
-                  className="flex items-center justify-center size-[40px] rounded-[12px] bg-[#EBF8F8] hover:opacity-80 transition-opacity"
+                  className="flex items-center justify-center size-8 md:size-[40px] rounded-[6px] md:rounded-[12px] bg-[#EBF8F8] hover:opacity-80 transition-opacity cursor-pointer"
                   onClick={() => setCurrencyOpen((o) => !o)}
                 >
-                  <Globe className="h-6 w-6 text-[#2CBCB3]" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icons/exchange.svg" alt="" className="size-[18px] md:size-6" aria-hidden="true" />
                 </button>
                 <CurrencySwitcher open={currencyOpen} onClose={() => setCurrencyOpen(false)} selected={currency} onSelect={setCurrency} />
               </div>
@@ -84,13 +75,14 @@ export function SiteHeader() {
               {/* Wishlist heart icon with badge */}
               <button
                 aria-label="Favorites"
-                className="relative flex items-center justify-center size-[40px] rounded-[12px] bg-[#FFEEC7] hover:opacity-80 transition-opacity"
+                className="relative flex items-center justify-center size-8 md:size-[40px] rounded-[6px] md:rounded-[12px] bg-[#FFEEC7] hover:opacity-80 transition-opacity cursor-pointer"
                 onClick={() => setWishlistOpen(true)}
               >
-                <Heart className="h-6 w-6 text-[#F5A623]" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/icons/heart-filled.svg" alt="" className="size-5 md:size-6" aria-hidden="true" />
                 {wishlistItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 flex items-center justify-center size-[18px] rounded-full bg-[#DA1115] text-white"
-                    style={{ fontSize: "9px", lineHeight: 1, fontWeight: 700 }}
+                  <span className="absolute -top-[5px] left-[21px] md:-top-[7px] md:left-[28px] flex items-center justify-center size-4 md:size-[18px] rounded-full bg-[#DA1115] text-white"
+                    style={{ fontSize: "9px", lineHeight: 1, fontWeight: 500 }}
                   >
                     +{wishlistItems.length}
                   </span>
@@ -100,7 +92,7 @@ export function SiteHeader() {
 
             {/* Mobile hamburger */}
             <button
-              className="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+              className="md:hidden flex items-center justify-center size-8 rounded-[6px] bg-[#EBF8F8] hover:bg-gray-100 transition-colors"
               aria-label="Open menu"
               onClick={() => setMobileOpen(true)}
             >

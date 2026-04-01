@@ -16,13 +16,18 @@ export type TourCardProps = {
   spots: number;
   tags: string[];
   slug: string;
+  /** Optional className override for sizing (grid vs carousel contexts) */
+  className?: string;
 };
 
-export function TourCard({ image, title, price, duration, spots, tags, slug }: TourCardProps) {
+export function TourCard({ image, title, price, duration, spots, tags, slug, className }: TourCardProps) {
   return (
     <Link
-      href={`/tours/${slug}`}
-      className="group relative flex-none w-[338px] h-[516px] snap-start rounded-[12px] overflow-hidden block"
+      href="#"
+      className={
+        className ??
+        "group relative flex-none w-[294px] h-[294px] md:w-[338px] md:h-[516px] snap-start rounded-[12px] overflow-hidden block"
+      }
     >
       {/* Full-height background image */}
       <Image

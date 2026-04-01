@@ -10,6 +10,7 @@
 
 import { useState } from "react";
 import { SubscribePopup } from "@/components/ui/subscribe-popup";
+import { ScrollReveal } from "@/components/ui/scroll-animations";
 
 export function NewsletterSection() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "" });
@@ -28,78 +29,79 @@ export function NewsletterSection() {
 
   // White inputs, no border — sit cleanly on the light teal card
   const inputClass =
-    "w-full bg-white h-[40px] rounded-[12px] px-[12px] py-[8px] text-xs text-[var(--color-foreground)] placeholder:text-[#BDBDBD] focus:outline-none focus:ring-2 focus:ring-[#3BBCB7]";
+    "w-full bg-white h-10 rounded-xl px-3 py-2 text-xs text-[var(--color-foreground)] placeholder:text-[#bdbdbd] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)]";
 
   return (
-    <section className="py-[50px] bg-[var(--color-background)]">
+    <section className="section-padding bg-[var(--color-background)]">
       <div className="container-wide">
         {/* Card — max 928px, light teal bg, 60px padding per Figma */}
+        <ScrollReveal>
         <div
-          className="max-w-[928px] mx-auto rounded-[12px] px-4 py-8 sm:p-[60px]"
-          style={{ background: "#EBF8F8" }}
+          className="max-w-[928px] mx-auto rounded-xl p-3 md:px-4 md:py-8 sm:p-[60px] bg-[var(--color-secondary)] overflow-hidden relative"
         >
-          <div className="flex flex-col md:flex-row gap-5 items-start">
+          {/* Decorative airplane icon — top right */}
+          <img
+            src="/images/newsletter-airplane.png"
+            alt=""
+            className="absolute top-2 right-2 md:hidden w-[46px] h-[40px] -scale-y-100 object-contain opacity-80 animate-float"
+            aria-hidden="true"
+          />
 
-            {/* Left: title + quote */}
-            <div className="flex-1 min-w-0">
+          <div className="flex flex-col gap-5">
+
+            {/* Title + quote */}
+            <div className="flex flex-col gap-2">
               <h2
-                className="font-bold text-[#1D1D1D] mb-4"
-                style={{
-                  fontSize: "32px",
-                  lineHeight: 1.2,
-                  letterSpacing: "0.08px",
-                }}
+                className="text-xl md:text-[32px] font-bold text-[var(--color-foreground)] leading-[1.2] tracking-[0.05px] md:tracking-[0.08px]"
               >
-                Like a travel expert<br />in your inbox
+                Like a travel expert<br />
+                in your inbox
+                {/* Decorative airplane icon per Figma — desktop only */}
+                <img
+                  src="/images/newsletter-airplane.png"
+                  alt=""
+                  className="hidden md:inline-block w-[46px] h-[40px] ml-1 align-middle -scale-y-100 rotate-[-174deg] object-contain"
+                  aria-hidden="true"
+                />
               </h2>
               <p
-                className="text-[#828282] italic"
-                style={{
-                  fontSize: "16px",
-                  lineHeight: 1.5,
-                  letterSpacing: "0.04px",
-                  maxWidth: "323px",
-                }}
+                className="text-[var(--color-muted-foreground)] text-xs md:text-base leading-[1.5] tracking-[0.04px] max-w-[243px] md:max-w-[323px]"
               >
                 &ldquo;Friendship, integrity and a spirit of self-improvement
                 forge the strength of an organization that continues to grow.&rdquo;
               </p>
             </div>
 
-            {/* Right: subscription form */}
-            <form onSubmit={handleSubmit} className="flex-1 w-full flex flex-col">
-              {/* First name + Last name stacked with gap-[8px] */}
-              <div className="flex flex-col gap-[8px]">
-                <div>
-                  <label htmlFor="nl-first" className="sr-only">First name</label>
-                  <input
-                    id="nl-first"
-                    type="text"
-                    name="firstName"
-                    value={form.firstName}
-                    onChange={handleChange}
-                    placeholder="First name"
-                    required
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="nl-last" className="sr-only">Last name</label>
-                  <input
-                    id="nl-last"
-                    type="text"
-                    name="lastName"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    placeholder="Last name"
-                    required
-                    className={inputClass}
-                  />
-                </div>
+            {/* Subscription form */}
+            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
+              {/* First name + Last name side by side on mobile per Figma */}
+              <div className="flex gap-2">
+                <label htmlFor="nl-first" className="sr-only">First name</label>
+                <input
+                  id="nl-first"
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  placeholder="First name"
+                  required
+                  className={inputClass}
+                />
+                <label htmlFor="nl-last" className="sr-only">Last name</label>
+                <input
+                  id="nl-last"
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  placeholder="Last name"
+                  required
+                  className={inputClass}
+                />
               </div>
 
-              {/* Email — gap-[12px] below name group */}
-              <div className="mt-[12px]">
+              {/* Email */}
+              <div>
                 <label htmlFor="nl-email" className="sr-only">Email address</label>
                 <input
                   id="nl-email"
@@ -113,20 +115,18 @@ export function NewsletterSection() {
                 />
               </div>
 
-              {/* Subscribe button — teal bg, rounded-[12px], intentional Figma typo "Subcribe" */}
-              <div className="mt-[12px]">
-                <button
-                  type="submit"
-                  className="h-[40px] rounded-[12px] px-[32px] text-white font-bold text-sm transition-opacity hover:opacity-90"
-                  style={{ background: "#3BBCB7" }}
-                >
-                  Subcribe
-                </button>
-              </div>
+              {/* Subscribe button — full width on mobile per Figma */}
+              <button
+                type="submit"
+                className="h-10 rounded-xl px-8 text-white font-bold text-sm bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors w-full md:self-start md:w-auto cursor-pointer"
+              >
+                Subcribe
+              </button>
             </form>
 
           </div>
         </div>
+        </ScrollReveal>
       </div>
 
       <SubscribePopup

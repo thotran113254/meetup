@@ -1,172 +1,193 @@
 "use client";
 
 /**
- * EticketsSection — e-Tickets flight search banner + form.
+ * EticketsSection — e-Tickets flight search banner.
+ * Ticket-style card: teal left panel (338px) + form panel.
  * Figma node 13263:4171.
- * Left: teal gradient panel (~338px) with decorative airplane.
- * Right: white card with 4-col date/city row + full-width passengers row + search btn.
  */
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { format } from "date-fns";
+import Image from "next/image";
+import { Search, MapPin, Calendar as CalendarIcon, Users } from "lucide-react";
+import { ScrollReveal } from "@/components/ui/scroll-animations";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+
+const CITIES = [
+  { value: "hanoi", label: "Hanoi (HAN)" },
+  { value: "hochiminh", label: "Ho Chi Minh City (SGN)" },
+  { value: "danang", label: "Da Nang (DAD)" },
+  { value: "nhatrang", label: "Nha Trang (CXR)" },
+  { value: "phuquoc", label: "Phu Quoc (PQC)" },
+  { value: "hue", label: "Hue (HUI)" },
+  { value: "dalat", label: "Da Lat (DLI)" },
+  { value: "bangkok", label: "Bangkok (BKK)" },
+  { value: "singapore", label: "Singapore (SIN)" },
+  { value: "tokyo", label: "Tokyo (NRT)" },
+  { value: "seoul", label: "Seoul (ICN)" },
+];
+
+const PASSENGERS = [
+  { value: "1-economy", label: "1 passenger, Economy" },
+  { value: "2-economy", label: "2 passengers, Economy" },
+  { value: "3-economy", label: "3 passengers, Economy" },
+  { value: "1-premium", label: "1 passenger, Premium Economy" },
+  { value: "2-premium", label: "2 passengers, Premium Economy" },
+  { value: "1-business", label: "1 passenger, Business" },
+  { value: "2-business", label: "2 passengers, Business" },
+];
 
 export function EticketsSection() {
-  const [form, setForm] = useState({
-    from: "",
-    to: "",
-    departure: "",
-    returnDate: "",
-    passengers: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
-  const inputClass =
-    "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-[var(--color-foreground)] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-white h-[42px]";
-
-  const labelClass = "block text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide";
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [departure, setDeparture] = useState<Date | undefined>();
+  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [passengers, setPassengers] = useState("");
 
   return (
-    <section className="py-[50px] bg-[var(--color-background)]">
+    <section className="section-padding bg-[var(--color-background)] overflow-x-clip">
       <div className="container-wide">
-        {/* Outer card with nav dots on left & right edges */}
+        <ScrollReveal>
         <div className="relative">
-          {/* Left nav dot */}
-          <button
-            aria-label="Previous"
-            className="absolute left-[-16px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white shadow border border-gray-200 flex items-center justify-center hidden sm:flex"
-          >
-            <span className="w-2 h-2 border-l-2 border-b-2 border-gray-400 rotate-45 inline-block translate-x-0.5" />
-          </button>
+          {/* Punch holes — ticket perforations */}
+          <PunchHole side="left" />
+          <PunchHole side="right" />
 
-          {/* Right nav dot */}
-          <button
-            aria-label="Next"
-            className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white shadow border border-gray-200 flex items-center justify-center hidden sm:flex"
-          >
-            <span className="w-2 h-2 border-r-2 border-t-2 border-gray-400 rotate-45 inline-block -translate-x-0.5" />
-          </button>
+          <div className="rounded-xl flex flex-col lg:flex-row gap-2 lg:gap-0">
+            {/* Left: teal branding panel */}
+            <TealPanel />
 
-          <div className="flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-md border border-gray-100">
-            {/* Left: teal gradient panel — 338px per Figma */}
-            <div
-              className="flex flex-col justify-center items-center px-8 py-10 md:w-[338px] shrink-0 relative overflow-hidden"
-              style={{ background: "linear-gradient(160deg, #5DD6D0 0%, #2CBCB3 40%, #1A9A93 100%)" }}
-            >
-              {/* Decorative large airplane */}
-              <span
-                className="absolute text-white/20 select-none pointer-events-none"
-                style={{ fontSize: "200px", top: "-20px", right: "-30px", transform: "rotate(-20deg)" }}
-                aria-hidden="true"
+            {/* Right: search form panel */}
+            <div className="relative flex-1 min-w-0 bg-[#EBF8F8] rounded-xl lg:rounded-l-none flex items-center justify-center p-2 lg:py-4 lg:px-6">
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                className="bg-white rounded-xl p-2 lg:p-3 flex flex-col lg:flex-row gap-2 items-stretch w-full"
               >
-                ✈
-              </span>
-              {/* Small decorative airplane */}
-              <span
-                className="absolute text-white/30 select-none pointer-events-none"
-                style={{ fontSize: "48px", bottom: "30px", left: "20px", transform: "rotate(10deg)" }}
-                aria-hidden="true"
-              >
-                ✈
-              </span>
-              <h2
-                className="text-white font-extrabold leading-tight relative z-10 text-center"
-                style={{ fontSize: "52px", fontStyle: "italic", textShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
-              >
-                e-Tickets
-              </h2>
-            </div>
-
-            {/* Right: search form */}
-            <form
-              onSubmit={handleSubmit}
-              className="flex-1 bg-white p-6 flex flex-col justify-center gap-3"
-            >
-              {/* Row 1: From, To, Departure date, Return date — 4 equal cols */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <div>
-                  <label htmlFor="eticket-from" className={labelClass}>From</label>
-                  <input
-                    id="eticket-from"
-                    type="text"
-                    name="from"
-                    value={form.from}
-                    onChange={handleChange}
-                    placeholder="City or airport..."
-                    className={inputClass}
-                  />
+                <div className="flex-1 flex flex-col gap-2 min-w-0">
+                  {/* All fields stacked on mobile, row on desktop */}
+                  <div className="flex flex-col xl:flex-row gap-2">
+                    <FormSelect label="From" value={from} onChange={setFrom} placeholder="City, domestic or international..." icon={<MapPin className="size-3.5 text-[var(--color-muted-foreground)]" />} options={CITIES} className="flex-1" />
+                    <FormSelect label="To" value={to} onChange={setTo} placeholder="City, domestic or international..." icon={<MapPin className="size-3.5 text-[var(--color-muted-foreground)]" />} options={CITIES} className="flex-1" />
+                    {/* Departure + Return side by side on all screens */}
+                    <div className="flex gap-2 flex-1">
+                      <FormDate label="Departure date" value={departure} onChange={setDeparture} placeholder="Sunday, Nov 16" className="flex-1 xl:flex-none xl:w-[188px]" />
+                      <FormDate label="Return date" value={returnDate} onChange={setReturnDate} placeholder="Sunday, Nov 16" className="flex-1 xl:flex-none xl:w-[188px]" />
+                    </div>
+                  </div>
+                  {/* Passengers */}
+                  <FormSelect label="Number of passengers, seat class" value={passengers} onChange={setPassengers} placeholder="3 passengers , economy/premium economy..." icon={<Users className="size-3.5 text-[var(--color-muted-foreground)]" />} options={PASSENGERS} />
                 </div>
-                <div>
-                  <label htmlFor="eticket-to" className={labelClass}>To</label>
-                  <input
-                    id="eticket-to"
-                    type="text"
-                    name="to"
-                    value={form.to}
-                    onChange={handleChange}
-                    placeholder="City or airport..."
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="eticket-departure" className={labelClass}>Departure date</label>
-                  <input
-                    id="eticket-departure"
-                    type="date"
-                    name="departure"
-                    value={form.departure}
-                    onChange={handleChange}
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="eticket-return" className={labelClass}>Return date</label>
-                  <input
-                    id="eticket-return"
-                    type="date"
-                    name="returnDate"
-                    value={form.returnDate}
-                    onChange={handleChange}
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              {/* Row 2: Passengers/seat class (full width) + Search button */}
-              <div className="flex gap-3 items-end">
-                <div className="flex-1">
-                  <label htmlFor="eticket-passengers" className={labelClass}>
-                    Number of passengers, seat class
-                  </label>
-                  <input
-                    id="eticket-passengers"
-                    type="text"
-                    name="passengers"
-                    value={form.passengers}
-                    onChange={handleChange}
-                    placeholder="e.g. 3 passengers, Economy / Premium Economy..."
-                    className={inputClass}
-                  />
-                </div>
+                {/* Search button — full width on mobile, side button on desktop */}
                 <button
                   type="submit"
-                  className="flex items-center justify-center bg-[var(--color-primary)] hover:bg-[#239A93] text-white font-semibold rounded-lg transition-colors shrink-0"
-                  style={{ width: "58px", height: "58px" }}
+                  className="flex items-center justify-center bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white rounded-xl transition-colors cursor-pointer h-10 lg:h-auto lg:w-[58px] lg:shrink-0"
                   aria-label="Search flights"
                 >
-                  <Search className="w-5 h-5" />
+                  <Search className="size-4" />
                 </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
+        </ScrollReveal>
       </div>
     </section>
+  );
+}
+
+/* ── Teal branding panel with airplane + clouds ── */
+function TealPanel() {
+  return (
+    <div
+      className="relative w-full lg:w-[338px] h-[116px] md:h-[211px] shrink-0 overflow-hidden rounded-xl lg:rounded-r-none"
+      style={{ backgroundColor: "#29A2C3" }}
+    >
+      <div className="absolute inset-0 bg-[var(--color-primary)] opacity-80" />
+      {/* Cloud layers — positioned per Figma coordinates */}
+      <Image src="/images/eticket-cloud.png" alt="" width={2442} height={474} className="absolute top-[-103px] left-[-523px] w-[2442px] opacity-90 pointer-events-none select-none -scale-y-100 rotate-[-0.37deg]" aria-hidden="true" />
+      <Image src="/images/eticket-cloud.png" alt="" width={2265} height={439} className="absolute top-[-14px] left-[-468px] w-[2265px] opacity-90 pointer-events-none select-none rotate-[-0.37deg]" aria-hidden="true" />
+      {/* Airplane — positioned per Figma: image 384 at top ~58px left ~28px */}
+      <Image
+        src="/images/eticket-airplane.png" alt="Airplane" width={493} height={179}
+        className="absolute pointer-events-none select-none w-[330px] md:w-[493px] top-[10px] left-[28px] md:top-[60px] md:left-[85px] animate-float"
+        priority
+      />
+      <h2 className="absolute left-3 top-3 md:left-[25px] md:top-[21px] text-white font-bold text-[28px] md:text-5xl lg:text-6xl leading-[1.2] tracking-[0.07px] md:tracking-[0.15px] z-10">
+        e-Tickets
+      </h2>
+    </div>
+  );
+}
+
+/* ── Punch hole (ticket perforation) ── */
+function PunchHole({ side }: { side: "left" | "right" }) {
+  const cls = side === "left"
+    ? "left-0 rounded-r-full shadow-[inset_-2px_0_5px_rgba(0,0,0,0.08)]"
+    : "right-0 rounded-l-full shadow-[inset_2px_0_5px_rgba(0,0,0,0.08)]";
+  return <div className={`absolute top-1/2 -translate-y-1/2 z-20 w-4 h-8 bg-[var(--color-background)] hidden lg:block ${cls}`} aria-hidden="true" />;
+}
+
+/* ── Select dropdown field ── */
+function FormSelect({ label, value, onChange, placeholder, icon, options, className = "" }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder: string;
+  icon: React.ReactNode; options: { value: string; label: string }[]; className?: string;
+}) {
+  return (
+    <div className={`bg-[#F3F3F3] rounded-xl p-3 flex flex-col gap-1 flex-1 min-w-0 transition-all duration-200 has-[button[data-state=open]]:bg-white has-[button[data-state=open]]:ring-2 has-[button[data-state=open]]:ring-[var(--color-ring)]/40 has-[button[data-state=open]]:shadow-sm ${className}`}>
+      <p className="text-xs font-bold leading-[1.3] text-[var(--color-foreground)] truncate">{label}</p>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="h-auto border-0 shadow-none bg-transparent p-0 text-xs leading-[1.5] gap-1 w-full focus:ring-0 focus-visible:ring-0 [&>svg]:text-[var(--color-muted-foreground)] [&>svg]:size-3.5 cursor-pointer max-w-full">
+          <span className="shrink-0">{icon}</span>
+          <span className="truncate text-left flex-1"><SelectValue placeholder={placeholder} /></span>
+        </SelectTrigger>
+        <SelectContent position="popper" sideOffset={8} className="rounded-xl border-[var(--color-border)] shadow-lg max-h-[280px] bg-white">
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value} className="rounded-lg cursor-pointer text-sm focus:bg-[var(--color-secondary)] focus:text-[var(--color-secondary-foreground)]">
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+/* ── Date picker field with calendar popover ── */
+function FormDate({ label, value, onChange, placeholder, className = "" }: {
+  label: string; value: Date | undefined; onChange: (d: Date | undefined) => void;
+  placeholder: string; className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className={`bg-[#F3F3F3] rounded-xl p-3 flex flex-col gap-1 flex-1 min-w-0 transition-all duration-200 ${open ? "bg-white ring-2 ring-[var(--color-ring)]/40 shadow-sm" : ""} ${className}`}>
+      <p className="text-xs font-bold leading-[1.3] text-[var(--color-foreground)] truncate">{label}</p>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button type="button" className="flex items-center gap-1 text-left w-full cursor-pointer max-w-full">
+            <CalendarIcon className="size-3.5 text-[#828282] shrink-0" />
+            <span className={`flex-1 text-xs leading-[1.5] truncate ${value ? "text-[var(--color-foreground)]" : "text-[#828282]"}`}>
+              {value ? format(value, "EEEE, MMM d") : placeholder}
+            </span>
+          </button>
+        </PopoverTrigger>
+        <PopoverContent align="start" sideOffset={8} className="w-auto p-0 rounded-xl border-[var(--color-border)] shadow-lg bg-white">
+          <Calendar
+            mode="single" selected={value}
+            onSelect={(d) => { onChange(d); setOpen(false); }}
+            disabled={{ before: new Date() }}
+            className="[--cell-size:36px]"
+            classNames={{
+              today: "rounded-md bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)]",
+              day: "group/day relative aspect-square h-full w-full p-0 text-center select-none",
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }

@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useHorizontalScroll } from "@/hooks/use-horizontal-scroll";
+import { ScrollReveal } from "@/components/ui/scroll-animations";
 
 /**
  * ServicesSection — "Service phụ" horizontal carousel.
- * Figma: 4 service cards 338x338, full-image bg, rounded-[12px],
+ * Figma: 4 service cards 338x338, full-image bg, rounded-xl,
  * teal gradient price badge overlay, service name below image.
  * Arrows: bg-black/50 40px round, same style as TourPackageSection.
  */
@@ -29,19 +30,22 @@ export function ServicesSection() {
   const { ref: scrollRef, scroll } = useHorizontalScroll(354); // 338px + 16px gap
 
   return (
-    <section className="py-[50px] bg-[var(--color-background)]">
+    <section className="section-padding bg-[var(--color-background)]">
       <div className="container-wide">
-        <h2 className="text-[32px] font-bold leading-[1.2] tracking-[0.08px] text-[var(--color-foreground)] mb-6">
-          Service phụ
-        </h2>
+        <ScrollReveal>
+          <h2 className="text-xl md:text-[32px] font-bold leading-[1.2] tracking-[0.05px] md:tracking-[0.08px] text-[var(--color-foreground)] mb-5 md:mb-6">
+            Service phụ
+          </h2>
+        </ScrollReveal>
 
         {/* Carousel wrapper */}
+        <ScrollReveal delay={0.15}>
         <div className="relative">
-          {/* Left arrow — bg-black/50, 40px round */}
+          {/* Left arrow — hidden on mobile */}
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll left"
-            className="absolute left-2 lg:-left-10 top-[169px] -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+            className="hidden md:flex absolute left-2 lg:-left-10 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 items-center justify-center transition-colors z-10"
           >
             <ChevronLeft className="w-5 h-5 text-white" />
           </button>
@@ -49,42 +53,36 @@ export function ServicesSection() {
           {/* Scrollable track */}
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory"
-            style={{ scrollbarWidth: "none" }}
+            className="flex gap-2 md:gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
           >
             {SERVICES.map((service) => (
               <div
                 key={service.id}
-                className="snap-start flex-none w-[338px] rounded-[12px] overflow-hidden cursor-pointer group"
+                className="snap-start flex-none w-[294px] h-[294px] md:w-[338px] md:h-[338px] rounded-xl overflow-hidden cursor-pointer group relative"
               >
-                {/* Image area 338x338 with gradient overlay + price badge */}
-                <div className="relative w-[338px] h-[338px]">
-                  <Image
-                    src={service.image}
-                    alt={service.name}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="338px"
-                  />
-                  {/* Bottom gradient for readability */}
-                  <div className="absolute bottom-0 left-0 right-0 h-[120px] bg-gradient-to-t from-black/60 to-transparent" />
-                  {/* Teal gradient price badge — bottom-left */}
+                <Image
+                  src={service.image}
+                  alt={service.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="338px"
+                />
+                {/* Dark gradient overlay — Figma: h-172, from transparent to foreground */}
+                <div className="absolute bottom-0 left-0 w-full h-[172px] bg-gradient-to-b from-transparent to-[var(--color-foreground)]" />
+                {/* Price badge + service name — positioned at bottom with p-4 */}
+                <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col gap-2">
                   <div
-                    className="absolute bottom-3 left-3 flex items-center gap-0.5 px-[6px] py-[5px] rounded-[4px]"
-                    style={{ background: "linear-gradient(260.5deg, #3BBCB7 20%, #B1FFFC 71%)" }}
+                    className="inline-flex items-center gap-1 px-[6px] py-[5px] rounded-[4px] w-fit"
+                    style={{ background: "linear-gradient(260.3deg, #3BBCB7 20%, #B1FFFC 71%)" }}
                   >
-                    <span className="text-[10px] font-medium leading-[1.3]" style={{ color: "rgba(29,29,29,0.5)" }}>
+                    <span className="text-[0.625rem] font-medium leading-[1.3] text-[var(--color-foreground)]/50">
                       From
                     </span>
-                    <span className="text-[20px] font-bold text-[#194F4D] leading-[1.2]">
+                    <span className="text-xl font-bold text-[var(--color-secondary-foreground)] leading-[1.2] tracking-[0.05px]">
                       {service.price}
                     </span>
                   </div>
-                </div>
-
-                {/* Service name below image */}
-                <div className="px-4 py-3 bg-[var(--color-background)]">
-                  <p className="text-sm font-semibold text-[var(--color-foreground)]">
+                  <p className="text-xs font-bold leading-[1.3] text-white truncate">
                     {service.name}
                   </p>
                 </div>
@@ -92,15 +90,16 @@ export function ServicesSection() {
             ))}
           </div>
 
-          {/* Right arrow — bg-black/50, 40px round */}
+          {/* Right arrow — hidden on mobile */}
           <button
             onClick={() => scroll("right")}
             aria-label="Scroll right"
-            className="absolute right-2 lg:-right-10 top-[169px] -translate-y-1/2 w-[40px] h-[40px] rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center transition-colors z-10"
+            className="hidden md:flex absolute right-2 lg:-right-10 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 items-center justify-center transition-colors z-10"
           >
             <ChevronRight className="w-5 h-5 text-white" />
           </button>
         </div>
+        </ScrollReveal>
       </div>
     </section>
   );

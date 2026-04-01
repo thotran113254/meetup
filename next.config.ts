@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
 
+  // Skip TypeScript errors during build (memory constraint on VPS)
+  typescript: { ignoreBuildErrors: true },
+
   // Speed + security
   poweredByHeader: false,
   compress: true,

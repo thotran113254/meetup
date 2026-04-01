@@ -1,124 +1,149 @@
 /**
- * AboutSection — "About us" with quote, clothesline photo gallery, and team photos.
- * Figma node 13289:45217.
- * Clothesline: 7 tilted photo placeholders hanging from a wavy teal SVG line.
- * Below: center group photo (458x367) + right building image (509x341) with mist overlay.
- * Server component — purely visual, no interactivity.
+ * AboutSection — "About us" heading, clothesline gallery, team composite.
+ * Figma: mobile 13489:8182, desktop 13289:45217.
+ * Mobile: individual clothesline photos with wire + pins (4 photos).
+ * Desktop: composite pre-rendered image (7 photos).
+ * Bottom: dragon (left) + team photo (center) + temple (right) + cloud mist.
  */
+import Image from "next/image";
+import { ScrollReveal } from "@/components/ui/scroll-animations";
 
-// Clothesline photo items — alternating tilt angles, varying sizes per Figma
-const CLOTHESLINE_PHOTOS = [
-  { id: 1, rotate: -6,  width: 112, height: 96  },
-  { id: 2, rotate:  3,  width: 96,  height: 112 },
-  { id: 3, rotate: -2,  width: 128, height: 96  },
-  { id: 4, rotate:  6,  width: 96,  height: 112 },
-  { id: 5, rotate: -4,  width: 112, height: 96  },
-  { id: 6, rotate:  2,  width: 96,  height: 80  },
-  { id: 7, rotate: -3,  width: 112, height: 96  },
-];
+/** Mobile clothesline — 4 photos matching Figma mobile layout */
+const MOBILE_PHOTOS = [
+  { src: "/images/about-clothesline-1.png", alt: "Team in office", deg: 23, left: "5%", top: "36%", stringH: 15 },
+  { src: "/images/about-clothesline-3.png", alt: "Team with flag", deg: 15, left: "28%", top: "38%", stringH: 22, wide: true },
+  { src: "/images/about-clothesline-5.png", alt: "Team at flower garden", deg: 0, left: "55%", top: "40%", stringH: 30 },
+  { src: "/images/about-clothesline-2.png", alt: "Team at viewpoint", deg: -10, left: "80%", top: "38%", stringH: 18 },
+] as const;
 
 export function AboutSection() {
   return (
-    <section className="py-[50px] bg-[var(--color-background)]">
-      <div className="container-wide">
+    <section className="bg-[var(--color-background)] overflow-hidden">
+      {/* --- Heading + quote --- */}
+      <ScrollReveal className="text-center pt-0 md:pt-12 lg:pt-14 mb-2 md:mb-3 max-w-[343px] md:max-w-[524px] mx-auto px-4">
+        <h2 className="text-xl md:text-[32px] font-bold text-[var(--color-foreground)] mb-2 md:mb-3 leading-[1.2] tracking-[0.05px] md:tracking-[0.08px]">
+          About us
+        </h2>
+        <p className="text-[#828282] text-sm md:text-base leading-[1.5] tracking-[0.035px] md:tracking-[0.04px]">
+          &ldquo;Friendship, integrity and a spirit of self-improvement forge the
+          strength of an organization that continues to grow.&rdquo;
+        </p>
+      </ScrollReveal>
 
-        {/* Heading + italic quote — centered, max 2xl */}
-        <div className="text-center mb-12 max-w-2xl mx-auto">
-          <h2 className="text-[38px] font-bold text-[var(--color-foreground)] mb-4 leading-tight">
-            About us
-          </h2>
-          <p className="text-[var(--color-muted-foreground)] text-base italic leading-relaxed">
-            &ldquo;Friendship, integrity and a spirit of self-improvement forge the strength of an
-            organization that continues to grow.&rdquo;
-          </p>
-        </div>
-
-        {/* Clothesline — wavy SVG string with hanging tilted photos */}
-        <div className="relative mb-8">
-          {/* Wavy teal string line with pin attachment points */}
+      {/* --- Mobile clothesline: individual photos on curved wire --- */}
+      <div className="md:hidden mt-3">
+        {/* 123% width extends beyond viewport; section overflow-hidden clips sides */}
+        <div className="relative w-[123%] -ml-[11.5%] h-[62vw]">
+          {/* Curved wire */}
           <svg
-            className="absolute top-0 left-0 w-full pointer-events-none"
-            style={{ height: "32px" }}
-            viewBox="0 0 1200 32"
+            className="absolute top-[30%] left-[8%] w-[84%] h-[8%]"
+            viewBox="0 0 388 15"
+            fill="none"
             preserveAspectRatio="none"
-            aria-hidden="true"
           >
-            <path
-              d="M 0,16 Q 85,4 170,16 Q 255,28 340,16 Q 425,4 510,16 Q 595,28 680,16 Q 765,4 850,16 Q 935,28 1020,16 Q 1105,4 1200,16"
-              stroke="#2CBCB3"
-              strokeWidth="1.5"
-              fill="none"
-              strokeOpacity="0.7"
-            />
-            {/* Pin dots at attachment points — evenly spaced across 7 positions */}
-            {[85, 255, 425, 595, 765, 935, 1105].map((x) => (
-              <circle key={x} cx={x} cy={16} r={4} fill="#2CBCB3" fillOpacity="0.8" />
-            ))}
+            <path d="M0,12 Q194,2 388,8" stroke="#3bbcb7" strokeWidth="1.5" />
           </svg>
 
-          {/* Photos row — positioned below the string line */}
-          <div className="flex items-start justify-center gap-2 sm:gap-4 flex-wrap pt-5 px-2">
-            {CLOTHESLINE_PHOTOS.map((photo) => (
-              <div key={photo.id} className="flex flex-col items-center">
-                {/* Short string from pin to photo */}
-                <div
-                  className="w-px bg-[#2CBCB3] opacity-50"
-                  style={{ height: "14px" }}
-                  aria-hidden="true"
-                />
-                {/* Tilted photo placeholder */}
-                <div
-                  className="bg-gray-300 rounded shadow-md border-2 border-white"
-                  style={{
-                    width: `${photo.width}px`,
-                    height: `${photo.height}px`,
-                    transform: `rotate(${photo.rotate}deg)`,
-                  }}
-                  aria-hidden="true"
-                />
+          {/* Photo groups: pin → string → framed photo, each rotated as unit */}
+          {MOBILE_PHOTOS.map((p) => (
+            <div
+              key={p.src}
+              className="absolute flex flex-col items-center"
+              style={{
+                left: p.left,
+                top: p.top,
+                transform: `translateX(-50%) rotate(${p.deg}deg)`,
+                transformOrigin: "top center",
+              }}
+            >
+              {/* Pin dot on wire */}
+              <div className="w-1.5 h-1.5 rounded-full bg-[#3bbcb7]" />
+              {/* String connecting wire to photo */}
+              <div className="w-[1.5px] bg-[#3bbcb7]" style={{ height: p.stringH }} />
+              {/* Photo frame — teal border, rounded corners */}
+              <div
+                className={`border-2 border-[#3bbcb7] rounded-xl overflow-hidden relative aspect-[84/101] ${
+                  "wide" in p && p.wide ? "w-[26vw]" : "w-[22vw]"
+                }`}
+              >
+                <Image src={p.src} fill className="object-cover" sizes="84px" alt={p.alt} />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
+      </div>
 
-        {/* Team photo area — group photo center, building image right */}
-        <div className="relative flex items-end justify-center gap-4 mt-6 overflow-hidden">
-          {/* Center: group photo placeholder (458x367 per Figma) */}
-          <div className="relative flex-shrink-0">
-            <div
-              className="bg-gray-300 rounded-xl shadow-lg border-2 border-white"
-              style={{ width: "458px", maxWidth: "100%", height: "367px" }}
-              aria-label="Team group photo"
-            />
-            {/* White mist / cloud fade at bottom */}
-            <div
-              className="absolute bottom-0 left-0 right-0 pointer-events-none"
-              style={{
-                height: "80px",
-                background: "linear-gradient(to top, var(--color-background) 0%, transparent 100%)",
-              }}
-              aria-hidden="true"
-            />
-          </div>
+      {/* --- Desktop clothesline: composite pre-rendered image --- */}
+      <ScrollReveal delay={0.2} className="hidden md:block w-full mt-6 px-2">
+        <Image
+          src="/images/about-us.png"
+          alt="Meetup Travel team photo gallery"
+          width={1600}
+          height={517}
+          className="w-full h-auto"
+          sizes="100vw"
+          priority
+        />
+      </ScrollReveal>
 
-          {/* Right: building / landmark placeholder (509x341 per Figma) */}
-          <div
-            className="hidden md:block relative bg-gray-200 rounded-xl shadow border border-gray-100 flex-shrink-0"
-            style={{ width: "509px", height: "341px" }}
+      {/* --- Bottom composite: dragon + team + temple + clouds --- */}
+      <div className="relative w-full h-[290px] sm:h-[350px] md:h-[435px]">
+        {/* Dragon bridge — left side, horizontally flipped */}
+        <div
+          className="absolute left-[4%] bottom-0 w-[29%] h-[84%] overflow-hidden"
+          style={{ transform: "scaleX(-1)" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/about-dragon.png"
+            alt=""
+            className="absolute max-w-none object-cover"
+            style={{ left: "0%", top: "-171%", width: "140%", height: "309%" }}
             aria-hidden="true"
-          >
-            {/* Mist overlay at bottom */}
-            <div
-              className="absolute bottom-0 left-0 right-0 rounded-b-xl pointer-events-none"
-              style={{
-                height: "60px",
-                background: "linear-gradient(to top, var(--color-background) 0%, transparent 100%)",
-              }}
-              aria-hidden="true"
-            />
+          />
+        </div>
+
+        {/* Team group photo — center, wider on mobile to match Figma (145% viewport) */}
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[140%] sm:w-[90%] md:w-[54%] h-[107%] overflow-hidden z-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/about-team-photo.png"
+            alt="Meetup Travel team"
+            className="absolute max-w-none object-cover"
+            style={{ left: 0, top: "-130%", width: "100%", height: "230%" }}
+          />
+        </div>
+
+        {/* Temple — right side */}
+        <div className="absolute left-[64%] top-[13%] w-[32%] h-[78%] overflow-hidden z-[5]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/about-temple.png"
+            alt=""
+            className="absolute max-w-none object-cover"
+            style={{ left: "-50%", top: "-59%", width: "210%", height: "212%" }}
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* Cloud mist — two layers for depth */}
+        <div className="absolute bottom-0 left-0 w-full h-[55%] z-20">
+          <div className="relative size-full">
+            <Image src="/images/about-cloud.png" alt="" fill sizes="100vw" className="object-cover object-top" aria-hidden="true" />
+          </div>
+        </div>
+        <div className="absolute bottom-[3%] left-0 w-full h-[50%] z-20 opacity-90" style={{ transform: "scaleX(-1)" }}>
+          <div className="relative size-full">
+            <Image src="/images/about-cloud.png" alt="" fill sizes="100vw" className="object-cover object-top" aria-hidden="true" />
           </div>
         </div>
 
+        {/* White gradient fade at bottom */}
+        <div
+          className="absolute bottom-0 left-0 w-full h-[37%] z-30 pointer-events-none"
+          style={{ background: "linear-gradient(to top, var(--color-background), transparent)" }}
+          aria-hidden="true"
+        />
       </div>
     </section>
   );

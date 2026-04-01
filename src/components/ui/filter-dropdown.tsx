@@ -14,14 +14,12 @@ type FilterDropdownProps = {
   options: FilterOption[];
   selected: string;
   onSelect: (value: string) => void;
-  /** Width of dropdown — style filters are 199px, duration filters 199px */
-  width?: number;
 };
 
 /**
- * FilterDropdown — Reusable dropdown for Style and Duration filters.
- * Figma: Style filter 199x220, Duration filter 199x177.
- * Positioned below trigger, with checkmark on selected option.
+ * FilterDropdown — Custom popup for Style/Duration filters.
+ * Figma: white bg, border #BDBDBD, rounded-12px, p-12px, gap-12px,
+ * dividers (h-px bg-#1D1D1D/5), selected teal + check, unselected dark.
  */
 export function FilterDropdown({
   open,
@@ -29,11 +27,9 @@ export function FilterDropdown({
   options,
   selected,
   onSelect,
-  width = 199,
 }: FilterDropdownProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -48,25 +44,32 @@ export function FilterDropdown({
   return (
     <div
       ref={ref}
-      className="absolute top-full left-0 mt-1 z-50 bg-white rounded-[12px] shadow-[0px_0px_40px_0px_rgba(0,0,0,0.06)] overflow-hidden"
-      style={{ width: `${width}px` }}
+      className="absolute top-full left-0 mt-1 z-50 bg-white border border-[#BDBDBD] rounded-xl p-3 flex flex-col gap-3 overflow-clip"
+      style={{ minWidth: "180px" }}
     >
-      <div className="py-1">
-        {options.map((option) => (
+      {options.map((option, i) => (
+        <div key={option.value}>
           <button
-            key={option.value}
             onClick={() => { onSelect(option.value); onClose(); }}
-            className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-[#1D1D1D] hover:bg-[#F8F8F8] transition-colors"
+            className="w-full flex items-center justify-between cursor-pointer"
           >
-            <span className={selected === option.value ? "font-bold" : "font-normal"}>
+            <span
+              className={`font-bold text-[14px] leading-[1.3] tracking-[0.14px] ${
+                selected === option.value ? "text-[#3BBCB7]" : "text-[#1D1D1D]"
+              }`}
+            >
               {option.label}
             </span>
             {selected === option.value && (
-              <Check className="w-4 h-4 text-[#3BBCB7]" />
+              <Check className="w-5 h-5 text-[#3BBCB7] flex-none" />
             )}
           </button>
-        ))}
-      </div>
+          {/* Divider — between items, not after last */}
+          {i < options.length - 1 && (
+            <div className="h-px bg-[#1D1D1D]/5 w-full mt-3" />
+          )}
+        </div>
+      ))}
     </div>
   );
 }

@@ -57,7 +57,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
       <nav className="px-4 py-4">
         {navigation.main.map((item) => (
           <Link
-            key={item.href}
+            key={item.label}
             href={item.href}
             onClick={onClose}
             className="flex items-center justify-between py-3.5 border-b border-[#F8F8F8] text-[15px] font-bold text-[#1D1D1D]"

@@ -132,7 +132,7 @@ export function SiteFooter() {
               <div className="flex flex-col gap-3">
                 {navigation.footer.company.map((item) => (
                   <Link
-                    key={item.href}
+                    key={item.label}
                     href={item.href}
                     className="font-bold text-[12px] md:text-[14px] text-[#ECECEC] leading-[1.3] hover:text-white transition-colors"
                   >
@@ -143,7 +143,7 @@ export function SiteFooter() {
               <div className="flex flex-col gap-3">
                 {navigation.footer.about.map((item) => (
                   <Link
-                    key={item.href}
+                    key={item.label}
                     href={item.href}
                     className="font-bold text-[12px] md:text-[14px] text-[#ECECEC] leading-[1.3] hover:text-white transition-colors"
                   >

@@ -43,7 +43,7 @@ export function SiteHeader() {
           <nav className="hidden md:flex items-center gap-5">
             {siteConfig.navigation.main.map((item) => (
               <Link
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 className="flex items-center gap-1 font-bold text-[14px] leading-[1.2] text-[#1D1D1D] hover:text-[#2CBCB3] transition-colors"
               >

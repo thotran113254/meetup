@@ -55,7 +55,7 @@ export const siteConfig = {
   // Navigation items
   navigation: {
     main: [
-      { label: "Tour", href: "#", hasDropdown: true },
+      { label: "Tour", href: "/tours", hasDropdown: true },
       { label: "Services", href: "/services", hasDropdown: true },
       { label: "eTickets", href: "#", hasDropdown: false },
       { label: "Destination", href: "#", hasDropdown: false },
@@ -65,7 +65,7 @@ export const siteConfig = {
     footer: {
       company: [
         { label: "Home", href: "/" },
-        { label: "Tours", href: "#" },
+        { label: "Tours", href: "/tours" },
         { label: "Hotel", href: "#" },
         { label: "Services", href: "/services" },
         { label: "e-Tickets", href: "#" },

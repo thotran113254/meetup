@@ -23,7 +23,7 @@ export type TourCardProps = {
 export function TourCard({ image, title, price, duration, spots, tags, slug, className }: TourCardProps) {
   return (
     <Link
-      href="#"
+      href={`/tours/${slug}`}
       className={
         className ??
         "group relative flex-none w-[294px] h-[294px] md:w-[338px] md:h-[516px] snap-start rounded-[12px] overflow-hidden block"

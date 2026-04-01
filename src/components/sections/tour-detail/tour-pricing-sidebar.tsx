@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { AlertTriangle, Baby } from "lucide-react";
 import { TourBudgetPlanner } from "./tour-budget-planner";
+import { ContactExpertPopup } from "./tour-contact-expert-popup";
 
 /** Price row — label left, price right */
 function PriceRow({ label, price }: { label: string; price: string }) {
@@ -38,8 +40,11 @@ function SidebarCard({ children }: { children: React.ReactNode }) {
 }
 
 export function TourPricingSidebar() {
+  const [showContact, setShowContact] = useState(false);
+
   return (
     <div className="flex flex-col gap-4 w-full">
+      {showContact && <ContactExpertPopup onClose={() => setShowContact(false)} />}
       {/* Card 1: Price */}
       <SidebarCard>
         <h3 className="text-[14px] font-bold text-[#1D1D1D]">Price</h3>
@@ -108,7 +113,10 @@ export function TourPricingSidebar() {
 
       {/* Action Buttons */}
       <div className="flex gap-[6px] px-4 md:px-5">
-        <button className="flex-1 h-[40px] bg-[#FEDA86] text-[#1D1D1D] rounded-[12px] text-[14px] font-bold hover:bg-[#fdd05e] transition-colors cursor-pointer">
+        <button
+          onClick={() => setShowContact(true)}
+          className="flex-1 h-[40px] bg-[#FEDA86] text-[#1D1D1D] rounded-[12px] text-[14px] font-bold hover:bg-[#fdd05e] transition-colors cursor-pointer"
+        >
           Contact Expert
         </button>
         <button className="flex-1 h-[40px] bg-[#3BBCB7] text-white rounded-[12px] text-[14px] font-bold hover:bg-[#2fa9a4] transition-colors cursor-pointer">

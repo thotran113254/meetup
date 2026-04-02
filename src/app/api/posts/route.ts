@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { revalidatePath } from "next/cache";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { getDb } from "@/db/connection";
 import { posts } from "@/db/schema";
 import { postFormSchema } from "@/lib/validations/post-schema";
@@ -13,11 +13,11 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const publishedParam = searchParams.get("published");
     const category = searchParams.get("category");
-    const limit = Math.min(parseInt(searchParams.get("limit") ?? "50"), 100);
+    const limit = Math.min(parseInt(searchParams.get("limit") ?? "10"), 100);
+    const page = Math.max(parseInt(searchParams.get("page") ?? "1"), 1);
+    const offset = (page - 1) * limit;
 
     const db = getDb();
-    let query = db.select().from(posts);
-
     const conditions = [];
     if (publishedParam !== null) {
       conditions.push(eq(posts.published, publishedParam === "true"));
@@ -26,11 +26,16 @@ export async function GET(request: NextRequest) {
       conditions.push(eq(posts.category, category));
     }
 
-    const results = await (conditions.length > 0
-      ? query.where(and(...conditions)).limit(limit)
-      : query.limit(limit));
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+    const [data, total] = await Promise.all([
+      whereClause
+        ? db.select().from(posts).where(whereClause).orderBy(desc(posts.createdAt)).limit(limit).offset(offset)
+        : db.select().from(posts).orderBy(desc(posts.createdAt)).limit(limit).offset(offset),
+      whereClause ? db.$count(posts, whereClause) : db.$count(posts),
+    ]);
 
-    return Response.json({ posts: results, total: results.length });
+    const totalPages = Math.ceil(Number(total) / limit);
+    return Response.json({ data, pagination: { total: Number(total), page, limit, totalPages } });
   } catch (err) {
     console.error("[GET /api/posts]", err);
     return Response.json({ error: "Internal server error" }, { status: 500 });

@@ -8,44 +8,44 @@ type FaqItem = { question: string; answer: string };
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "What to bring",
+    question: "How do I book a tour with Meetup Travel?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's",
+      "You can book directly through our website by selecting your desired tour and filling out the booking form, or contact us via WhatsApp, email, or phone. Our team will confirm your reservation within 24 hours and guide you through the payment process.",
   },
   {
-    question: "Where to stay",
+    question: "What is included in the tour price?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "Our tour prices typically include accommodation, meals as specified in the itinerary, local transportation, guided activities, and entrance fees. International flights are usually not included unless stated. Each tour page lists exactly what is covered.",
   },
   {
-    question: "What working",
+    question: "Can I customize my tour itinerary?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "Absolutely! Meetup Travel specializes in tailor-made experiences. Contact our local experts and we will craft a personalized itinerary based on your interests, travel dates, group size, and budget.",
   },
   {
-    question: "Where to going",
+    question: "What is the cancellation and refund policy?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "Cancellations made 30+ days before departure receive a full refund. Cancellations 15–29 days prior receive a 50% refund. Within 14 days of departure, tours are non-refundable. We recommend travel insurance to protect your booking.",
   },
   {
-    question: "What to bring",
+    question: "Are your tours suitable for families with children?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's",
+      "Yes, many of our tours are family-friendly and designed to be enjoyable for all ages. We offer dedicated family packages with child-friendly activities, flexible pacing, and accommodation suited for families. Please mention children's ages when booking.",
   },
   {
-    question: "What working",
+    question: "What should I pack for the tour?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "Packing depends on the destination and season. Generally, we recommend comfortable walking shoes, lightweight clothing, sunscreen, insect repellent, and a valid passport. Detailed packing guides are provided in your pre-trip information email.",
   },
   {
-    question: "What working",
+    question: "Do I need a visa to travel to tour destinations?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "Visa requirements vary by destination and your nationality. Our team can advise you on the necessary visas and provide guidance on the application process. We recommend checking requirements at least 4–6 weeks before your trip.",
   },
   {
-    question: "Where to going",
+    question: "How experienced are your local guides?",
     answer:
-      "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs.",
+      "All Meetup Travel guides are certified local experts with deep knowledge of their region's culture, history, and hidden gems. They speak English fluently and are passionate about delivering authentic, memorable experiences for every traveler.",
   },
 ];
 

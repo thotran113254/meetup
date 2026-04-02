@@ -58,7 +58,7 @@ export const siteConfig = {
       { label: "Tour", href: "/tours", hasDropdown: true },
       { label: "Services", href: "/services", hasDropdown: true },
       { label: "eTickets", href: "#", hasDropdown: false },
-      { label: "Destination", href: "#", hasDropdown: false },
+      { label: "Destination", href: "/destinations", hasDropdown: false },
       { label: "Blog", href: "/blog", hasDropdown: false },
       { label: "About Meetup", href: "/about", hasDropdown: true },
     ],
@@ -72,7 +72,7 @@ export const siteConfig = {
       ],
       about: [
         { label: "About Us", href: "/about" },
-        { label: "Recruitment", href: "#" },
+        { label: "Recruitment", href: "/recruitment" },
         { label: "Terms & Policy", href: "#" },
         { label: "Contact Us", href: "/contact" },
       ],

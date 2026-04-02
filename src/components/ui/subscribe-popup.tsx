@@ -67,8 +67,8 @@ export function SubscribePopup({ variant, open, onClose, onConfirm }: SubscribeP
         <h3 className="text-center font-bold text-xl mb-2" style={{
           color: variant === "success" ? "#2CBCB3" : variant === "fail" ? "#8B5E3C" : "#1D1D1D"
         }}>
-          {variant === "success" && "Subcribe Success"}
-          {variant === "fail" && "Subcribe Fail"}
+          {variant === "success" && "Subscribe Success"}
+          {variant === "fail" && "Subscribe Fail"}
           {variant === "unsubscribe" && "Unsubcribe?"}
         </h3>
 

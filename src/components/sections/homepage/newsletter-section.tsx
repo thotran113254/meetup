@@ -108,7 +108,7 @@ export function NewsletterSection() {
                 type="submit"
                 className="h-10 rounded-xl px-8 text-white font-bold text-sm bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors self-start cursor-pointer"
               >
-                Subcribe
+                Subscribe
               </button>
             </form>
 

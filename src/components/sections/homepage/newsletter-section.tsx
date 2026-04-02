@@ -37,9 +37,9 @@ export function NewsletterSection() {
         {/* Card — max 928px, light teal bg, 60px padding per Figma */}
         <ScrollReveal>
         <div
-          className="max-w-[928px] mx-auto rounded-xl p-3 md:px-4 md:py-8 sm:p-[60px] bg-[var(--color-secondary)] overflow-hidden relative"
+          className="max-w-[928px] mx-auto rounded-xl p-4 md:p-[60px] bg-[var(--color-secondary)] overflow-hidden relative"
         >
-          {/* Decorative airplane icon — top right */}
+          {/* Decorative airplane icon — mobile only, top right corner */}
           <img
             src="/images/newsletter-airplane.png"
             alt=""
@@ -47,13 +47,12 @@ export function NewsletterSection() {
             aria-hidden="true"
           />
 
-          <div className="flex flex-col gap-5">
+          {/* Two-column layout on desktop: title+desc left, form right */}
+          <div className="flex flex-col md:flex-row gap-5 md:gap-8 items-start">
 
-            {/* Title + quote */}
-            <div className="flex flex-col gap-2">
-              <h2
-                className="text-xl md:text-[32px] font-bold text-[var(--color-foreground)] leading-[1.2] tracking-[0.05px] md:tracking-[0.08px]"
-              >
+            {/* Left column: title + quote */}
+            <div className="flex flex-1 flex-col gap-3">
+              <h2 className="text-xl md:text-[32px] font-bold text-[var(--color-foreground)] leading-[1.2] tracking-[0.05px] md:tracking-[0.08px]">
                 Like a travel expert<br />
                 in your inbox
                 {/* Decorative airplane icon per Figma — desktop only */}
@@ -64,61 +63,50 @@ export function NewsletterSection() {
                   aria-hidden="true"
                 />
               </h2>
-              <p
-                className="text-[var(--color-muted-foreground)] text-xs md:text-base leading-[1.5] tracking-[0.04px] max-w-[243px] md:max-w-[323px]"
-              >
+              <p className="text-[var(--color-muted-foreground)] text-xs md:text-base leading-[1.5] tracking-[0.04px] max-w-[243px] md:max-w-[323px]">
                 &ldquo;Friendship, integrity and a spirit of self-improvement
                 forge the strength of an organization that continues to grow.&rdquo;
               </p>
             </div>
 
-            {/* Subscription form */}
-            <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2">
-              {/* First name + Last name side by side on mobile per Figma */}
-              <div className="flex gap-2">
-                <label htmlFor="nl-first" className="sr-only">First name</label>
-                <input
-                  id="nl-first"
-                  type="text"
-                  name="firstName"
-                  value={form.firstName}
-                  onChange={handleChange}
-                  placeholder="First name"
-                  required
-                  className={inputClass}
-                />
-                <label htmlFor="nl-last" className="sr-only">Last name</label>
-                <input
-                  id="nl-last"
-                  type="text"
-                  name="lastName"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  placeholder="Last name"
-                  required
-                  className={inputClass}
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="nl-email" className="sr-only">Email address</label>
-                <input
-                  id="nl-email"
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="Your e-mail address"
-                  required
-                  className={inputClass}
-                />
-              </div>
-
-              {/* Subscribe button — full width on mobile per Figma */}
+            {/* Right column: subscription form — First/Last stacked per Figma */}
+            <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-2 w-full md:w-auto">
+              <label htmlFor="nl-first" className="sr-only">First name</label>
+              <input
+                id="nl-first"
+                type="text"
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                placeholder="First name"
+                required
+                className={inputClass}
+              />
+              <label htmlFor="nl-last" className="sr-only">Last name</label>
+              <input
+                id="nl-last"
+                type="text"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+                placeholder="Last name"
+                required
+                className={inputClass}
+              />
+              <label htmlFor="nl-email" className="sr-only">Email address</label>
+              <input
+                id="nl-email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Your e-mail address"
+                required
+                className={inputClass}
+              />
               <button
                 type="submit"
-                className="h-10 rounded-xl px-8 text-white font-bold text-sm bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors w-full md:self-start md:w-auto cursor-pointer"
+                className="h-10 rounded-xl px-8 text-white font-bold text-sm bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors self-start cursor-pointer"
               >
                 Subcribe
               </button>

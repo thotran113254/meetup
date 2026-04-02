@@ -11,7 +11,7 @@ interface FormFieldProps {
   label: string;
   htmlFor: string;
   required?: boolean;
-  error?: FieldError;
+  error?: FieldError | string;
   children: React.ReactNode;
   className?: string;
 }
@@ -33,7 +33,9 @@ export function FormField({
       </label>
       {children}
       {error && (
-        <p className="text-xs text-[var(--color-destructive)]">{error.message}</p>
+        <p className="text-xs text-[var(--color-destructive)]">
+          {typeof error === "string" ? error : error.message}
+        </p>
       )}
     </div>
   );

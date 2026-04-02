@@ -11,14 +11,33 @@ import {
   Menu,
   X,
   ExternalLink,
+  Images,
+  Navigation,
+  ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Bai viet", href: "/admin/posts", icon: FileText },
-  { label: "Tin nhan", href: "/admin/contacts", icon: MessageSquare },
-  { label: "Cai dat", href: "/admin/settings", icon: Settings },
+const navGroups = [
+  {
+    label: "Tong quan",
+    items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }],
+  },
+  {
+    label: "Noi dung",
+    items: [
+      { label: "Bai viet", href: "/admin/posts", icon: FileText },
+      { label: "Slides", href: "/admin/slides", icon: Images },
+      { label: "Media", href: "/admin/media", icon: ImageIcon },
+    ],
+  },
+  {
+    label: "He thong",
+    items: [
+      { label: "Tin nhan", href: "/admin/contacts", icon: MessageSquare },
+      { label: "Dieu huong", href: "/admin/navigation", icon: Navigation },
+      { label: "Cai dat", href: "/admin/settings", icon: Settings },
+    ],
+  },
 ];
 
 export function AdminSidebar() {
@@ -42,22 +61,31 @@ export function AdminSidebar() {
       </div>
 
       {/* Nav links */}
-      <nav className="flex-1 space-y-1 p-4">
-        {navItems.map(({ label, href, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setMobileOpen(false)}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              isActive(href)
-                ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
-                : "text-[var(--color-muted-foreground)] hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
-            )}
-          >
-            <Icon className="h-4 w-4 shrink-0" />
-            {label}
-          </Link>
+      <nav className="flex-1 space-y-4 p-4 overflow-y-auto">
+        {navGroups.map((group) => (
+          <div key={group.label}>
+            <p className="px-3 mb-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-muted-foreground)]">
+              {group.label}
+            </p>
+            <div className="space-y-0.5">
+              {group.items.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    isActive(href)
+                      ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
+                      : "text-[var(--color-muted-foreground)] hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
 

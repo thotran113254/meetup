@@ -41,7 +41,7 @@ export default function AdminNavigationPage() {
   const getChildren = (parentId: string) => items.filter((n) => n.parentId === parentId);
 
   return (
-    <div className="space-y-6 ">
+    <div className="w-full space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Điều hướng</h1>

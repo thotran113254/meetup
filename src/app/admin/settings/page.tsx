@@ -13,9 +13,12 @@ type SettingsFormData = {
   description: string;
   email: string;
   phone: string;
-  twitter: string;
+  address: string;
   facebook: string;
-  linkedin: string;
+  instagram: string;
+  tiktok: string;
+  youtube: string;
+  whatsapp: string;
   seoTitle: string;
   seoDescription: string;
 };
@@ -25,9 +28,12 @@ const SETTING_KEYS: Record<keyof SettingsFormData, string> = {
   description: "site_description",
   email: "contact_email",
   phone: "contact_phone",
-  twitter: "social_twitter",
-  facebook: "social_facebook",
-  linkedin: "social_linkedin",
+  address: "address",
+  facebook: "facebook_url",
+  instagram: "instagram_url",
+  tiktok: "tiktok_url",
+  youtube: "youtube_url",
+  whatsapp: "whatsapp_url",
   seoTitle: "seo_default_title",
   seoDescription: "seo_default_description",
 };
@@ -46,9 +52,12 @@ export default function AdminSettingsPage() {
       description: siteConfig.description,
       email: siteConfig.email,
       phone: siteConfig.phone,
-      twitter: "",
+      address: "",
       facebook: siteConfig.socials.facebook,
-      linkedin: "",
+      instagram: siteConfig.socials.instagram,
+      tiktok: siteConfig.socials.tiktok,
+      youtube: siteConfig.socials.youtube,
+      whatsapp: siteConfig.socials.whatsapp,
       seoTitle: siteConfig.seo.defaultTitle,
       seoDescription: siteConfig.description,
     },
@@ -63,9 +72,12 @@ export default function AdminSettingsPage() {
         description: getValue("site_description", siteConfig.description),
         email: getValue("contact_email", siteConfig.email),
         phone: getValue("contact_phone", siteConfig.phone),
-        twitter: getValue("social_twitter"),
-        facebook: getValue("social_facebook", siteConfig.socials.facebook),
-        linkedin: getValue("social_linkedin"),
+        address: getValue("address"),
+        facebook: getValue("facebook_url", siteConfig.socials.facebook),
+        instagram: getValue("instagram_url", siteConfig.socials.instagram),
+        tiktok: getValue("tiktok_url", siteConfig.socials.tiktok),
+        youtube: getValue("youtube_url", siteConfig.socials.youtube),
+        whatsapp: getValue("whatsapp_url", siteConfig.socials.whatsapp),
         seoTitle: getValue("seo_default_title", siteConfig.seo.defaultTitle),
         seoDescription: getValue("seo_default_description", siteConfig.description),
       });
@@ -78,7 +90,7 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className=" space-y-8">
+    <div className="w-full space-y-8">
       <div>
         <h1 className="text-2xl font-bold">Cài đặt</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
@@ -89,7 +101,7 @@ export default function AdminSettingsPage() {
       {loading ? (
         <div className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">Đang tải...</div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-8">
           {/* Site Info */}
           <section className="space-y-4">
             <h2 className="text-base font-semibold border-b border-[var(--color-border)] pb-2">
@@ -109,6 +121,9 @@ export default function AdminSettingsPage() {
                 <input id="phone" className={inputStyles} {...register("phone")} />
               </FormField>
             </div>
+            <FormField label="Địa chỉ" htmlFor="address">
+              <input id="address" className={inputStyles} placeholder="Số nhà, đường, quận/huyện, thành phố" {...register("address")} />
+            </FormField>
           </section>
 
           {/* Social Links */}
@@ -116,14 +131,22 @@ export default function AdminSettingsPage() {
             <h2 className="text-base font-semibold border-b border-[var(--color-border)] pb-2">
               Mạng xã hội
             </h2>
-            <FormField label="Twitter / X" htmlFor="twitter">
-              <input id="twitter" className={inputStyles} placeholder="https://twitter.com/..." {...register("twitter")} />
-            </FormField>
-            <FormField label="Facebook" htmlFor="facebook">
-              <input id="facebook" className={inputStyles} placeholder="https://facebook.com/..." {...register("facebook")} />
-            </FormField>
-            <FormField label="LinkedIn" htmlFor="linkedin">
-              <input id="linkedin" className={inputStyles} placeholder="https://linkedin.com/..." {...register("linkedin")} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormField label="Facebook" htmlFor="facebook">
+                <input id="facebook" className={inputStyles} placeholder="https://facebook.com/..." {...register("facebook")} />
+              </FormField>
+              <FormField label="Instagram" htmlFor="instagram">
+                <input id="instagram" className={inputStyles} placeholder="https://instagram.com/..." {...register("instagram")} />
+              </FormField>
+              <FormField label="TikTok" htmlFor="tiktok">
+                <input id="tiktok" className={inputStyles} placeholder="https://tiktok.com/..." {...register("tiktok")} />
+              </FormField>
+              <FormField label="YouTube" htmlFor="youtube">
+                <input id="youtube" className={inputStyles} placeholder="https://youtube.com/..." {...register("youtube")} />
+              </FormField>
+            </div>
+            <FormField label="WhatsApp" htmlFor="whatsapp">
+              <input id="whatsapp" className={inputStyles} placeholder="https://wa.me/..." {...register("whatsapp")} />
             </FormField>
           </section>
 

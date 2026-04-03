@@ -16,6 +16,12 @@ import {
   ImageIcon,
   LogOut,
   Home,
+  Info,
+  Briefcase,
+  MapPin,
+  HelpCircle,
+  Compass,
+  Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -30,6 +36,12 @@ const navGroups = [
     items: [
       { label: "Homepage", href: "/admin/homepage", icon: Home },
       { label: "Hero Slides", href: "/admin/slides", icon: Images },
+      { label: "About", href: "/admin/about", icon: Info },
+      { label: "Services", href: "/admin/services", icon: Briefcase },
+      { label: "Destinations", href: "/admin/destinations", icon: MapPin },
+      { label: "Tours", href: "/admin/tours", icon: Compass },
+      { label: "Contact & FAQ", href: "/admin/contact", icon: HelpCircle },
+      { label: "Tuyển dụng", href: "/admin/recruitment", icon: Users },
     ],
   },
   {

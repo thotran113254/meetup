@@ -8,6 +8,7 @@ import { EticketsSection } from "@/components/sections/homepage/etickets-section
 import { YoutubeSection } from "@/components/sections/homepage/youtube-section";
 import { AboutSection } from "@/components/sections/homepage/about-section";
 import { NewsletterSection } from "@/components/sections/homepage/newsletter-section";
+import { LatestPostsSection } from "@/components/sections/homepage/latest-posts-section";
 import { JsonLdScript } from "@/components/seo/json-ld-script";
 import {
   generatePageMetadata,
@@ -34,6 +35,7 @@ export default function HomePage() {
       <ExperienceSection region="Mid" />
       <ExperienceSection region="South" />
       <ServicesSection />
+      <LatestPostsSection />
       <EticketsSection />
       <YoutubeSection />
       <AboutSection />

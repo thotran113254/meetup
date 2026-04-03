@@ -12,6 +12,8 @@ import { TourPackageGridSection } from "@/components/sections/tours/tour-package
 import { ReviewsSection } from "@/components/sections/homepage/reviews-section";
 import { TourFaqSection } from "@/components/sections/tours/tour-faq-section";
 import { NewsletterSection } from "@/components/sections/homepage/newsletter-section";
+import { getSetting } from "@/db/queries/settings-queries";
+import type { VietnamStat, ToursPageContent } from "@/lib/types/tours-cms-types";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Tour Packages - Explore Vietnam with Local Experts",
@@ -20,7 +22,21 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/tours",
 });
 
-export default function ToursPage() {
+export default async function ToursPage() {
+  let stats: VietnamStat[] = [];
+  let description: string | undefined;
+
+  try {
+    const [cmsStats, cmsContent] = await Promise.all([
+      getSetting<VietnamStat[]>("tours_page_stats"),
+      getSetting<ToursPageContent>("tours_page_content"),
+    ]);
+    if (Array.isArray(cmsStats) && cmsStats.length > 0) stats = cmsStats;
+    if (cmsContent && typeof cmsContent === "object" && !Array.isArray(cmsContent)) {
+      description = cmsContent.introDescription || undefined;
+    }
+  } catch {}
+
   return (
     <>
       <JsonLdScript
@@ -34,7 +50,7 @@ export default function ToursPage() {
       />
 
       <ToursHeroSection />
-      <VietnamIntroSection />
+      <VietnamIntroSection stats={stats.length > 0 ? stats : undefined} description={description} />
       <MostLikedPackageSection />
       <TourPackageGridSection />
       <ReviewsSection />

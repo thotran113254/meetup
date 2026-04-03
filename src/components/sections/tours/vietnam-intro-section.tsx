@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ScrollReveal } from "@/components/ui/scroll-animations";
+import type { VietnamStat } from "@/lib/types/tours-cms-types";
 
 /**
  * VietnamIntroSection — "Introduce About Vietnam" on /tours page.
@@ -7,27 +8,40 @@ import { ScrollReveal } from "@/components/ui/scroll-animations";
  *
  * Mobile: title → [stats-left + map-right] → video full-width → description
  * Desktop: overlapping layout — title+Vietnam+stats left, map center full-height, video+desc right
+ *
+ * Accepts optional CMS props; falls back to hardcoded defaults when not provided.
  */
 
-const STATS = [
+const FALLBACK_STATS: VietnamStat[] = [
   {
+    id: 1,
     value: "20 Million",
-    description:
-      "Historical record of international arrivals reached in December 2025",
+    description: "Historical record of international arrivals reached in December 2025",
   },
   {
+    id: 2,
     value: "#1 Growth",
-    description:
-      "Ranked the fastest-growing tourism destination in Asia by UN Tourism",
+    description: "Ranked the fastest-growing tourism destination in Asia by UN Tourism",
   },
   {
+    id: 3,
     value: "9 Consecutive Years",
-    description:
-      'The only nation to be "Asia\'s Best Golf Destination" since 2017',
+    description: 'The only nation to be "Asia\'s Best Golf Destination" since 2017',
   },
 ];
 
-export function VietnamIntroSection() {
+const FALLBACK_DESCRIPTION =
+  "Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus. Sed lacus semper eu lectus fermentum eu a.Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed";
+
+type Props = {
+  stats?: VietnamStat[];
+  description?: string;
+};
+
+export function VietnamIntroSection({ stats = FALLBACK_STATS, description = FALLBACK_DESCRIPTION }: Props) {
+  const displayStats = stats.length > 0 ? stats : FALLBACK_STATS;
+  const displayDescription = description || FALLBACK_DESCRIPTION;
+
   return (
     <section className="section-padding bg-[var(--color-background)]">
       <div className="container-wide">
@@ -62,8 +76,8 @@ export function VietnamIntroSection() {
             <div className="flex gap-4 mt-6 lg:hidden">
               {/* Stats stacked vertically on mobile */}
               <div className="flex flex-col gap-6 w-[127px] shrink-0">
-                {STATS.map((stat) => (
-                  <div key={stat.value} className="flex flex-col gap-1">
+                {displayStats.map((stat) => (
+                  <div key={stat.id} className="flex flex-col gap-1">
                     <p className="text-[14px] font-bold text-[#1D1D1D] leading-[1.3] tracking-[0.32px]">
                       {stat.value}
                     </p>
@@ -103,20 +117,14 @@ export function VietnamIntroSection() {
                 </div>
               </div>
               <p className="text-[12px] leading-[1.5] text-[#828282]">
-                Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum
-                aliquet convallis turpis lectus orci arcu ultrices viverra.
-                Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus.
-                Sed lacus semper eu lectus fermentum eu a.Lorem ipsum dolor sit
-                amet consectetur. Scelerisque fermentum aliquet convallis turpis
-                lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc
-                sed at. Arcu sem sed
+                {displayDescription}
               </p>
             </div>
 
             {/* ─── Desktop only: stats below Vietnam ─── */}
             <div className="hidden lg:flex gap-[24px] lg:relative lg:z-10 mt-10">
-              {STATS.map((stat) => (
-                <div key={stat.value} className="w-[170px] shrink-0 flex flex-col gap-2">
+              {displayStats.map((stat) => (
+                <div key={stat.id} className="w-[170px] shrink-0 flex flex-col gap-2">
                   <p className="text-[16px] font-bold text-[#1D1D1D] leading-[1.3] tracking-[0.32px]">
                     {stat.value}
                   </p>
@@ -158,13 +166,7 @@ export function VietnamIntroSection() {
                 </div>
               </div>
               <p className="text-[12px] leading-[1.5] text-[#828282]">
-                Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum
-                aliquet convallis turpis lectus orci arcu ultrices viverra.
-                Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus.
-                Sed lacus semper eu lectus fermentum eu a.Lorem ipsum dolor sit
-                amet consectetur. Scelerisque fermentum aliquet convallis turpis
-                lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc
-                sed at. Arcu sem sed
+                {displayDescription}
               </p>
             </div>
           </div>

@@ -25,7 +25,7 @@ export function useAdminSettings() {
     return typeof row.value === "string" ? row.value : String(row.value ?? fallback);
   }, [settings]);
 
-  const saveSetting = async (key: string, value: unknown) => {
+  const saveSetting = useCallback(async (key: string, value: unknown) => {
     const result = await upsertSetting(key, value);
     if (result.data) {
       setSettings((prev) => {
@@ -34,7 +34,7 @@ export function useAdminSettings() {
       });
     }
     return result;
-  };
+  }, []);
 
   return { settings, loading, getValue, saveSetting };
 }

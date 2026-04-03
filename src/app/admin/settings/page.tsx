@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
@@ -40,6 +40,7 @@ const SETTING_KEYS: Record<keyof SettingsFormData, string> = {
 
 export default function AdminSettingsPage() {
   const { loading, getValue, saveSetting } = useAdminSettings();
+  const initialized = useRef(false);
 
   const {
     register,
@@ -63,10 +64,10 @@ export default function AdminSettingsPage() {
     },
   });
 
-  // Pre-fill from DB once when loading completes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Pre-fill from DB exactly once after initial load completes
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !initialized.current) {
+      initialized.current = true;
       reset({
         siteName: getValue("site_name", siteConfig.name),
         description: getValue("site_description", siteConfig.description),
@@ -82,7 +83,7 @@ export default function AdminSettingsPage() {
         seoDescription: getValue("seo_default_description", siteConfig.description),
       });
     }
-  }, [loading]); // Only re-run when loading state changes
+  }, [loading, getValue, reset]);
 
   async function onSubmit(data: SettingsFormData) {
     const entries = Object.entries(data) as [keyof SettingsFormData, string][];

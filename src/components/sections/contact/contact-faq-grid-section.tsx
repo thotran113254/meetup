@@ -81,13 +81,20 @@ function FaqCategoryCard({ category }: { category: FaqCategory }) {
   );
 }
 
+type Props = {
+  /** CMS-overridable FAQ categories. Falls back to hardcoded FAQ_CATEGORIES. */
+  categories?: FaqCategory[];
+};
+
 /**
  * ContactFaqGridSection — FAQ categories in 2-column grid (last row full width).
+ * Accepts optional CMS categories prop; falls back to hardcoded defaults.
  * Matches Figma design node 13934:24146.
  */
-export function ContactFaqGridSection() {
-  const paired = FAQ_CATEGORIES.filter((c) => !c.fullWidth);
-  const fullWidthItems = FAQ_CATEGORIES.filter((c) => c.fullWidth);
+export function ContactFaqGridSection({ categories }: Props = {}) {
+  const source = categories && categories.length > 0 ? categories : FAQ_CATEGORIES;
+  const paired = source.filter((c) => !c.fullWidth);
+  const fullWidthItems = source.filter((c) => c.fullWidth);
 
   return (
     <section className="w-full bg-white px-4 sm:px-6 lg:px-[100px] pt-6 sm:pt-10 pb-16">
@@ -96,10 +103,10 @@ export function ContactFaqGridSection() {
       </h2>
 
       <div className="flex flex-col gap-4">
-        {/* 2-column rows */}
-        {[0, 2].map((startIdx) => (
-          <div key={startIdx} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {paired.slice(startIdx, startIdx + 2).map((cat) => (
+        {/* 2-column rows — chunk paired items into rows of 2 */}
+        {Array.from({ length: Math.ceil(paired.length / 2) }, (_, rowIdx) => (
+          <div key={rowIdx} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {paired.slice(rowIdx * 2, rowIdx * 2 + 2).map((cat) => (
               <FaqCategoryCard key={cat.title} category={cat} />
             ))}
           </div>

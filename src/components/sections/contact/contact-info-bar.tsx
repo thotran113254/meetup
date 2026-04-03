@@ -1,21 +1,38 @@
 import Image from "next/image";
 import { siteConfig } from "@/config/site-config";
 
+type Props = {
+  /** CMS-overridable title (supports \n for line breaks). Defaults to "Got questions\nabout your trip?" */
+  infoTitle?: string;
+  /** CMS-overridable timezone string. Defaults to "Asia/Saigon, GMT+7" */
+  timezone?: string;
+  /** CMS-overridable hours string. Defaults to "Mon-Sun: 06:00 AM - 12:00 AM" */
+  operatingHours?: string;
+};
+
 /**
  * ContactInfoBar — "Got questions about your trip?" card with timezone + WhatsApp links.
+ * Accepts optional CMS props; falls back to hardcoded defaults for zero visual regression.
  * Matches Figma design node 13925:88709.
  */
-export function ContactInfoBar() {
+export function ContactInfoBar({
+  infoTitle = "Got questions\nabout your trip?",
+  timezone = "Asia/Saigon, GMT+7",
+  operatingHours = "Mon-Sun: 06:00 AM - 12:00 AM",
+}: Props = {}) {
   const { whatsapp } = siteConfig.navigation.footer.contact;
 
   return (
     <section className="w-full bg-white px-4 sm:px-6 lg:px-[100px] pt-6 sm:pt-[40px]">
       <div className="bg-white rounded-xl shadow-[0px_0px_40px_0px_rgba(0,0,0,0.06)] p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-        {/* Left: Title */}
+        {/* Left: Title — split on \n to support line breaks from CMS */}
         <h2 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-[#1D1D1D] leading-[1.2] shrink-0">
-          Got questions
-          <br />
-          about your trip?
+          {infoTitle.split("\n").map((line, i, arr) => (
+            <span key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+            </span>
+          ))}
         </h2>
 
         {/* Right: Info cards */}
@@ -31,11 +48,8 @@ export function ContactInfoBar() {
               />
             </div>
             <div className="flex flex-col gap-1 text-[#194F4D]">
-              <p className="text-[14px] sm:text-[16px] leading-[1.5]">Asia/Saigon, GMT+7</p>
-              <p className="text-[14px] sm:text-[16px] leading-[1.5]">
-                Mon-Sun:{" "}
-                <span className="font-bold">06:00 AM - 12:00 AM</span>
-              </p>
+              <p className="text-[14px] sm:text-[16px] leading-[1.5]">{timezone}</p>
+              <p className="text-[14px] sm:text-[16px] leading-[1.5]">{operatingHours}</p>
             </div>
           </div>
 

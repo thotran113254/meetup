@@ -6,6 +6,8 @@ import { ContactInfoBar } from "@/components/sections/contact/contact-info-bar";
 import { ContactPlanningFormSection } from "@/components/sections/contact/contact-planning-form-section";
 import { ContactLeaveMessageSection } from "@/components/sections/contact/contact-leave-message-section";
 import { ContactFaqGridSection } from "@/components/sections/contact/contact-faq-grid-section";
+import { getSetting } from "@/db/queries/settings-queries";
+import type { ContactPageInfo, ContactFaqCategory } from "@/lib/types/contact-cms-types";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Contact Us",
@@ -14,16 +16,25 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const [pageInfo, faqCategories] = await Promise.all([
+    getSetting<ContactPageInfo>("contact_page_info"),
+    getSetting<ContactFaqCategory[]>("contact_page_faq"),
+  ]);
+
   return (
     <>
       <JsonLdScript data={buildOrganizationJsonLd()} />
 
       <ContactHeroSection />
-      <ContactInfoBar />
+      <ContactInfoBar
+        infoTitle={pageInfo?.infoTitle}
+        timezone={pageInfo?.timezone}
+        operatingHours={pageInfo?.operatingHours}
+      />
       <ContactPlanningFormSection />
       <ContactLeaveMessageSection />
-      <ContactFaqGridSection />
+      <ContactFaqGridSection categories={faqCategories ?? undefined} />
     </>
   );
 }

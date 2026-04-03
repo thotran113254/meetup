@@ -26,11 +26,16 @@ const navGroups = [
     items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }],
   },
   {
+    label: "Trang",
+    items: [
+      { label: "Homepage", href: "/admin/homepage", icon: Home },
+      { label: "Hero Slides", href: "/admin/slides", icon: Images },
+    ],
+  },
+  {
     label: "Nội dung",
     items: [
       { label: "Bài viết", href: "/admin/posts", icon: FileText },
-      { label: "Homepage", href: "/admin/homepage", icon: Home },
-      { label: "Slides", href: "/admin/slides", icon: Images },
       { label: "Media", href: "/admin/media", icon: ImageIcon },
     ],
   },

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { getDb } from "@/db/connection";
 import { siteSettings } from "@/db/schema";
 
@@ -18,5 +19,6 @@ export async function upsertSetting(key: string, value: unknown): Promise<{ data
     .onConflictDoUpdate({ target: siteSettings.key, set: { value, updatedAt: new Date() } })
     .returning();
 
+  revalidatePath("/");
   return { data: result[0] };
 }

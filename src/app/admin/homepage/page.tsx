@@ -1,214 +1,162 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { AdminConfirmDialog } from "@/components/admin/admin-confirm-dialog";
 import { AdminHomepageTourDialog } from "@/components/admin/admin-homepage-tour-dialog";
 import { AdminHomepageServiceDialog } from "@/components/admin/admin-homepage-service-dialog";
 import { AdminHomepageReviewDialog } from "@/components/admin/admin-homepage-review-dialog";
 import { AdminHomepageVideoDialog } from "@/components/admin/admin-homepage-video-dialog";
+import { AdminHomepageItemsTab } from "@/components/admin/admin-homepage-items-tab";
+import { AdminHomepageConfigTab } from "@/components/admin/admin-homepage-config-tab";
+import { AdminHomepageExperienceTab } from "@/components/admin/admin-homepage-experience-tab";
+import { AdminHomepageAboutTab } from "@/components/admin/admin-homepage-about-tab";
+import { AdminHomepageNewsletterTab } from "@/components/admin/admin-homepage-newsletter-tab";
+import { AdminHomepageEticketsTab } from "@/components/admin/admin-homepage-etickets-tab";
 import { useAdminHomepage, type SectionKey } from "@/hooks/use-admin-homepage";
+import { useAdminHomepageSingle } from "@/hooks/use-admin-homepage-single";
 import type { TourCardProps } from "@/components/ui/tour-card";
 import type { ServiceItem } from "@/components/sections/homepage/services-carousel";
 import type { ReviewItem } from "@/components/sections/homepage/reviews-carousel";
 import type { VideoItem } from "@/components/sections/homepage/youtube-grid";
 
-const TABS: { key: SectionKey; label: string }[] = [
-  { key: "tours", label: "Tour Packages" },
+type TabKey = SectionKey | "config" | "about" | "newsletter" | "etickets";
+
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "config", label: "Cấu hình" },
+  { key: "tours", label: "Tours" },
   { key: "services", label: "Dịch vụ" },
   { key: "reviews", label: "Đánh giá" },
   { key: "videos", label: "YouTube" },
+  { key: "experience", label: "Experience" },
+  { key: "about", label: "About" },
+  { key: "newsletter", label: "Newsletter" },
+  { key: "etickets", label: "eTickets" },
 ];
 
+const ARRAY_TABS: SectionKey[] = ["tours", "services", "reviews", "videos"];
+
 export default function AdminHomepagePage() {
-  const { data, loading, saving, addItem, editItem, removeItem } = useAdminHomepage();
-  const [tab, setTab] = useState<SectionKey>("tours");
+  const { data, config, loading, saving, addItem, editItem, removeItem, saveExperience, updateConfig } = useAdminHomepage();
+  const single = useAdminHomepageSingle();
+  const [tab, setTab] = useState<TabKey>("config");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; label: string } | null>(null);
   const [editTarget, setEditTarget] = useState<Record<string, unknown> | null>(null);
 
-  const openAdd = () => { setEditTarget(null); setDialogOpen(true); };
-  const openEdit = (item: Record<string, unknown>) => { setEditTarget(item); setDialogOpen(true); };
+  const activeSection = ARRAY_TABS.includes(tab as SectionKey) ? (tab as SectionKey) : null;
   const isSaving = saving === tab;
 
+  const openAdd = () => { setEditTarget(null); setDialogOpen(true); };
+  const openEdit = (item: Record<string, unknown>) => { setEditTarget(item); setDialogOpen(true); };
+
   const handleSave = async (item: Record<string, unknown>) => {
-    if (editTarget) await editItem(tab, item);
-    else await addItem(tab, item);
+    if (!activeSection) return;
+    if (editTarget) await editItem(activeSection, item);
+    else await addItem(activeSection, item);
     setDialogOpen(false);
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
-    await removeItem(tab, deleteTarget.id);
+    if (!deleteTarget || !activeSection) return;
+    await removeItem(activeSection, deleteTarget.id);
     setDeleteTarget(null);
   };
 
-  const items = data[tab] as Array<Record<string, unknown>>;
+  const getDeleteLabel = (item: Record<string, unknown>): string => {
+    return (item.title ?? item.name ?? item.label ?? "mục này") as string;
+  };
 
   return (
     <div className="w-full space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Nội dung Homepage</h1>
-        <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-          Quản lý các section hiển thị trên trang chủ
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Nội dung Homepage</h1>
+          <p className="text-sm text-[var(--color-muted-foreground)] mt-1">Quản lý các section trên trang chủ</p>
+        </div>
+        <Link
+          href="/admin/slides"
+          className="flex items-center gap-1.5 text-sm text-[var(--color-primary)] hover:underline"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          Hero Slides
+        </Link>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-[var(--color-border)]">
+      {/* Tab bar */}
+      <div className="flex gap-1 flex-wrap border-b border-[var(--color-border)]">
         {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
+          <button key={t.key} onClick={() => setTab(t.key)}
             className={`px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
               tab === t.key
                 ? "bg-[var(--color-primary)] text-white"
                 : "text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-muted)]"
             }`}
           >
-            {t.label} {!loading && `(${data[t.key].length})`}
+            {t.label}
+            {!loading && activeSection === t.key && ` (${data[t.key as SectionKey].length})`}
           </button>
         ))}
       </div>
 
-      {/* List header */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-muted-foreground)]">
-          {loading ? "Đang tải..." : `${items.length} mục`}
-        </p>
-        <Button onClick={openAdd} disabled={loading || isSaving}>
-          <Plus className="h-4 w-4 mr-1" />
-          Thêm mới
-        </Button>
-      </div>
-
-      {/* Items table */}
-      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] overflow-hidden">
-        {loading ? (
-          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Đang tải...</div>
-        ) : items.length === 0 ? (
-          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Chưa có dữ liệu</div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[var(--color-border)] bg-[var(--color-muted)]">
-                <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Ảnh</th>
-                <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Thông tin</th>
-                <th className="px-4 py-3 text-right font-medium text-[var(--color-muted-foreground)]">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <ItemRow
-                  key={item.id as number}
-                  tab={tab}
-                  item={item}
-                  onEdit={() => openEdit(item)}
-                  onDelete={() => setDeleteTarget({ id: item.id as number, label: getLabel(tab, item) })}
-                />
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Dialogs */}
-      {tab === "tours" && (
-        <AdminHomepageTourDialog
-          open={dialogOpen} onOpenChange={setDialogOpen}
-          initialData={editTarget as (TourCardProps & { id: number }) | null}
-          onSave={handleSave} saving={isSaving}
+      {/* Tab content */}
+      {tab === "config" && (
+        <AdminHomepageConfigTab config={config} saving={saving === "config"} onSave={updateConfig} />
+      )}
+      {activeSection && (
+        <AdminHomepageItemsTab
+          tab={activeSection}
+          items={data[activeSection] as Record<string, unknown>[]}
+          loading={loading} saving={isSaving}
+          onAdd={openAdd}
+          onEdit={openEdit}
+          onDelete={(item) => setDeleteTarget({ id: item.id as number, label: getDeleteLabel(item) })}
         />
+      )}
+      {tab === "experience" && (
+        <AdminHomepageExperienceTab
+          experience={data.experience} saving={saving === "experience"}
+          onSave={saveExperience}
+        />
+      )}
+      {tab === "about" && (
+        <AdminHomepageAboutTab about={single.about} saving={single.saving === "about"} onSave={single.saveAbout} />
+      )}
+      {tab === "newsletter" && (
+        <AdminHomepageNewsletterTab newsletter={single.newsletter} saving={single.saving === "newsletter"} onSave={single.saveNewsletter} />
+      )}
+      {tab === "etickets" && (
+        <AdminHomepageEticketsTab etickets={single.etickets} saving={single.saving === "etickets"} onSave={single.saveEtickets} />
+      )}
+
+      {/* Array section dialogs */}
+      {tab === "tours" && (
+        <AdminHomepageTourDialog open={dialogOpen} onOpenChange={setDialogOpen}
+          initialData={editTarget as (TourCardProps & { id: number }) | null}
+          onSave={handleSave} saving={isSaving} />
       )}
       {tab === "services" && (
-        <AdminHomepageServiceDialog
-          open={dialogOpen} onOpenChange={setDialogOpen}
+        <AdminHomepageServiceDialog open={dialogOpen} onOpenChange={setDialogOpen}
           initialData={editTarget as (ServiceItem & { id: number }) | null}
-          onSave={handleSave} saving={isSaving}
-        />
+          onSave={handleSave} saving={isSaving} />
       )}
       {tab === "reviews" && (
-        <AdminHomepageReviewDialog
-          open={dialogOpen} onOpenChange={setDialogOpen}
+        <AdminHomepageReviewDialog open={dialogOpen} onOpenChange={setDialogOpen}
           initialData={editTarget as (ReviewItem & { id: number }) | null}
-          onSave={handleSave} saving={isSaving}
-        />
+          onSave={handleSave} saving={isSaving} />
       )}
       {tab === "videos" && (
-        <AdminHomepageVideoDialog
-          open={dialogOpen} onOpenChange={setDialogOpen}
+        <AdminHomepageVideoDialog open={dialogOpen} onOpenChange={setDialogOpen}
           initialData={editTarget as (VideoItem & { id: number }) | null}
-          onSave={handleSave} saving={isSaving}
-        />
+          onSave={handleSave} saving={isSaving} />
       )}
 
       <AdminConfirmDialog
-        open={!!deleteTarget}
-        onOpenChange={(v) => !v && setDeleteTarget(null)}
-        title="Xóa mục này?"
-        description={`Bạn chắc chắn muốn xóa "${deleteTarget?.label}"?`}
+        open={!!deleteTarget} onOpenChange={(v) => !v && setDeleteTarget(null)}
+        title="Xóa mục này?" description={`Xóa "${deleteTarget?.label}"?`}
         onConfirm={handleDelete}
       />
     </div>
   );
-}
-
-/** Compact row showing thumbnail + key info for any section type */
-function ItemRow({ tab, item, onEdit, onDelete }: {
-  tab: SectionKey;
-  item: Record<string, unknown>;
-  onEdit: () => void;
-  onDelete: () => void;
-}) {
-  const imgSrc = (item.image ?? item.photo ?? item.avatar ?? "") as string;
-  const label = getLabel(tab, item);
-  const sub = getSubLabel(tab, item);
-
-  return (
-    <tr className="border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-muted)]/40 transition-colors">
-      <td className="px-4 py-3 w-16">
-        {imgSrc ? (
-          <div className="w-12 h-12 rounded-lg overflow-hidden border border-[var(--color-border)] shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imgSrc} alt="" className="w-full h-full object-cover" />
-          </div>
-        ) : (
-          <div className="w-12 h-12 rounded-lg bg-[var(--color-muted)] shrink-0" />
-        )}
-      </td>
-      <td className="px-4 py-3">
-        <p className="font-medium text-[var(--color-foreground)] line-clamp-1">{label}</p>
-        {sub && <p className="text-xs text-[var(--color-muted-foreground)] mt-0.5">{sub}</p>}
-      </td>
-      <td className="px-4 py-3 text-right">
-        <div className="flex items-center justify-end gap-2">
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            <Pencil className="h-3.5 w-3.5" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={onDelete} className="text-red-500 hover:text-red-600 hover:border-red-200">
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-        </div>
-      </td>
-    </tr>
-  );
-}
-
-function getLabel(tab: SectionKey, item: Record<string, unknown>): string {
-  switch (tab) {
-    case "tours": return (item.title ?? "—") as string;
-    case "services": return (item.name ?? "—") as string;
-    case "reviews": return (item.name ?? "—") as string;
-    case "videos": return (item.label ?? "—") as string;
-  }
-}
-
-function getSubLabel(tab: SectionKey, item: Record<string, unknown>): string {
-  switch (tab) {
-    case "tours": return `$${item.price} · ${item.duration} · ${(item.tags as string[] ?? []).join(", ")}`;
-    case "services": return (item.price ?? "") as string;
-    case "reviews": return `${item.date} · "${String(item.title ?? "").slice(0, 40)}"`;
-    case "videos": return (item.url ?? item.stagger ?? "") as string;
-  }
 }

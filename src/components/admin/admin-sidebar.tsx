@@ -44,34 +44,27 @@ const navGroups = [
   },
 ];
 
-export function AdminSidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.push("/admin/login");
-    router.refresh();
-  }
-
+/** Extracted as a stable component to avoid hydration mismatch when rendered in mobile + desktop sidebars */
+function NavContent({
+  pathname,
+  onNavClick,
+  onLogout,
+}: {
+  pathname: string;
+  onNavClick: () => void;
+  onLogout: () => void;
+}) {
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
 
-  const NavContent = () => (
+  return (
     <div className="flex h-full flex-col">
-      {/* Logo */}
       <div className="flex h-16 items-center border-b border-[var(--color-border)] px-6">
-        <Link
-          href="/admin"
-          className="text-lg font-bold text-[var(--color-primary)]"
-          onClick={() => setMobileOpen(false)}
-        >
+        <Link href="/admin" className="text-lg font-bold text-[var(--color-primary)]" onClick={onNavClick}>
           Admin Panel
         </Link>
       </div>
 
-      {/* Nav links */}
       <nav className="flex-1 space-y-4 p-4 overflow-y-auto">
         {navGroups.map((group) => (
           <div key={group.label}>
@@ -83,7 +76,7 @@ export function AdminSidebar() {
                 <Link
                   key={href}
                   href={href}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={onNavClick}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     isActive(href)
@@ -100,7 +93,6 @@ export function AdminSidebar() {
         ))}
       </nav>
 
-      {/* Bottom actions */}
       <div className="border-t border-[var(--color-border)] p-4 space-y-0.5">
         <Link
           href="/"
@@ -111,7 +103,7 @@ export function AdminSidebar() {
           Xem trang web
         </Link>
         <button
-          onClick={handleLogout}
+          onClick={onLogout}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[var(--color-muted-foreground)] hover:bg-red-50 hover:text-red-600 transition-colors"
         >
           <LogOut className="h-4 w-4 shrink-0" />
@@ -120,6 +112,20 @@ export function AdminSidebar() {
       </div>
     </div>
   );
+}
+
+export function AdminSidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const closeMobile = () => setMobileOpen(false);
+
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+    router.refresh();
+  }
 
   return (
     <>
@@ -134,10 +140,7 @@ export function AdminSidebar() {
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={closeMobile} />
       )}
 
       {/* Mobile sidebar */}
@@ -147,13 +150,13 @@ export function AdminSidebar() {
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <NavContent />
+        <NavContent pathname={pathname} onNavClick={closeMobile} onLogout={handleLogout} />
       </aside>
 
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-card)] lg:block">
         <div className="sticky top-0 h-screen overflow-y-auto">
-          <NavContent />
+          <NavContent pathname={pathname} onNavClick={closeMobile} onLogout={handleLogout} />
         </div>
       </aside>
     </>

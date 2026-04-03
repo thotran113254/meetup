@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   fetchAdminSettings,
   upsertSetting,
@@ -19,11 +19,11 @@ export function useAdminSettings() {
   }, []);
 
   /** Get setting value by key, with an optional fallback */
-  const getValue = (key: string, fallback = "") => {
+  const getValue = useCallback((key: string, fallback = "") => {
     const row = settings.find((s) => s.key === key);
     if (!row) return fallback;
     return typeof row.value === "string" ? row.value : String(row.value ?? fallback);
-  };
+  }, [settings]);
 
   const saveSetting = async (key: string, value: unknown) => {
     const result = await upsertSetting(key, value);

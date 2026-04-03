@@ -10,8 +10,10 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)]">
       <AdminSidebar />
-      <main className="flex-1 overflow-auto p-6 lg:p-8 pt-16 lg:pt-8">
-        {children}
+      <main className="flex-1 overflow-auto min-w-0">
+        <div className="w-full h-full p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+          {children}
+        </div>
       </main>
     </div>
   );

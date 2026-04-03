@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Dancing_Script, Phudu } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site-config";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { FloatingSocial } from "@/components/layout/floating-social";
+
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -64,12 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${dancingScript.variable} ${phudu.variable}`}>
       <body className="min-h-screen flex flex-col font-sans antialiased bg-[var(--color-background)] text-[var(--color-foreground)]">
-        <ThemeProvider>
-          <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <SiteFooter />
-          <FloatingSocial />
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

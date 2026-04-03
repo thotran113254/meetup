@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
   compress: true,
   logging: { fetches: { fullUrl: false } },
 
-  // Allow dev server access from VPS IP (update for your server)
-  allowedDevOrigins: ["165.99.16.130"],
+  // Allow dev server access from VPS IP and tunnel domain
+  allowedDevOrigins: ["165.99.16.130", "meetup.thotran.com", "66.42.121.112"],
 
   // Image optimization - add your CDN/external domains here
   images: {

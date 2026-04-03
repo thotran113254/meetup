@@ -56,21 +56,21 @@ export default function NewPostPage() {
   }
 
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className=" space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Them bai viet moi</h1>
+        <h1 className="text-2xl font-bold">Thêm bài viết mới</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-          Dien thong tin de tao bai viet moi
+          Điền thông tin để tạo bài viết mới
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Title + Slug */}
-        <FormField label="Tieu de" htmlFor="title" required error={errors.title}>
+        <FormField label="Tiêu đề" htmlFor="title" required error={errors.title}>
           <input
             id="title"
             className={inputStyles}
-            placeholder="Tieu de bai viet..."
+            placeholder="Tiêu đề bài viết..."
             {...register("title")}
             onBlur={handleTitleBlur}
           />
@@ -86,39 +86,39 @@ export default function NewPostPage() {
         </FormField>
 
         {/* Excerpt */}
-        <FormField label="Tom tat" htmlFor="excerpt" error={errors.excerpt}>
+        <FormField label="Tóm tắt" htmlFor="excerpt" error={errors.excerpt}>
           <textarea
             id="excerpt"
             rows={2}
             className={cn(inputStyles, "resize-none")}
-            placeholder="Mo ta ngan gon bai viet (toi da 500 ky tu)..."
+            placeholder="Mô tả ngắn gọn bài viết (tối đa 500 ký tự)..."
             {...register("excerpt")}
           />
         </FormField>
 
         {/* Content */}
-        <FormField label="Noi dung" htmlFor="content" required error={errors.content}>
+        <FormField label="Nội dung" htmlFor="content" required error={errors.content}>
           <textarea
             id="content"
             rows={8}
             className={cn(inputStyles, "resize-y")}
-            placeholder="Viet noi dung bai viet tai day..."
+            placeholder="Viết nội dung bài viết tại đây..."
             {...register("content")}
           />
         </FormField>
 
         {/* Category + Cover Image */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <FormField label="Danh muc" htmlFor="category" required error={errors.category}>
+          <FormField label="Danh mục" htmlFor="category" required error={errors.category}>
             <select id="category" className={inputStyles} {...register("category")}>
-              <option value="">Chon danh muc</option>
+              <option value="">Chọn danh mục</option>
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
           </FormField>
 
-          <FormField label="Anh bia (URL)" htmlFor="coverImage" error={errors.coverImage}>
+          <FormField label="Ảnh bìa (URL)" htmlFor="coverImage" error={errors.coverImage}>
             <input
               id="coverImage"
               className={inputStyles}
@@ -134,10 +134,10 @@ export default function NewPostPage() {
             SEO
           </h2>
           <FormField label="Meta Title" htmlFor="metaTitle" error={errors.metaTitle}>
-            <input id="metaTitle" className={inputStyles} placeholder="(mac dinh dung tieu de bai viet)" {...register("metaTitle")} />
+            <input id="metaTitle" className={inputStyles} placeholder="(mặc định dùng tiêu đề bài viết)" {...register("metaTitle")} />
           </FormField>
           <FormField label="Meta Description" htmlFor="metaDescription" error={errors.metaDescription}>
-            <textarea id="metaDescription" rows={2} className={cn(inputStyles, "resize-none")} placeholder="Mo ta SEO (toi da 160 ky tu)..." {...register("metaDescription")} />
+            <textarea id="metaDescription" rows={2} className={cn(inputStyles, "resize-none")} placeholder="Mô tả SEO (tối đa 160 ký tự)..." {...register("metaDescription")} />
           </FormField>
         </div>
 
@@ -157,12 +157,12 @@ export default function NewPostPage() {
               <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform", published ? "translate-x-5" : "translate-x-0.5")} />
             </button>
             <span className="text-sm font-medium">
-              {published ? "Xuat ban ngay" : "Luu ban nhap"}
+              {published ? "Xuất bản ngay" : "Lưu bản nháp"}
             </span>
           </label>
 
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Dang luu..." : "Luu bai viet"}
+            {isSubmitting ? "Đang lưu..." : "Lưu bài viết"}
           </Button>
         </div>
       </form>

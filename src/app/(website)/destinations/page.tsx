@@ -10,6 +10,8 @@ import { DestinationGridSection } from "@/components/sections/destinations/desti
 import { DestinationIntroSection } from "@/components/sections/destinations/destination-intro-section";
 import { DestinationFeaturesSection } from "@/components/sections/destinations/destination-features-section";
 import { NewsletterSection } from "@/components/sections/homepage/newsletter-section";
+import { getSetting } from "@/db/queries/settings-queries";
+import type { DestinationItem, DestinationsPageContent } from "@/lib/types/destinations-cms-types";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Destinations - Explore Vietnam's Best Places",
@@ -18,7 +20,22 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/destinations",
 });
 
-export default function DestinationsPage() {
+export default async function DestinationsPage() {
+  // Load CMS data — fall back silently to component defaults if DB unavailable
+  let cmsDestinations: DestinationItem[] | undefined;
+  let cmsContent: DestinationsPageContent | undefined;
+
+  try {
+    const [destinations, content] = await Promise.all([
+      getSetting<DestinationItem[]>("destinations_list"),
+      getSetting<DestinationsPageContent>("destinations_page_content"),
+    ]);
+    if (Array.isArray(destinations) && destinations.length > 0) cmsDestinations = destinations;
+    if (content && typeof content === "object" && !Array.isArray(content)) cmsContent = content;
+  } catch {
+    // DB unavailable — section components will use their built-in fallbacks
+  }
+
   return (
     <>
       <JsonLdScript
@@ -32,8 +49,14 @@ export default function DestinationsPage() {
       />
 
       <DestinationHeroSection />
-      <DestinationIntroSection />
-      <DestinationGridSection />
+      <DestinationIntroSection
+        city={cmsContent?.introCity}
+        description={cmsContent?.introDescription || undefined}
+      />
+      <DestinationGridSection
+        destinations={cmsDestinations}
+        title={cmsContent?.gridTitle}
+      />
       <DestinationFeaturesSection />
       <NewsletterSection />
     </>

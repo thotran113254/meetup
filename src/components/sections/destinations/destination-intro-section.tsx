@@ -6,8 +6,23 @@ import { ScrollReveal } from "@/components/ui/scroll-animations";
  * Figma desktop: 13854:57363.
  * Left: gold gradient title + city name in script font + description.
  * Right: map/image placeholder.
+ *
+ * Accepts optional CMS props; falls back to hardcoded values for zero regression.
  */
-export function DestinationIntroSection() {
+
+const FALLBACK_CITY = "Hanoi";
+const FALLBACK_DESCRIPTION =
+  "Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus. Sed lacus semper eu lectus fermentum eu a. Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed a. Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed";
+
+type Props = {
+  city?: string;
+  description?: string;
+};
+
+export function DestinationIntroSection({ city, description }: Props) {
+  const cityName = city || FALLBACK_CITY;
+  const desc = description || FALLBACK_DESCRIPTION;
+
   return (
     <section className="section-padding bg-[var(--color-background)]">
       <div className="container-wide">
@@ -36,20 +51,12 @@ export function DestinationIntroSection() {
                 className="text-gradient-red text-[47px] lg:text-[112px] leading-[0.92]"
                 style={{ fontFamily: "var(--font-script), 'Dancing Script', cursive" }}
               >
-                Hanoi
+                {cityName}
               </h2>
 
               {/* Description */}
               <p className="text-xs leading-[1.5] text-[var(--color-muted-foreground)] max-w-[574px]">
-                Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum
-                aliquet convallis turpis lectus orci arcu ultrices viverra.
-                Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus.
-                Sed lacus semper eu lectus fermentum eu a. Lorem ipsum dolor sit
-                amet consectetur. Scelerisque fermentum aliquet convallis turpis
-                lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc
-                sed at. Arcu sem sed a. Lorem ipsum dolor sit amet consectetur.
-                Scelerisque fermentum aliquet convallis turpis lectus orci arcu
-                ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed
+                {desc}
               </p>
             </div>
 

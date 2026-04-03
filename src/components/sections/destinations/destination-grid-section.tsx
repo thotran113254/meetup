@@ -6,10 +6,18 @@ import { useState } from "react";
 import { ScrollReveal } from "@/components/ui/scroll-animations";
 
 /**
- * Destination data — each city card with image, name, description.
+ * Fallback destination data — exact hardcoded values for zero visual regression.
  * Figma shows 4 destinations repeated across 3 rows (12 cards total per page).
  */
-const DESTINATIONS = [
+type DestinationItem = {
+  id?: number;
+  name: string;
+  slug: string;
+  image: string;
+  description: string;
+};
+
+const FALLBACK_DESTINATIONS: DestinationItem[] = [
   {
     name: "Hanoi",
     slug: "hanoi",
@@ -40,19 +48,28 @@ const DESTINATIONS = [
   },
 ];
 
-/** Repeat destinations to fill a 4x3 grid (12 cards) per Figma layout */
-const GRID_ITEMS = [...DESTINATIONS, ...DESTINATIONS, ...DESTINATIONS];
-
 const ITEMS_PER_PAGE = 12;
 const TOTAL_PAGES = 6;
+const FALLBACK_TITLE = "Where is your favorite place?";
+
+type Props = {
+  destinations?: DestinationItem[];
+  title?: string;
+};
 
 /**
  * DestinationGridSection — Grid of destination cards with pagination.
  * Desktop: 4 columns, 3 rows. Mobile: single column stacked.
  * Figma desktop: 13842:14337, mobile: 13856:60413.
+ *
+ * Accepts optional CMS props; falls back to hardcoded data for zero regression.
  */
-export function DestinationGridSection() {
+export function DestinationGridSection({ destinations, title }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
+  const base = destinations && destinations.length > 0 ? destinations : FALLBACK_DESTINATIONS;
+  const heading = title || FALLBACK_TITLE;
+  // Repeat to fill grid rows (12 cards per page per Figma layout)
+  const gridItems = [...base, ...base, ...base];
 
   return (
     <section className="section-padding bg-[var(--color-background)]">
@@ -60,12 +77,12 @@ export function DestinationGridSection() {
         <ScrollReveal>
           {/* Title */}
           <h2 className="text-xl md:text-[32px] font-bold text-[var(--color-foreground)] leading-[1.2] tracking-[0.05px] md:tracking-[0.08px] mb-5 md:mb-8">
-            Where is your favorite place?
+            {heading}
           </h2>
 
           {/* Destination cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
-            {GRID_ITEMS.slice(0, ITEMS_PER_PAGE).map((dest, idx) => (
+            {gridItems.slice(0, ITEMS_PER_PAGE).map((dest, idx) => (
               <DestinationCard key={`${dest.slug}-${idx}`} {...dest} />
             ))}
           </div>

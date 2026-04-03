@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
@@ -20,18 +20,25 @@ const IMAGE_FIELDS: { key: keyof AboutData; label: string }[] = [
   { key: "cloudImage", label: "Ảnh Mây" },
 ];
 
-/** Editor for the About section — title, quote, image URLs, mobile photos. */
+/** Editor for the About section — syncs from parent once on initial load only. */
 export function AdminHomepageAboutTab({ about, saving, onSave }: Props) {
   const [local, setLocal] = useState<AboutData>(about);
+  const initialized = useRef(false);
 
-  // Sync when parent data loads from DB
-  useEffect(() => { setLocal(about); }, [about]);
+  /* Sync from parent only once when real data arrives */
+  useEffect(() => {
+    if (initialized.current) return;
+    if (about.title || about.quote || about.desktopImage) {
+      setLocal(about);
+      initialized.current = true;
+    }
+  }, [about]);
 
   const set = <K extends keyof AboutData>(key: K, val: AboutData[K]) =>
     setLocal((prev) => ({ ...prev, [key]: val }));
 
   const addPhoto = () =>
-    set("mobilePhotos", [...local.mobilePhotos, { src: "", alt: "", deg: 0, left: "0%", top: "0%", stringH: 200 }]);
+    set("mobilePhotos", [...local.mobilePhotos, { src: "", alt: "", deg: 0, left: "0%", top: "0%", stringH: 20 }]);
 
   const removePhoto = (idx: number) =>
     set("mobilePhotos", local.mobilePhotos.filter((_, i) => i !== idx));

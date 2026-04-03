@@ -107,7 +107,6 @@ function getLabel(tab: SectionKey, item: Record<string, unknown>): string {
     case "services": return (item.name ?? "—") as string;
     case "reviews": return (item.name ?? "—") as string;
     case "videos": return (item.label ?? "—") as string;
-    case "experience": return (item.title ?? "—") as string;
   }
 }
 
@@ -117,6 +116,5 @@ function getSubLabel(tab: SectionKey, item: Record<string, unknown>): string {
     case "services": return (item.price ?? "") as string;
     case "reviews": return `${item.date} · "${String(item.title ?? "").slice(0, 40)}"`;
     case "videos": return (item.url ?? item.stagger ?? "") as string;
-    case "experience": return `${item.price} · ${(item.tags as string[] ?? []).join(", ")}`;
   }
 }

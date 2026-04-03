@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SECTION_LABELS } from "@/lib/constants/homepage-section-defaults";
@@ -17,9 +17,16 @@ export function AdminHomepageConfigTab({ config, saving, onSave }: Props) {
   const [local, setLocal] = useState<SectionConfig[]>(() =>
     [...config].sort((a, b) => a.order - b.order)
   );
+  const initialized = useRef(false);
 
-  // Keep local in sync when parent config changes (initial load)
-  // We don't need useEffect here — user is actively editing local state
+  /* Sync from parent once when real data loads from DB */
+  useEffect(() => {
+    if (initialized.current) return;
+    if (config.length > 0) {
+      setLocal([...config].sort((a, b) => a.order - b.order));
+      initialized.current = true;
+    }
+  }, [config]);
 
   const move = (idx: number, dir: -1 | 1) => {
     const next = [...local];

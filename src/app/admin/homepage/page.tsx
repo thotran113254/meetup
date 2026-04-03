@@ -15,13 +15,12 @@ import { AdminHomepageAboutTab } from "@/components/admin/admin-homepage-about-t
 import { AdminHomepageNewsletterTab } from "@/components/admin/admin-homepage-newsletter-tab";
 import { AdminHomepageEticketsTab } from "@/components/admin/admin-homepage-etickets-tab";
 import { useAdminHomepage, type SectionKey } from "@/hooks/use-admin-homepage";
-import { useAdminHomepageSingle } from "@/hooks/use-admin-homepage-single";
 import type { TourCardProps } from "@/components/ui/tour-card";
 import type { ServiceItem } from "@/components/sections/homepage/services-carousel";
 import type { ReviewItem } from "@/components/sections/homepage/reviews-carousel";
 import type { VideoItem } from "@/components/sections/homepage/youtube-grid";
 
-type TabKey = SectionKey | "config" | "about" | "newsletter" | "etickets";
+type TabKey = SectionKey | "config" | "experience" | "about" | "newsletter" | "etickets";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "config", label: "Cấu hình" },
@@ -38,35 +37,33 @@ const TABS: { key: TabKey; label: string }[] = [
 const ARRAY_TABS: SectionKey[] = ["tours", "services", "reviews", "videos"];
 
 export default function AdminHomepagePage() {
-  const { data, config, loading, saving, addItem, editItem, removeItem, saveExperience, updateConfig } = useAdminHomepage();
-  const single = useAdminHomepageSingle();
+  const cms = useAdminHomepage();
   const [tab, setTab] = useState<TabKey>("config");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; label: string } | null>(null);
   const [editTarget, setEditTarget] = useState<Record<string, unknown> | null>(null);
 
   const activeSection = ARRAY_TABS.includes(tab as SectionKey) ? (tab as SectionKey) : null;
-  const isSaving = saving === tab;
+  const isSaving = cms.saving === tab;
 
   const openAdd = () => { setEditTarget(null); setDialogOpen(true); };
   const openEdit = (item: Record<string, unknown>) => { setEditTarget(item); setDialogOpen(true); };
 
   const handleSave = async (item: Record<string, unknown>) => {
     if (!activeSection) return;
-    if (editTarget) await editItem(activeSection, item);
-    else await addItem(activeSection, item);
+    if (editTarget) await cms.editItem(activeSection, item);
+    else await cms.addItem(activeSection, item);
     setDialogOpen(false);
   };
 
   const handleDelete = async () => {
     if (!deleteTarget || !activeSection) return;
-    await removeItem(activeSection, deleteTarget.id);
+    await cms.removeItem(activeSection, deleteTarget.id);
     setDeleteTarget(null);
   };
 
-  const getDeleteLabel = (item: Record<string, unknown>): string => {
-    return (item.title ?? item.name ?? item.label ?? "mục này") as string;
-  };
+  const getDeleteLabel = (item: Record<string, unknown>): string =>
+    (item.title ?? item.name ?? item.label ?? "mục này") as string;
 
   return (
     <div className="w-full space-y-6">
@@ -75,12 +72,8 @@ export default function AdminHomepagePage() {
           <h1 className="text-2xl font-bold">Nội dung Homepage</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">Quản lý các section trên trang chủ</p>
         </div>
-        <Link
-          href="/admin/slides"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-primary)] hover:underline"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Hero Slides
+        <Link href="/admin/slides" className="flex items-center gap-1.5 text-sm text-[var(--color-primary)] hover:underline">
+          <ExternalLink className="h-3.5 w-3.5" /> Hero Slides
         </Link>
       </div>
 
@@ -95,39 +88,35 @@ export default function AdminHomepagePage() {
             }`}
           >
             {t.label}
-            {!loading && activeSection === t.key && ` (${data[t.key as SectionKey].length})`}
+            {!cms.loading && activeSection === t.key && ` (${cms.data[t.key as SectionKey].length})`}
           </button>
         ))}
       </div>
 
       {/* Tab content */}
       {tab === "config" && (
-        <AdminHomepageConfigTab config={config} saving={saving === "config"} onSave={updateConfig} />
+        <AdminHomepageConfigTab config={cms.config} saving={cms.saving === "config"} onSave={cms.updateConfig} />
       )}
       {activeSection && (
         <AdminHomepageItemsTab
           tab={activeSection}
-          items={data[activeSection] as Record<string, unknown>[]}
-          loading={loading} saving={isSaving}
-          onAdd={openAdd}
-          onEdit={openEdit}
+          items={cms.data[activeSection] as Record<string, unknown>[]}
+          loading={cms.loading} saving={isSaving}
+          onAdd={openAdd} onEdit={openEdit}
           onDelete={(item) => setDeleteTarget({ id: item.id as number, label: getDeleteLabel(item) })}
         />
       )}
       {tab === "experience" && (
-        <AdminHomepageExperienceTab
-          experience={data.experience} saving={saving === "experience"}
-          onSave={saveExperience}
-        />
+        <AdminHomepageExperienceTab experience={cms.experience} saving={cms.saving === "experience"} onSave={cms.saveExperience} />
       )}
       {tab === "about" && (
-        <AdminHomepageAboutTab about={single.about} saving={single.saving === "about"} onSave={single.saveAbout} />
+        <AdminHomepageAboutTab about={cms.about} saving={cms.saving === "about"} onSave={cms.saveAbout} />
       )}
       {tab === "newsletter" && (
-        <AdminHomepageNewsletterTab newsletter={single.newsletter} saving={single.saving === "newsletter"} onSave={single.saveNewsletter} />
+        <AdminHomepageNewsletterTab newsletter={cms.newsletter} saving={cms.saving === "newsletter"} onSave={cms.saveNewsletter} />
       )}
       {tab === "etickets" && (
-        <AdminHomepageEticketsTab etickets={single.etickets} saving={single.saving === "etickets"} onSave={single.saveEtickets} />
+        <AdminHomepageEticketsTab etickets={cms.etickets} saving={cms.saving === "etickets"} onSave={cms.saveEtickets} />
       )}
 
       {/* Array section dialogs */}

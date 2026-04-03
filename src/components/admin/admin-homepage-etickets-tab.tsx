@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
@@ -14,12 +14,8 @@ type Props = {
 
 type PairItem = { value: string; label: string };
 
-function PairList({
-  title, items, onChange,
-}: {
-  title: string;
-  items: PairItem[];
-  onChange: (items: PairItem[]) => void;
+function PairList({ title, items, onChange }: {
+  title: string; items: PairItem[]; onChange: (items: PairItem[]) => void;
 }) {
   const add = () => onChange([...items, { value: "", label: "" }]);
   const remove = (idx: number) => onChange(items.filter((_, i) => i !== idx));
@@ -39,23 +35,12 @@ function PairList({
       )}
       {items.map((item, idx) => (
         <div key={idx} className="flex gap-2 items-center">
-          <input
-            className={inputStyles}
-            placeholder="value"
-            value={item.value}
-            onChange={(e) => setField(idx, "value", e.target.value)}
-          />
-          <input
-            className={inputStyles}
-            placeholder="label"
-            value={item.label}
-            onChange={(e) => setField(idx, "label", e.target.value)}
-          />
-          <Button
-            variant="outline" size="sm"
-            onClick={() => remove(idx)}
-            className="shrink-0 text-red-500 hover:text-red-600 hover:border-red-200"
-          >
+          <input className={inputStyles} placeholder="value" value={item.value}
+            onChange={(e) => setField(idx, "value", e.target.value)} />
+          <input className={inputStyles} placeholder="label" value={item.label}
+            onChange={(e) => setField(idx, "label", e.target.value)} />
+          <Button variant="outline" size="sm" onClick={() => remove(idx)}
+            className="shrink-0 text-red-500 hover:text-red-600 hover:border-red-200">
             <Trash2 className="h-3.5 w-3.5" />
           </Button>
         </div>
@@ -64,34 +49,31 @@ function PairList({
   );
 }
 
-/** Editor for the eTickets section — title, cities, passengers. */
+/** Editor for the eTickets section — syncs from parent once on initial load only. */
 export function AdminHomepageEticketsTab({ etickets, saving, onSave }: Props) {
   const [local, setLocal] = useState<EticketsData>(etickets);
+  const initialized = useRef(false);
 
-  useEffect(() => { setLocal(etickets); }, [etickets]);
+  useEffect(() => {
+    if (initialized.current) return;
+    if (etickets.title || etickets.cities.length > 0) {
+      setLocal(etickets);
+      initialized.current = true;
+    }
+  }, [etickets]);
 
   return (
     <div className="space-y-6 max-w-lg">
       <FormField label="Tiêu đề" htmlFor="et-title">
-        <input
-          id="et-title"
-          className={inputStyles}
-          value={local.title}
-          onChange={(e) => setLocal((p) => ({ ...p, title: e.target.value }))}
-        />
+        <input id="et-title" className={inputStyles} value={local.title}
+          onChange={(e) => setLocal((p) => ({ ...p, title: e.target.value }))} />
       </FormField>
 
-      <PairList
-        title="Thành phố"
-        items={local.cities}
-        onChange={(cities) => setLocal((p) => ({ ...p, cities }))}
-      />
+      <PairList title="Thành phố" items={local.cities}
+        onChange={(cities) => setLocal((p) => ({ ...p, cities }))} />
 
-      <PairList
-        title="Hành khách"
-        items={local.passengers}
-        onChange={(passengers) => setLocal((p) => ({ ...p, passengers }))}
-      />
+      <PairList title="Hành khách" items={local.passengers}
+        onChange={(passengers) => setLocal((p) => ({ ...p, passengers }))} />
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>

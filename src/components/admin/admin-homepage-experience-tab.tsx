@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminHomepageExperienceDialog } from "@/components/admin/admin-homepage-experience-dialog";
@@ -21,20 +21,32 @@ type Props = {
   onSave: (data: ExperienceData) => Promise<void>;
 };
 
-/** Experience section tab — manages tours + images for 3 regions. */
+/** Experience section tab — local state + explicit save button. */
 export function AdminHomepageExperienceTab({ experience, saving, onSave }: Props) {
   const [region, setRegion] = useState<RegionKey>("north");
+  const [local, setLocal] = useState<ExperienceData>(experience);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<ExperienceTourItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ExperienceTourItem | null>(null);
+  const initialized = useRef(false);
+
+  /* Sync from parent only on first real data load */
+  useEffect(() => {
+    if (initialized.current) return;
+    if (Object.keys(experience).length > 0 || !saving) {
+      setLocal(experience);
+      initialized.current = true;
+    }
+  }, [experience, saving]);
 
   const getRegion = (key: RegionKey): ExperienceRegionData =>
-    experience[key] ?? { tours: [], images: [] };
+    local[key] ?? { tours: [], images: [] };
 
   const current = getRegion(region);
 
-  const updateRegion = async (key: RegionKey, data: ExperienceRegionData) => {
-    await onSave({ ...experience, [key]: data });
+  /** Update local state only — no DB save yet */
+  const updateRegionLocal = (key: RegionKey, data: ExperienceRegionData) => {
+    setLocal((prev) => ({ ...prev, [key]: data }));
   };
 
   const handleSaveTour = async (tour: ExperienceTourItem) => {
@@ -42,31 +54,30 @@ export function AdminHomepageExperienceTab({ experience, saving, onSave }: Props
     const tours = editTarget
       ? r.tours.map((t) => (t.id === editTarget.id ? tour : t))
       : [...r.tours, { ...tour, id: Date.now() }];
-    await updateRegion(region, { ...r, tours });
+    updateRegionLocal(region, { ...r, tours });
     setDialogOpen(false);
     setEditTarget(null);
   };
 
-  const handleDeleteTour = async () => {
+  const handleDeleteTour = () => {
     if (!deleteTarget) return;
     const r = getRegion(region);
-    await updateRegion(region, { ...r, tours: r.tours.filter((t) => t.id !== deleteTarget.id) });
+    updateRegionLocal(region, { ...r, tours: r.tours.filter((t) => t.id !== deleteTarget.id) });
     setDeleteTarget(null);
   };
 
   const handleImageChange = (idx: number, val: string) => {
     const images = [...current.images];
     images[idx] = val;
-    updateRegion(region, { ...current, images });
+    updateRegionLocal(region, { ...current, images });
   };
 
   const handleAddImage = () => {
-    updateRegion(region, { ...current, images: [...current.images, ""] });
+    updateRegionLocal(region, { ...current, images: [...current.images, ""] });
   };
 
   const handleRemoveImage = (idx: number) => {
-    const images = current.images.filter((_, i) => i !== idx);
-    updateRegion(region, { ...current, images });
+    updateRegionLocal(region, { ...current, images: current.images.filter((_, i) => i !== idx) });
   };
 
   return (
@@ -149,6 +160,13 @@ export function AdminHomepageExperienceTab({ experience, saving, onSave }: Props
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Save button — only saves to DB when clicked */}
+      <div className="flex justify-end">
+        <Button onClick={() => onSave(local)} disabled={saving}>
+          {saving ? "Đang lưu..." : "Lưu Experience"}
+        </Button>
       </div>
 
       <AdminHomepageExperienceDialog

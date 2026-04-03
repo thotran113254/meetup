@@ -8,16 +8,18 @@ import { ScrollReveal } from "@/components/ui/scroll-animations";
  * Each card: gradient bg (#EBF8F8 → white), 56px icon, bold title, description.
  * Desktop: 4 columns. Mobile: 2 columns grid.
  * Figma: node 14621:93664
+ *
+ * Accepts optional CMS props; falls back to hardcoded data for zero regression.
  */
 
 type Feature = {
-  id: string;
+  id: string | number;
   icon: string;
   title: string;
   description: string;
 };
 
-const FEATURES: Feature[] = [
+const FALLBACK_FEATURES: Feature[] = [
   {
     id: "customized",
     icon: "/images/feature-customized-itinerary.svg",
@@ -48,13 +50,27 @@ const FEATURES: Feature[] = [
   },
 ];
 
-export function ServicesFeaturesSection() {
+type Props = {
+  features?: Feature[];
+  title?: string;
+};
+
+export function ServicesFeaturesSection({ features, title }: Props) {
+  const items = features && features.length > 0 ? features : FALLBACK_FEATURES;
+
   return (
     <section className="section-padding bg-[var(--color-background)]">
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-[100px]">
+        {title && (
+          <ScrollReveal>
+            <h2 className="text-xl md:text-[32px] font-bold leading-[1.2] tracking-[0.08px] text-[var(--color-foreground)] mb-5 md:mb-6">
+              {title}
+            </h2>
+          </ScrollReveal>
+        )}
         <ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-            {FEATURES.map((feature) => (
+            {items.map((feature) => (
               <div
                 key={feature.id}
                 className="flex flex-col gap-5 md:gap-[30px] p-4 md:p-6 rounded-xl bg-gradient-to-b from-[#EBF8F8] to-white"

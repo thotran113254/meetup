@@ -8,6 +8,8 @@ import { ServicesFeaturesSection } from "@/components/sections/services/services
 import { ReviewsSection } from "@/components/sections/homepage/reviews-section";
 import { TourFaqSection } from "@/components/sections/tours/tour-faq-section";
 import { NewsletterSection } from "@/components/sections/homepage/newsletter-section";
+import { getSetting } from "@/db/queries/settings-queries";
+import type { ServiceCard, ServiceFeature, ServicesPageContent } from "@/lib/types/services-cms-types";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Services",
@@ -24,7 +26,7 @@ const SERVICE_SCHEMAS = [
   { name: "Customize Tour Service", description: "Fully personalized tour itineraries crafted by local travel experts." },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
   const jsonLdSchemas = SERVICE_SCHEMAS.map((s) =>
     buildServiceJsonLd({
       name: s.name,
@@ -33,12 +35,37 @@ export default function ServicesPage() {
     })
   );
 
+  // Load CMS data — fall back silently to component defaults if DB unavailable
+  let cmsCards: ServiceCard[] | undefined;
+  let cmsFeatures: ServiceFeature[] | undefined;
+  let cmsContent: ServicesPageContent | undefined;
+
+  try {
+    const [cards, features, content] = await Promise.all([
+      getSetting<ServiceCard[]>("services_page_cards"),
+      getSetting<ServiceFeature[]>("services_page_features"),
+      getSetting<ServicesPageContent>("services_page_content"),
+    ]);
+    if (Array.isArray(cards) && cards.length > 0) cmsCards = cards;
+    if (Array.isArray(features) && features.length > 0) cmsFeatures = features;
+    if (content && typeof content === "object" && !Array.isArray(content)) cmsContent = content;
+  } catch {
+    // DB unavailable — section components will use their built-in fallbacks
+  }
+
   return (
     <>
       <JsonLdScript data={jsonLdSchemas} />
       <ServicesHeroSection />
-      <ServicesCardGridSection />
-      <ServicesFeaturesSection />
+      <ServicesCardGridSection
+        cards={cmsCards}
+        title={cmsContent?.gridTitle}
+        description={cmsContent?.gridDescription}
+      />
+      <ServicesFeaturesSection
+        features={cmsFeatures}
+        title={cmsContent?.featuresTitle}
+      />
       <ReviewsSection />
       <TourFaqSection />
       <NewsletterSection />

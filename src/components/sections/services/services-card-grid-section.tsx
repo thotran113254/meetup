@@ -10,23 +10,35 @@ import { ScrollReveal } from "@/components/ui/scroll-animations";
  * Desktop: 4 columns first row + 1 card second row.
  * Mobile: 2 columns grid.
  * Figma: node 13845:15302
+ *
+ * Accepts optional CMS props; falls back to hardcoded data for zero regression.
  */
 
 type ServiceCard = {
-  id: string;
+  id: string | number;
   name: string;
   price: string;
   image: string;
   href: string;
 };
 
-const SERVICE_CARDS: ServiceCard[] = [
+const FALLBACK_CARDS: ServiceCard[] = [
   { id: "fast-track", name: "Fast track service", price: "$669", image: "/images/service-fast-track.png", href: "/services/fast-track" },
   { id: "evisa", name: "eVisa service", price: "$669", image: "/images/service-evisa.png", href: "/services/evisa" },
   { id: "airport-pickup", name: "Airport Pickup service", price: "$669", image: "/images/service-airport-pickup.png", href: "/services/airport-pickup" },
   { id: "esim", name: "eSim service", price: "$669", image: "/images/service-esim.png", href: "/services/esim" },
   { id: "customize-tour", name: "Customize Tour service", price: "$669", image: "/images/service-customize-tour.jpg", href: "/services/customize-tour" },
 ];
+
+const FALLBACK_TITLE = "Introduce About Travel Services";
+const FALLBACK_DESCRIPTION =
+  "Meetup Travel offers a comprehensive range of services to make your Vietnam journey seamless — from airport fast track and visa assistance to eSIM connectivity and fully customized tour experiences.";
+
+type Props = {
+  cards?: ServiceCard[];
+  title?: string;
+  description?: string;
+};
 
 function ServiceCardItem({ card }: { card: ServiceCard }) {
   return (
@@ -64,19 +76,21 @@ function ServiceCardItem({ card }: { card: ServiceCard }) {
   );
 }
 
-export function ServicesCardGridSection() {
+export function ServicesCardGridSection({ cards, title, description }: Props) {
+  const items = cards && cards.length > 0 ? cards : FALLBACK_CARDS;
+  const heading = title || FALLBACK_TITLE;
+  const subtext = description || FALLBACK_DESCRIPTION;
+
   return (
     <section className="section-padding bg-[var(--color-background)]">
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-[100px]">
         <ScrollReveal>
           <div className="flex flex-col gap-3 mb-5 md:mb-6">
             <h2 className="text-xl md:text-[32px] font-bold leading-[1.2] tracking-[0.08px] text-[var(--color-foreground)]">
-              Introduce About Travel Services
+              {heading}
             </h2>
             <p className="text-xs md:text-sm text-[#828282] leading-[1.5] max-w-[533px]">
-              Meetup Travel offers a comprehensive range of services to make your
-              Vietnam journey seamless — from airport fast track and visa assistance
-              to eSIM connectivity and fully customized tour experiences.
+              {subtext}
             </p>
           </div>
         </ScrollReveal>
@@ -84,7 +98,7 @@ export function ServicesCardGridSection() {
         {/* Grid: 2 cols mobile, 4 cols desktop */}
         <ScrollReveal delay={0.15}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-            {SERVICE_CARDS.map((card) => (
+            {items.map((card) => (
               <ServiceCardItem key={card.id} card={card} />
             ))}
           </div>

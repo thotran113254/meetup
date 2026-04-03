@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { submitContactForm } from "@/app/contact/contact-form-action";
+import { submitContactForm } from "@/app/(website)/contact/contact-form-action";
 
 const inputClass =
   "w-full h-10 px-3 py-2.5 border border-[#BDBDBD] rounded-xl text-[12px] text-[#1D1D1D] placeholder-[#BDBDBD] bg-white focus:outline-none focus:border-[#3BBCB7] transition-colors";

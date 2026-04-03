@@ -35,11 +35,11 @@ export default function AdminContactsPage() {
   const unreadCount = contacts.filter((c) => !c.read).length;
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 ">
       <div>
-        <h1 className="text-2xl font-bold">Tin nhan lien he</h1>
+        <h1 className="text-2xl font-bold">Tin nhắn liên hệ</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-          {pagination.total} tong • {unreadCount > 0 && `${unreadCount} chua doc trang nay`}
+          {pagination.total} tổng • {unreadCount > 0 && `${unreadCount} chưa đọc trang này`}
         </p>
       </div>
 
@@ -54,7 +54,7 @@ export default function AdminContactsPage() {
               size="sm"
               onClick={() => filterByRead(f === "all" ? undefined : f === "unread" ? false : true)}
             >
-              {f === "all" ? "Tat ca" : f === "unread" ? "Chua doc" : "Da doc"}
+              {f === "all" ? "Tất cả" : f === "unread" ? "Chưa đọc" : "Đã đọc"}
             </Button>
           );
         })}
@@ -62,20 +62,20 @@ export default function AdminContactsPage() {
 
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] overflow-hidden">
         {loading ? (
-          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Dang tai...</div>
+          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Đang tải...</div>
         ) : contacts.length === 0 ? (
-          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Khong co tin nhan nao</div>
+          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Không có tin nhắn nào</div>
         ) : (
           <>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--color-border)] bg-[var(--color-muted)]">
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Ho ten</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Họ tên</th>
                   <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden sm:table-cell">Email</th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden md:table-cell">Dien thoai</th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden lg:table-cell">Ngay gui</th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Trang thai</th>
-                  <th className="px-4 py-3 text-right font-medium text-[var(--color-muted-foreground)]">Thao tac</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden md:table-cell">Điện thoại</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden lg:table-cell">Ngày gửi</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Trạng thái</th>
+                  <th className="px-4 py-3 text-right font-medium text-[var(--color-muted-foreground)]">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,7 +96,7 @@ export default function AdminContactsPage() {
                       <td className="px-4 py-3 text-[var(--color-muted-foreground)] hidden lg:table-cell">{formatDate(contact.createdAt)}</td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${contact.read ? "bg-[var(--color-muted)] text-[var(--color-muted-foreground)]" : "bg-blue-100 text-blue-700"}`}>
-                          {contact.read ? "Da doc" : "Chua doc"}
+                          {contact.read ? "Đã đọc" : "Chưa đọc"}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
@@ -106,7 +106,7 @@ export default function AdminContactsPage() {
                             size="sm"
                             onClick={() => handleToggleRead(contact.id)}
                             disabled={togglingId === contact.id}
-                            title={contact.read ? "Danh dau chua doc" : "Danh dau da doc"}
+                            title={contact.read ? "Đánh dấu chưa đọc" : "Đánh dấu đã đọc"}
                           >
                             {contact.read ? <Mail className="h-3.5 w-3.5" /> : <MailOpen className="h-3.5 w-3.5" />}
                           </Button>
@@ -125,7 +125,7 @@ export default function AdminContactsPage() {
                     {expandedId === contact.id && (
                       <tr key={`${contact.id}-msg`} className="border-b border-[var(--color-border)] bg-[var(--color-muted)]/30">
                         <td colSpan={6} className="px-6 py-4">
-                          <p className="text-xs font-medium text-[var(--color-muted-foreground)] mb-1">Noi dung:</p>
+                          <p className="text-xs font-medium text-[var(--color-muted-foreground)] mb-1">Nội dung:</p>
                           <p className="text-sm">{contact.message}</p>
                           <div className="mt-2 flex gap-4 text-xs text-[var(--color-muted-foreground)] sm:hidden">
                             <span>{contact.email}</span>
@@ -152,8 +152,8 @@ export default function AdminContactsPage() {
       <AdminConfirmDialog
         open={!!deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title="Xoa tin nhan"
-        description={`Xoa tin nhan tu "${deleteTarget?.name}"? Hanh dong nay khong the hoan tac.`}
+        title="Xóa tin nhắn"
+        description={`Xóa tin nhắn từ "${deleteTarget?.name}"? Hành động này không thể hoàn tác.`}
         onConfirm={handleDelete}
         loading={deleting}
       />

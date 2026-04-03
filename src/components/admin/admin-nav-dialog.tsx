@@ -48,39 +48,39 @@ export function AdminNavDialog({ open, onOpenChange, initialData, parentOptions,
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{initialData ? "Chinh sua muc dieu huong" : "Them muc dieu huong"}</DialogTitle>
+          <DialogTitle>{initialData ? "Chỉnh sửa mục điều hướng" : "Thêm mục điều hướng"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <FormField label="Nhan hien thi" htmlFor="n-label" required error={errors.label?.message}>
+          <FormField label="Nhãn hiển thị" htmlFor="n-label" required error={errors.label?.message}>
             <input id="n-label" className={inputStyles} {...register("label")} />
           </FormField>
-          <FormField label="Duong dan (href)" htmlFor="n-href" required error={errors.href?.message}>
+          <FormField label="Đường dẫn (href)" htmlFor="n-href" required error={errors.href?.message}>
             <input id="n-href" className={inputStyles} placeholder="/trang or https://..." {...register("href")} />
           </FormField>
-          <FormField label="Muc cha" htmlFor="n-parent">
+          <FormField label="Mục cha" htmlFor="n-parent">
             <select id="n-parent" className={inputStyles} {...register("parentId")}>
-              <option value="">— Khong co muc cha —</option>
+              <option value="">— Không có mục cha —</option>
               {topLevelOptions.map((n) => (
                 <option key={n.id} value={n.id}>{n.label}</option>
               ))}
             </select>
           </FormField>
-          <FormField label="Thu tu" htmlFor="n-order" error={errors.sortOrder?.message}>
+          <FormField label="Thứ tự" htmlFor="n-order" error={errors.sortOrder?.message}>
             <input id="n-order" type="number" min={0} className={inputStyles} {...register("sortOrder", { valueAsNumber: true })} />
           </FormField>
           <div className="flex gap-6">
             <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
               <input type="checkbox" className="rounded" {...register("isExternal")} />
-              Mo tab moi
+              Mở tab mới
             </label>
             <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
               <input type="checkbox" className="rounded" {...register("active")} />
-              Hien thi
+              Hiển thị
             </label>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Huy</Button>
-            <Button type="submit" disabled={saving}>{saving ? "Dang luu..." : initialData ? "Cap nhat" : "Tao moi"}</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Hủy</Button>
+            <Button type="submit" disabled={saving}>{saving ? "Đang lưu..." : initialData ? "Cập nhật" : "Tạo mới"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

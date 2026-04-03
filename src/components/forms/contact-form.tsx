@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, type ContactFormData } from "@/lib/validations/contact-schema";
-import { submitContactForm, type ContactFormState } from "@/app/contact/contact-form-action";
+import { submitContactForm, type ContactFormState } from "@/app/(website)/contact/contact-form-action";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
 import { cn } from "@/lib/utils";

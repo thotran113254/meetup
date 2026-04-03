@@ -47,14 +47,14 @@ export function AdminMediaUploadDialog({ open, onOpenChange, onSave, saving }: P
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Them media</DialogTitle>
+          <DialogTitle>Thêm media</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <FormField label="Loai" htmlFor="m-type">
+          <FormField label="Loại" htmlFor="m-type">
             <select id="m-type" className={inputStyles} {...register("type")}>
-              <option value="image">Hinh anh</option>
+              <option value="image">Hình ảnh</option>
               <option value="video">Video</option>
-              <option value="document">Tai lieu</option>
+              <option value="document">Tài liệu</option>
             </select>
           </FormField>
           <FormField label="URL" htmlFor="m-url" required error={errors.url?.message}>
@@ -71,18 +71,18 @@ export function AdminMediaUploadDialog({ open, onOpenChange, onSave, saving }: P
               />
             </div>
           )}
-          <FormField label="Ten file" htmlFor="m-filename" required error={errors.filename?.message}>
+          <FormField label="Tên file" htmlFor="m-filename" required error={errors.filename?.message}>
             <input id="m-filename" className={inputStyles} placeholder="anh-san-pham.jpg" {...register("filename")} />
           </FormField>
-          <FormField label="Mo ta (alt)" htmlFor="m-alt" error={errors.alt?.message}>
+          <FormField label="Mô tả (alt)" htmlFor="m-alt" error={errors.alt?.message}>
             <input id="m-alt" className={inputStyles} {...register("alt")} />
           </FormField>
-          <FormField label="Kich thuoc (bytes)" htmlFor="m-size" error={errors.size?.message}>
+          <FormField label="Kích thước (bytes)" htmlFor="m-size" error={errors.size?.message}>
             <input id="m-size" type="number" min={0} className={inputStyles} {...register("size", { valueAsNumber: true, setValueAs: (v) => (v === "" || isNaN(v) ? undefined : Number(v)) })} />
           </FormField>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => handleClose(false)} disabled={saving}>Huy</Button>
-            <Button type="submit" disabled={saving}>{saving ? "Dang luu..." : "Them media"}</Button>
+            <Button type="button" variant="outline" onClick={() => handleClose(false)} disabled={saving}>Hủy</Button>
+            <Button type="submit" disabled={saving}>{saving ? "Đang lưu..." : "Thêm media"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

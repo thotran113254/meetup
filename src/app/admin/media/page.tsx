@@ -10,10 +10,10 @@ import { useAdminMedia } from "@/hooks/use-admin-media";
 import type { MediaRow } from "@/app/admin/_actions/media-actions";
 
 const TYPE_FILTERS = [
-  { value: undefined, label: "Tat ca" },
-  { value: "image", label: "Hinh anh" },
+  { value: undefined, label: "Tất cả" },
+  { value: "image", label: "Hình ảnh" },
   { value: "video", label: "Video" },
-  { value: "document", label: "Tai lieu" },
+  { value: "document", label: "Tài liệu" },
 ];
 
 function MediaTypeIcon({ type }: { type: string }) {
@@ -55,15 +55,15 @@ export default function AdminMediaPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 ">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Thu vien Media</h1>
+          <h1 className="text-2xl font-bold">Thư viện Media</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">{pagination.total} file</p>
         </div>
         <Button onClick={() => setUploadOpen(true)}>
           <Plus className="h-4 w-4" />
-          Them media
+          Thêm media
         </Button>
       </div>
 
@@ -82,9 +82,9 @@ export default function AdminMediaPage() {
       </div>
 
       {loading ? (
-        <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Dang tai...</div>
+        <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Đang tải...</div>
       ) : items.length === 0 ? (
-        <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Chua co media nao</div>
+        <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Chưa có media nào</div>
       ) : (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -118,7 +118,7 @@ export default function AdminMediaPage() {
                 <button
                   onClick={() => setDeleteTarget(item)}
                   className="absolute top-1.5 right-1.5 hidden group-hover:flex items-center justify-center h-6 w-6 rounded-full bg-red-500 text-white shadow"
-                  title="Xoa"
+                  title="Xóa"
                 >
                   <Trash2 className="h-3 w-3" />
                 </button>
@@ -147,8 +147,8 @@ export default function AdminMediaPage() {
       <AdminConfirmDialog
         open={!!deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title="Xoa media"
-        description={`Xoa file "${deleteTarget?.filename}"?`}
+        title="Xóa media"
+        description={`Xóa file "${deleteTarget?.filename}"?`}
         onConfirm={handleDelete}
         loading={deleting}
       />

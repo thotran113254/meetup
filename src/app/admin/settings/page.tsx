@@ -54,7 +54,8 @@ export default function AdminSettingsPage() {
     },
   });
 
-  // Pre-fill from DB once loaded
+  // Pre-fill from DB once when loading completes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!loading) {
       reset({
@@ -69,7 +70,7 @@ export default function AdminSettingsPage() {
         seoDescription: getValue("seo_default_description", siteConfig.description),
       });
     }
-  }, [loading, getValue, reset]);
+  }, [loading]); // Only re-run when loading state changes
 
   async function onSubmit(data: SettingsFormData) {
     const entries = Object.entries(data) as [keyof SettingsFormData, string][];
@@ -77,34 +78,34 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-8">
+    <div className=" space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">Cai dat</h1>
+        <h1 className="text-2xl font-bold">Cài đặt</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-          Quan ly thong tin va cau hinh trang web
+          Quản lý thông tin và cấu hình trang web
         </p>
       </div>
 
       {loading ? (
-        <div className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">Dang tai...</div>
+        <div className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">Đang tải...</div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Site Info */}
           <section className="space-y-4">
             <h2 className="text-base font-semibold border-b border-[var(--color-border)] pb-2">
-              Thong tin website
+              Thông tin website
             </h2>
-            <FormField label="Ten website" htmlFor="siteName" required>
+            <FormField label="Tên website" htmlFor="siteName" required>
               <input id="siteName" className={inputStyles} {...register("siteName")} />
             </FormField>
-            <FormField label="Mo ta" htmlFor="description" required>
+            <FormField label="Mô tả" htmlFor="description" required>
               <textarea id="description" rows={3} className={cn(inputStyles, "resize-none")} {...register("description")} />
             </FormField>
             <div className="grid gap-4 sm:grid-cols-2">
-              <FormField label="Email lien he" htmlFor="email" required>
+              <FormField label="Email liên hệ" htmlFor="email" required>
                 <input id="email" type="email" className={inputStyles} {...register("email")} />
               </FormField>
-              <FormField label="So dien thoai" htmlFor="phone">
+              <FormField label="Số điện thoại" htmlFor="phone">
                 <input id="phone" className={inputStyles} {...register("phone")} />
               </FormField>
             </div>
@@ -113,7 +114,7 @@ export default function AdminSettingsPage() {
           {/* Social Links */}
           <section className="space-y-4">
             <h2 className="text-base font-semibold border-b border-[var(--color-border)] pb-2">
-              Mang xa hoi
+              Mạng xã hội
             </h2>
             <FormField label="Twitter / X" htmlFor="twitter">
               <input id="twitter" className={inputStyles} placeholder="https://twitter.com/..." {...register("twitter")} />
@@ -129,19 +130,19 @@ export default function AdminSettingsPage() {
           {/* SEO Defaults */}
           <section className="space-y-4">
             <h2 className="text-base font-semibold border-b border-[var(--color-border)] pb-2">
-              Mac dinh SEO
+              Mặc định SEO
             </h2>
-            <FormField label="SEO Title mac dinh" htmlFor="seoTitle">
+            <FormField label="SEO Title mặc định" htmlFor="seoTitle">
               <input id="seoTitle" className={inputStyles} {...register("seoTitle")} />
             </FormField>
-            <FormField label="SEO Description mac dinh" htmlFor="seoDescription">
+            <FormField label="SEO Description mặc định" htmlFor="seoDescription">
               <textarea id="seoDescription" rows={3} className={cn(inputStyles, "resize-none")} {...register("seoDescription")} />
             </FormField>
           </section>
 
           <div className="flex justify-end pt-2">
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Dang luu..." : "Luu cai dat"}
+              {isSubmitting ? "Đang lưu..." : "Lưu cài đặt"}
             </Button>
           </div>
         </form>

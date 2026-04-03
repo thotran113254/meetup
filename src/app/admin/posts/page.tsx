@@ -42,17 +42,17 @@ export default function AdminPostsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="space-y-6 ">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Quan ly bai viet</h1>
+          <h1 className="text-2xl font-bold">Quản lý bài viết</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-            {pagination.total} bai viet
+            {pagination.total} bài viết
           </p>
         </div>
         <Button onClick={openCreate}>
           <Plus className="h-4 w-4" />
-          Them bai viet
+          Thêm bài viết
         </Button>
       </div>
 
@@ -62,15 +62,15 @@ export default function AdminPostsPage() {
           className="rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] px-3 py-1.5 text-sm"
           onChange={(e) => filterByPublished(e.target.value === "" ? undefined : e.target.value === "true")}
         >
-          <option value="">Tat ca trang thai</option>
-          <option value="true">Da xuat ban</option>
-          <option value="false">Ban nhap</option>
+          <option value="">Tất cả trạng thái</option>
+          <option value="true">Đã xuất bản</option>
+          <option value="false">Bản nháp</option>
         </select>
         <select
           className="rounded-lg border border-[var(--color-border)] bg-[var(--color-card)] px-3 py-1.5 text-sm"
           onChange={(e) => filterByCategory(e.target.value || undefined)}
         >
-          <option value="">Tat ca danh muc</option>
+          <option value="">Tất cả danh mục</option>
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
@@ -79,19 +79,19 @@ export default function AdminPostsPage() {
 
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] overflow-hidden">
         {loading ? (
-          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Dang tai...</div>
+          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Đang tải...</div>
         ) : posts.length === 0 ? (
-          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Chua co bai viet nao</div>
+          <div className="py-12 text-center text-sm text-[var(--color-muted-foreground)]">Chưa có bài viết nào</div>
         ) : (
           <>
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--color-border)] bg-[var(--color-muted)]">
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Tieu de</th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden sm:table-cell">Danh muc</th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Trang thai</th>
-                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden md:table-cell">Ngay tao</th>
-                  <th className="px-4 py-3 text-right font-medium text-[var(--color-muted-foreground)]">Thao tac</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Tiêu đề</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden sm:table-cell">Danh mục</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)]">Trạng thái</th>
+                  <th className="px-4 py-3 text-left font-medium text-[var(--color-muted-foreground)] hidden md:table-cell">Ngày tạo</th>
+                  <th className="px-4 py-3 text-right font-medium text-[var(--color-muted-foreground)]">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
@@ -107,7 +107,7 @@ export default function AdminPostsPage() {
                     <td className="px-4 py-3 text-[var(--color-muted-foreground)] hidden sm:table-cell capitalize">{post.category}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${post.published ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
-                        {post.published ? "Da xuat ban" : "Ban nhap"}
+                        {post.published ? "Đã xuất bản" : "Bản nháp"}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-[var(--color-muted-foreground)] hidden md:table-cell">{formatDate(post.createdAt)}</td>
@@ -115,7 +115,7 @@ export default function AdminPostsPage() {
                       <div className="flex items-center justify-end gap-1">
                         <Button variant="ghost" size="sm" onClick={() => openEdit(post)}>
                           <Pencil className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Sua</span>
+                          <span className="hidden sm:inline">Sửa</span>
                         </Button>
                         <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(post)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
                           <Trash2 className="h-3.5 w-3.5" />
@@ -148,8 +148,8 @@ export default function AdminPostsPage() {
       <AdminConfirmDialog
         open={!!deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title="Xoa bai viet"
-        description={`Ban chac chan muon xoa "${deleteTarget?.title}"? Hanh dong nay khong the hoan tac.`}
+        title="Xóa bài viết"
+        description={`Bạn chắc chắn muốn xóa "${deleteTarget?.title}"? Hành động này không thể hoàn tác.`}
         onConfirm={handleDelete}
         loading={deleting}
       />

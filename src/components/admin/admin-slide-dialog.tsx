@@ -47,16 +47,16 @@ export function AdminSlideDialog({ open, onOpenChange, initialData, onSave, savi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>{initialData ? "Chinh sua slide" : "Them slide moi"}</DialogTitle>
+          <DialogTitle>{initialData ? "Chỉnh sửa slide" : "Thêm slide mới"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <FormField label="Tieu de" htmlFor="s-title" required error={errors.title?.message}>
+          <FormField label="Tiêu đề" htmlFor="s-title" required error={errors.title?.message}>
             <input id="s-title" className={inputStyles} {...register("title")} />
           </FormField>
-          <FormField label="Tieu de phu" htmlFor="s-subtitle" error={errors.subtitle?.message}>
+          <FormField label="Tiêu đề phụ" htmlFor="s-subtitle" error={errors.subtitle?.message}>
             <input id="s-subtitle" className={inputStyles} {...register("subtitle")} />
           </FormField>
-          <FormField label="URL anh" htmlFor="s-image" required error={errors.image?.message}>
+          <FormField label="URL ảnh" htmlFor="s-image" required error={errors.image?.message}>
             <input id="s-image" className={inputStyles} placeholder="https://..." {...register("image")} />
           </FormField>
           {imageUrl && (
@@ -65,23 +65,23 @@ export function AdminSlideDialog({ open, onOpenChange, initialData, onSave, savi
               <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
             </div>
           )}
-          <FormField label="URL lien ket" htmlFor="s-link" error={errors.link?.message}>
+          <FormField label="URL liên kết" htmlFor="s-link" error={errors.link?.message}>
             <input id="s-link" className={inputStyles} placeholder="https://..." {...register("link")} />
           </FormField>
           <div className="grid grid-cols-2 gap-4">
-            <FormField label="Thu tu" htmlFor="s-order" error={errors.sortOrder?.message}>
+            <FormField label="Thứ tự" htmlFor="s-order" error={errors.sortOrder?.message}>
               <input id="s-order" type="number" min={0} className={inputStyles} {...register("sortOrder", { valueAsNumber: true })} />
             </FormField>
             <div className="flex items-end pb-1">
               <label className="flex items-center gap-2 text-sm font-medium cursor-pointer">
                 <input type="checkbox" className="rounded" {...register("active")} />
-                Hien thi
+                Hiển thị
               </label>
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Huy</Button>
-            <Button type="submit" disabled={saving}>{saving ? "Dang luu..." : initialData ? "Cap nhat" : "Tao moi"}</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Hủy</Button>
+            <Button type="submit" disabled={saving}>{saving ? "Đang lưu..." : initialData ? "Cập nhật" : "Tạo mới"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

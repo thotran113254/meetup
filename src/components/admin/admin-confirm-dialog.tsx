@@ -23,9 +23,9 @@ type Props = {
 export function AdminConfirmDialog({
   open,
   onOpenChange,
-  title = "Xac nhan xoa",
-  description = "Hanh dong nay khong the hoan tac.",
-  confirmLabel = "Xoa",
+  title = "Xác nhận xóa",
+  description = "Hành động này không thể hoàn tác.",
+  confirmLabel = "Xóa",
   onConfirm,
   loading,
 }: Props) {
@@ -38,14 +38,14 @@ export function AdminConfirmDialog({
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-            Huy
+            Hủy
           </Button>
           <Button
             variant="destructive"
             onClick={onConfirm}
             disabled={loading}
           >
-            {loading ? "Dang xu ly..." : confirmLabel}
+            {loading ? "Đang xử lý..." : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -14,35 +14,44 @@ import {
   Images,
   Navigation,
   ImageIcon,
+  LogOut,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const navGroups = [
   {
-    label: "Tong quan",
+    label: "Tổng quan",
     items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }],
   },
   {
-    label: "Noi dung",
+    label: "Nội dung",
     items: [
-      { label: "Bai viet", href: "/admin/posts", icon: FileText },
+      { label: "Bài viết", href: "/admin/posts", icon: FileText },
       { label: "Slides", href: "/admin/slides", icon: Images },
       { label: "Media", href: "/admin/media", icon: ImageIcon },
     ],
   },
   {
-    label: "He thong",
+    label: "Hệ thống",
     items: [
-      { label: "Tin nhan", href: "/admin/contacts", icon: MessageSquare },
-      { label: "Dieu huong", href: "/admin/navigation", icon: Navigation },
-      { label: "Cai dat", href: "/admin/settings", icon: Settings },
+      { label: "Tin nhắn", href: "/admin/contacts", icon: MessageSquare },
+      { label: "Điều hướng", href: "/admin/navigation", icon: Navigation },
+      { label: "Cài đặt", href: "/admin/settings", icon: Settings },
     ],
   },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+    router.refresh();
+  }
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
@@ -89,8 +98,8 @@ export function AdminSidebar() {
         ))}
       </nav>
 
-      {/* Back to site link */}
-      <div className="border-t border-[var(--color-border)] p-4">
+      {/* Bottom actions */}
+      <div className="border-t border-[var(--color-border)] p-4 space-y-0.5">
         <Link
           href="/"
           target="_blank"
@@ -99,6 +108,13 @@ export function AdminSidebar() {
           <ExternalLink className="h-4 w-4 shrink-0" />
           Xem trang web
         </Link>
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-[var(--color-muted-foreground)] hover:bg-red-50 hover:text-red-600 transition-colors"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          Đăng xuất
+        </button>
       </div>
     </div>
   );

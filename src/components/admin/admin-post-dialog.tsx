@@ -85,10 +85,10 @@ export function AdminPostDialog({ open, onOpenChange, initialData, onSave, savin
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{initialData ? "Chinh sua bai viet" : "Them bai viet moi"}</DialogTitle>
+          <DialogTitle>{initialData ? "Chỉnh sửa bài viết" : "Thêm bài viết mới"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <FormField label="Tieu de" htmlFor="title" required error={errors.title?.message}>
+          <FormField label="Tiêu đề" htmlFor="title" required error={errors.title?.message}>
             {(() => {
               const { onBlur, ...rest } = register("title");
               return (
@@ -104,27 +104,27 @@ export function AdminPostDialog({ open, onOpenChange, initialData, onSave, savin
           <FormField label="Slug" htmlFor="slug" required error={errors.slug?.message}>
             <input id="slug" className={inputStyles} {...register("slug")} />
           </FormField>
-          <FormField label="Danh muc" htmlFor="category" required error={errors.category?.message}>
+          <FormField label="Danh mục" htmlFor="category" required error={errors.category?.message}>
             <select id="category" className={inputStyles} {...register("category")}>
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </FormField>
-          <FormField label="Tom tat" htmlFor="excerpt" error={errors.excerpt?.message}>
+          <FormField label="Tóm tắt" htmlFor="excerpt" error={errors.excerpt?.message}>
             <textarea id="excerpt" rows={2} className={cn(inputStyles, "resize-none")} {...register("excerpt")} />
           </FormField>
-          <FormField label="Noi dung" htmlFor="content" required error={errors.content?.message}>
+          <FormField label="Nội dung" htmlFor="content" required error={errors.content?.message}>
             <textarea id="content" rows={6} className={cn(inputStyles, "resize-none font-mono text-xs")} {...register("content")} />
           </FormField>
-          <FormField label="Anh bia (URL)" htmlFor="coverImage" error={errors.coverImage?.message}>
+          <FormField label="Ảnh bìa (URL)" htmlFor="coverImage" error={errors.coverImage?.message}>
             <input id="coverImage" className={inputStyles} placeholder="https://..." {...register("coverImage")} />
           </FormField>
           <div className="flex items-center gap-2">
             <input id="published" type="checkbox" className="rounded" {...register("published")} />
-            <label htmlFor="published" className="text-sm font-medium">Xuat ban ngay</label>
+            <label htmlFor="published" className="text-sm font-medium">Xuất bản ngay</label>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Huy</Button>
-            <Button type="submit" disabled={saving}>{saving ? "Dang luu..." : initialData ? "Cap nhat" : "Tao moi"}</Button>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Hủy</Button>
+            <Button type="submit" disabled={saving}>{saving ? "Đang lưu..." : initialData ? "Cập nhật" : "Tạo mới"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

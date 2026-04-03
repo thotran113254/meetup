@@ -37,18 +37,18 @@ export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();
 
   const statCards = [
-    { label: "Tong bai viet", value: stats.totalPosts, icon: FileText, color: "var(--color-primary)" },
-    { label: "Da xuat ban", value: stats.publishedPosts, icon: FileText, color: "#22c55e" },
-    { label: "Ban nhap", value: stats.draftPosts, icon: FileText, color: "#f59e0b" },
-    { label: "Chua doc", value: stats.unreadContacts, icon: MessageSquare, color: "#6366f1" },
+    { label: "Tổng bài viết", value: stats.totalPosts, icon: FileText, color: "var(--color-primary)" },
+    { label: "Đã xuất bản", value: stats.publishedPosts, icon: FileText, color: "#22c55e" },
+    { label: "Bản nháp", value: stats.draftPosts, icon: FileText, color: "#f59e0b" },
+    { label: "Chưa đọc", value: stats.unreadContacts, icon: MessageSquare, color: "#6366f1" },
   ];
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-8 ">
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-          Tong quan he thong quan tri
+          Tổng quan hệ thống quản trị
         </p>
       </div>
 
@@ -72,19 +72,19 @@ export default async function AdminDashboardPage() {
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-semibold">
-            Tin nhan gan day
+            Tin nhắn gần đây
             {stats.unreadContacts > 0 && (
               <span className="ml-2 inline-flex items-center rounded-full bg-[var(--color-primary)] px-2 py-0.5 text-xs text-[var(--color-primary-foreground)]">
-                {stats.unreadContacts} chua doc
+                {stats.unreadContacts} chưa đọc
               </span>
             )}
           </h2>
           <Button asChild variant="outline" size="sm">
-            <Link href="/admin/contacts">Xem tat ca</Link>
+            <Link href="/admin/contacts">Xem tất cả</Link>
           </Button>
         </div>
         {stats.recentContacts.length === 0 ? (
-          <p className="text-sm text-[var(--color-muted-foreground)] py-4 text-center">Chua co tin nhan nao</p>
+          <p className="text-sm text-[var(--color-muted-foreground)] py-4 text-center">Chưa có tin nhắn nào</p>
         ) : (
           <div className="space-y-0">
             {stats.recentContacts.map((msg) => (
@@ -112,24 +112,24 @@ export default async function AdminDashboardPage() {
 
       {/* Quick actions */}
       <div>
-        <h2 className="font-semibold mb-3">Tac vu nhanh</h2>
+        <h2 className="font-semibold mb-3">Tác vụ nhanh</h2>
         <div className="flex gap-3 flex-wrap">
           <Button asChild>
             <Link href="/admin/posts">
               <PenSquare className="h-4 w-4" />
-              Quan ly bai viet
+              Quản lý bài viết
             </Link>
           </Button>
           <Button asChild variant="outline">
             <Link href="/admin/slides">
               <Images className="h-4 w-4" />
-              Quan ly slides
+              Quản lý Slides
             </Link>
           </Button>
           <Button asChild variant="outline">
             <Link href="/admin/navigation">
               <Navigation className="h-4 w-4" />
-              Dieu huong
+              Điều hướng
             </Link>
           </Button>
           <Button asChild variant="outline">

@@ -3,6 +3,8 @@ import { generatePageMetadata } from "@/lib/seo-utils";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";
 import { CurrentOpeningsSection } from "@/components/sections/recruitment/current-openings-section";
 import { ConnectSection } from "@/components/sections/recruitment/connect-section";
+import { getSetting } from "@/db/queries/settings-queries";
+import type { RecruitmentJob, RecruitmentPageContent } from "@/lib/types/recruitment-cms-types";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Recruitment",
@@ -11,12 +13,26 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/recruitment",
 });
 
-export default function RecruitmentPage() {
+export default async function RecruitmentPage() {
+  const [pageContent, jobs] = await Promise.all([
+    getSetting<RecruitmentPageContent>("recruitment_page_content"),
+    getSetting<RecruitmentJob[]>("recruitment_jobs"),
+  ]);
+
   return (
     <>
       <Breadcrumbs items={[{ label: "Recruitment", href: "/recruitment" }]} />
-      <CurrentOpeningsSection />
-      <ConnectSection />
+      <CurrentOpeningsSection
+        jobs={jobs ?? undefined}
+        heading={pageContent?.heading}
+        subheading={pageContent?.subheading}
+      />
+      <ConnectSection
+        connectTitle={pageContent?.connectTitle}
+        connectDescription={pageContent?.connectDescription}
+        joinTitle={pageContent?.joinTitle}
+        joinDescription={pageContent?.joinDescription}
+      />
     </>
   );
 }

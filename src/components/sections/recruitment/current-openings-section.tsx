@@ -110,23 +110,40 @@ function JobCard({ job }: { job: JobPosting }) {
   );
 }
 
-export function CurrentOpeningsSection() {
+type Props = {
+  /** CMS-overridable job list. Falls back to hardcoded JOB_POSTINGS. */
+  jobs?: { id: string | number; title: string; description: string; jdLink: string; jdLabel: string }[];
+  /** CMS-overridable heading. Defaults to "Current openings". */
+  heading?: string;
+  /** CMS-overridable subheading. Defaults to hardcoded text. */
+  subheading?: string;
+};
+
+export function CurrentOpeningsSection({
+  jobs,
+  heading = "Current openings",
+  subheading = "Thanks for checking out our job openings. See something that interests you? Apply here.",
+}: Props = {}) {
+  const source = jobs && jobs.length > 0
+    ? jobs.map((j) => ({ ...j, id: String(j.id) }))
+    : JOB_POSTINGS;
+
   return (
     <section className="section-padding bg-[var(--color-background)]">
       <div className="container-wide">
         {/* Heading block */}
         <div className="mb-10">
           <h1 className="text-[#1d1d1d] text-[28px] md:text-[48px] font-bold leading-[1.2] mb-3">
-            Current openings
+            {heading}
           </h1>
           <p className="text-[#828282] text-[14px] md:text-[16px] leading-[1.5] tracking-[0.04px] max-w-[678px]">
-            Thanks for checking out our job openings. See something that interests you? Apply here.
+            {subheading}
           </p>
         </div>
 
         {/* Job cards grid — 1 col on mobile, 2 on sm, 4 on lg */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {JOB_POSTINGS.map((job) => (
+          {source.map((job) => (
             <JobCard key={job.id} job={job} />
           ))}
         </div>

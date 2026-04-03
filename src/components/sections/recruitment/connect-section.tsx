@@ -39,7 +39,23 @@ function SocialButton({
   );
 }
 
-export function ConnectSection() {
+type Props = {
+  /** CMS-overridable "Connect with us" title. */
+  connectTitle?: string;
+  /** CMS-overridable "Connect with us" description. */
+  connectDescription?: string;
+  /** CMS-overridable "Join our Team" title. */
+  joinTitle?: string;
+  /** CMS-overridable "Join our Team" description. */
+  joinDescription?: string;
+};
+
+export function ConnectSection({
+  connectTitle = "Connect with us",
+  connectDescription = "Follow us on social media to stay up to date with the latest travel inspiration, exclusive deals, and behind-the-scenes glimpses of life at Meetup Travel.",
+  joinTitle = "Join our Team",
+  joinDescription = "Ready to turn your passion for travel into a career? Send your CV to our team and we'll be in touch about upcoming opportunities.",
+}: Props = {}) {
   const { socials, email, address, phone } = siteConfig;
 
   return (
@@ -49,12 +65,10 @@ export function ConnectSection() {
           {/* Left: Connect with us */}
           <div className="flex flex-col gap-5 lg:w-[456px] lg:pr-8">
             <h2 className="text-[#1d1d1d] text-[28px] md:text-[48px] font-bold leading-[1.2]">
-              Connect with us
+              {connectTitle}
             </h2>
             <p className="text-[#828282] text-[14px] leading-[1.5] tracking-[0.035px]">
-              Follow us on social media to stay up to date with the latest travel
-              inspiration, exclusive deals, and behind-the-scenes glimpses of
-              life at Meetup Travel.
+              {connectDescription}
             </p>
             <div className="flex items-center gap-2">
               <SocialButton href={socials.instagram} label="Instagram">
@@ -75,11 +89,10 @@ export function ConnectSection() {
           {/* Right: Join our Team */}
           <div className="flex flex-col gap-5 lg:w-[456px] lg:pl-8">
             <h2 className="text-[#1d1d1d] text-[28px] md:text-[48px] font-bold leading-[1.2]">
-              Join our Team
+              {joinTitle}
             </h2>
             <p className="text-[#828282] text-[14px] leading-[1.5] tracking-[0.035px]">
-              Ready to turn your passion for travel into a career? Send your CV
-              to our team and we&apos;ll be in touch about upcoming opportunities.
+              {joinDescription}
             </p>
 
             {/* Contact info rows */}

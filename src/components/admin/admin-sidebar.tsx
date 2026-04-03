@@ -15,6 +15,7 @@ import {
   Navigation,
   ImageIcon,
   LogOut,
+  Home,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ const navGroups = [
     label: "Nội dung",
     items: [
       { label: "Bài viết", href: "/admin/posts", icon: FileText },
+      { label: "Homepage", href: "/admin/homepage", icon: Home },
       { label: "Slides", href: "/admin/slides", icon: Images },
       { label: "Media", href: "/admin/media", icon: ImageIcon },
     ],

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import { slideSchema, type SlideData } from "@/lib/validations/slide-schema";
 import type { SlideRow } from "@/app/admin/_actions/slides-actions";
 
@@ -20,7 +21,7 @@ type Props = {
 };
 
 export function AdminSlideDialog({ open, onOpenChange, initialData, onSave, saving }: Props) {
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<SlideData>({
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<SlideData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(slideSchema) as any,
     defaultValues: { title: "", subtitle: "", image: "", link: "", sortOrder: 0, active: true },
@@ -56,15 +57,13 @@ export function AdminSlideDialog({ open, onOpenChange, initialData, onSave, savi
           <FormField label="Tiêu đề phụ" htmlFor="s-subtitle" error={errors.subtitle?.message}>
             <input id="s-subtitle" className={inputStyles} {...register("subtitle")} />
           </FormField>
-          <FormField label="URL ảnh" htmlFor="s-image" required error={errors.image?.message}>
-            <input id="s-image" className={inputStyles} placeholder="https://..." {...register("image")} />
-          </FormField>
-          {imageUrl && (
-            <div className="rounded-lg overflow-hidden border border-[var(--color-border)] h-32">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
-            </div>
-          )}
+          <AdminImageField
+            value={imageUrl || ""}
+            onChange={(url) => setValue("image", url)}
+            label="Ảnh slide"
+            alt={watch("title")}
+            folder="slides"
+          />
           <FormField label="URL liên kết" htmlFor="s-link" error={errors.link?.message}>
             <input id="s-link" className={inputStyles} placeholder="https://..." {...register("link")} />
           </FormField>

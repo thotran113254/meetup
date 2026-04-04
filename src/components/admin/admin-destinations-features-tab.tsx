@@ -5,17 +5,17 @@ import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
 import { AdminImageField } from "@/components/admin/admin-image-field";
-import type { DestinationItem } from "@/lib/types/destinations-cms-types";
+import type { DestinationFeatureItem } from "@/lib/types/destinations-cms-types";
 
 type Props = {
-  data: DestinationItem[];
+  data: DestinationFeatureItem[];
   saving: boolean;
-  onSave: (d: DestinationItem[]) => Promise<void>;
+  onSave: (d: DestinationFeatureItem[]) => Promise<void>;
 };
 
-/** CRUD editor for the destinations grid list. */
-export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
-  const [local, setLocal] = useState<DestinationItem[]>(data);
+/** CRUD editor for destination feature cards (icon, title, description). */
+export function AdminDestinationsFeaturesTab({ data, saving, onSave }: Props) {
+  const [local, setLocal] = useState<DestinationFeatureItem[]>(data);
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
     }
   }, [data]);
 
-  const update = (idx: number, field: keyof DestinationItem, value: string) =>
+  const update = (idx: number, field: keyof DestinationFeatureItem, value: string) =>
     setLocal((prev) =>
       prev.map((item, i) => (i === idx ? { ...item, [field]: value } : item))
     );
@@ -34,7 +34,7 @@ export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
   const addItem = () =>
     setLocal((prev) => [
       ...prev,
-      { id: Date.now(), name: "", slug: "", image: "", description: "" },
+      { id: Date.now(), icon: "", title: "", description: "" },
     ]);
 
   const removeItem = (idx: number) =>
@@ -43,7 +43,7 @@ export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} điểm đến</p>
+        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} đặc điểm</p>
         <Button variant="outline" size="sm" onClick={addItem} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
           Thêm mới
@@ -52,7 +52,7 @@ export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
 
       {local.length === 0 && (
         <p className="text-center py-10 text-sm text-[var(--color-muted-foreground)]">
-          Chưa có điểm đến nào
+          Chưa có đặc điểm nào. Trang sẽ hiển thị giá trị mặc định.
         </p>
       )}
 
@@ -64,7 +64,7 @@ export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-[var(--color-muted-foreground)]">
-                Điểm đến #{idx + 1}
+                Đặc điểm #{idx + 1}
               </span>
               <button
                 onClick={() => removeItem(idx)}
@@ -76,43 +76,33 @@ export function AdminDestinationsListTab({ data, saving, onSave }: Props) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField label="Tên điểm đến" htmlFor={`dest-name-${idx}`}>
+              <AdminImageField
+                value={item.icon}
+                onChange={(url) => update(idx, "icon", url)}
+                label="URL icon (SVG)"
+                alt={item.title}
+                placeholder="/images/destinations/icon-itinerary.svg"
+                folder="destinations"
+              />
+
+              <FormField label="Tiêu đề" htmlFor={`feat-title-${idx}`}>
                 <input
-                  id={`dest-name-${idx}`}
+                  id={`feat-title-${idx}`}
                   className={inputStyles}
-                  value={item.name}
-                  onChange={(e) => update(idx, "name", e.target.value)}
-                  placeholder="Hanoi"
+                  value={item.title}
+                  onChange={(e) => update(idx, "title", e.target.value)}
+                  placeholder="Customized Itineraries"
                 />
               </FormField>
 
-              <FormField label="Slug (URL)" htmlFor={`dest-slug-${idx}`}>
-                <input
-                  id={`dest-slug-${idx}`}
-                  className={inputStyles}
-                  value={item.slug}
-                  onChange={(e) => update(idx, "slug", e.target.value)}
-                  placeholder="hanoi"
-                />
-              </FormField>
-
-              <div className="sm:col-span-2">
-                <AdminImageField
-                  value={item.image}
-                  onChange={(url) => update(idx, "image", url)}
-                  label="URL ảnh"
-                  folder="destinations"
-                />
-              </div>
-
-              <FormField label="Mô tả" htmlFor={`dest-desc-${idx}`} className="sm:col-span-2">
+              <FormField label="Mô tả" htmlFor={`feat-desc-${idx}`} className="sm:col-span-2">
                 <textarea
-                  id={`dest-desc-${idx}`}
+                  id={`feat-desc-${idx}`}
                   rows={3}
                   className={inputStyles}
                   value={item.description}
                   onChange={(e) => update(idx, "description", e.target.value)}
-                  placeholder="Mô tả về điểm đến..."
+                  placeholder="Mô tả về đặc điểm..."
                 />
               </FormField>
             </div>

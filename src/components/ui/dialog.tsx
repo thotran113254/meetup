@@ -81,6 +81,11 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   return <div className={cn("mt-6 flex justify-end gap-3", className)} {...props} />;
 }
 
+/** Scrollable body region — use inside DialogContent with p-0 flex flex-col for sticky header/footer */
+function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("flex-1 overflow-y-auto min-h-0 px-6 py-4", className)} {...props} />;
+}
+
 export {
   Dialog,
   DialogTrigger,
@@ -90,4 +95,5 @@ export {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogBody,
 };

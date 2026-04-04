@@ -48,6 +48,7 @@ type ConfirmSidebarProps = {
   messenger: string;
   totalUsd: number;
   totalVnd: string;
+  submitting?: boolean;
   onBookNow: () => void;
 };
 
@@ -63,6 +64,7 @@ export function TourCheckoutConfirmSidebar({
   messenger,
   totalUsd,
   totalVnd,
+  submitting = false,
   onBookNow,
 }: ConfirmSidebarProps) {
   /* Count adults/children from quantities */
@@ -102,7 +104,7 @@ export function TourCheckoutConfirmSidebar({
             {messenger && (
               <div className="flex gap-1 items-start">
                 <span className="text-[12px] text-[#828282] leading-[1.5] shrink-0">
-                  Children:
+                  Message:
                 </span>
                 <span className="text-[12px] text-[#1D1D1D] leading-[1.5]">
                   {messenger}
@@ -166,9 +168,10 @@ export function TourCheckoutConfirmSidebar({
             <button
               type="submit"
               onClick={onBookNow}
-              className="h-10 px-8 bg-[var(--color-primary)] text-white text-[14px] font-bold rounded-[12px] hover:opacity-90 transition-opacity"
+              disabled={submitting}
+              className="h-10 px-8 bg-[var(--color-primary)] text-white text-[14px] font-bold rounded-[12px] hover:opacity-90 transition-opacity disabled:opacity-50"
             >
-              Book now
+              {submitting ? "Đang xử lý..." : "Book now"}
             </button>
             <button
               type="button"

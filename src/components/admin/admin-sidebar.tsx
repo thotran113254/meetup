@@ -21,7 +21,9 @@ import {
   MapPin,
   HelpCircle,
   Compass,
+  List,
   Users,
+  ShoppingCart,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -40,6 +42,7 @@ const navGroups = [
       { label: "Services", href: "/admin/services", icon: Briefcase },
       { label: "Destinations", href: "/admin/destinations", icon: MapPin },
       { label: "Tours", href: "/admin/tours", icon: Compass },
+      { label: "Quản lý Tour", href: "/admin/tours-list", icon: List },
       { label: "Contact & FAQ", href: "/admin/contact", icon: HelpCircle },
       { label: "Tuyển dụng", href: "/admin/recruitment", icon: Users },
     ],
@@ -54,6 +57,7 @@ const navGroups = [
   {
     label: "Hệ thống",
     items: [
+      { label: "Đơn hàng", href: "/admin/orders", icon: ShoppingCart },
       { label: "Tin nhắn", href: "/admin/contacts", icon: MessageSquare },
       { label: "Điều hướng", href: "/admin/navigation", icon: Navigation },
       { label: "Cài đặt", href: "/admin/settings", icon: Settings },
@@ -71,8 +75,9 @@ function NavContent({
   onNavClick: () => void;
   onLogout: () => void;
 }) {
+  // Exact match for /admin dashboard; for others match href or href/* (not prefix-only)
   const isActive = (href: string) =>
-    href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+    href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(href + "/");
 
   return (
     <div className="flex h-full flex-col">

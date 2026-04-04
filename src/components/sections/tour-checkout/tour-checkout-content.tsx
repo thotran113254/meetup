@@ -11,6 +11,9 @@ import {
   type QuantityItem,
   type ServiceItem,
 } from "@/lib/validations/checkout-schema";
+import { submitCheckout } from "@/app/(website)/tours/checkout/checkout-action";
+import { VND_RATE } from "@/lib/constants/payment-constants";
+import type { TourPackage } from "@/lib/types/tours-cms-types";
 import { TourCheckoutInfoCard } from "./tour-checkout-info-card";
 import { TourCheckoutCalendar } from "./tour-checkout-calendar";
 import { QuantitySelector, ServiceSelector } from "./tour-checkout-quantity-selector";
@@ -19,30 +22,26 @@ import { TourCheckoutConfirmSidebar } from "./tour-checkout-confirm-sidebar";
 import { inputStyles } from "@/components/ui/form-field";
 import { cn } from "@/lib/utils";
 
-/** Sample tour data — in production this comes from API/props */
-const TOUR_TITLE =
-  "Ha Giang Loop Tour - HaGiang Motorventures Ha Giang Loop Tour - HaGiang Motorventures";
-const TOUR_DESCRIPTION =
-  "Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's Lorem ipsum.";
-const TOUR_IMAGE = "/images/tour-1-floating-market.png";
-
-const INITIAL_QUANTITIES: QuantityItem[] = [
-  { label: "Adult", price: 28, count: 2 },
-  { label: "Child", price: 28, count: 2 },
-  { label: "Adult", price: 28, count: 2 },
-  { label: "Adult", price: 28, count: 2 },
-  { label: "Adult", price: 28, count: 2 },
-  { label: "Adult", price: 28, count: 2 },
-  { label: "Adult", price: 28, count: 2 },
-];
-
 const INITIAL_SERVICES: ServiceItem[] = [
-  { label: "Vip Private tour", price: 10, count: 2, description: "Add $10.00 per guests" },
-  { label: "Book Scooter", price: 10, count: 2, description: "Add $10.00 per guests" },
-  { label: "Esim 15 days", price: 10, count: 2, description: "Add $10.00 per guests" },
+  { label: "Vip Private tour", price: 10, count: 0, description: "Add $10.00 per guest" },
+  { label: "Book Scooter", price: 10, count: 0, description: "Add $10.00 per guest" },
+  { label: "Esim 15 days", price: 10, count: 0, description: "Add $10.00 per guest" },
 ];
 
-const VND_RATE = 16500;
+/** Parse pricing rows from tour into QuantityItems */
+function derivePricingItems(tour: TourPackage): QuantityItem[] {
+  if (!tour.pricingOptions?.length) {
+    return [{ label: "Adult", price: tour.price || 28, count: 0 }];
+  }
+  // Flatten all pricing rows from all groups
+  return tour.pricingOptions.flatMap((group) =>
+    group.rows.map((row) => ({
+      label: `${row.label}${group.title ? ` (${group.title})` : ""}`,
+      price: parseFloat(row.price.replace(/[^0-9.]/g, "")) || 0,
+      count: 0,
+    })),
+  );
+}
 
 function formatDate(d: Date) {
   return d.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" });
@@ -54,31 +53,19 @@ function formatVnd(usd: number) {
 
 /** Dropdown-style select matching Figma design */
 function CheckoutSelect({
-  label,
-  placeholder,
-  value,
-  onChange,
-  options,
+  label, placeholder, value, onChange, options,
 }: {
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: string[];
+  label: string; placeholder: string; value: string;
+  onChange: (v: string) => void; options: string[];
 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-[12px] text-[#828282] leading-[1.4] pl-0.5">{label}</label>
       <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={cn(inputStyles, "!text-[14px] appearance-none pr-8")}
-        >
+        <select value={value} onChange={(e) => onChange(e.target.value)}
+          className={cn(inputStyles, "!text-[14px] appearance-none pr-8")}>
           <option value="" disabled>{placeholder}</option>
-          {options.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
+          {options.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
         </select>
         <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#BDBDBD] pointer-events-none" />
       </div>
@@ -87,14 +74,16 @@ function CheckoutSelect({
 }
 
 /** Main checkout content — orchestrates all state */
-export function TourCheckoutContent() {
-  const [selectedDate, setSelectedDate] = useState(new Date(2024, 8, 26));
-  const [currentMonth, setCurrentMonth] = useState(new Date(2024, 8));
+export function TourCheckoutContent({ tour }: { tour: TourPackage }) {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [pickupPoint, setPickupPoint] = useState("");
   const [address, setAddress] = useState("");
   const [option, setOption] = useState("");
-  const [quantities, setQuantities] = useState(INITIAL_QUANTITIES);
+  const [quantities, setQuantities] = useState(() => derivePricingItems(tour));
   const [services, setServices] = useState(INITIAL_SERVICES);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutFormSchema),
@@ -118,132 +107,105 @@ export function TourCheckoutContent() {
   const endDate = new Date(selectedDate);
   endDate.setDate(endDate.getDate() + 3);
 
-  function onSubmit(data: CheckoutFormData) {
-    console.log("Checkout submitted:", { ...data, selectedDate, quantities, services, totalUsd });
+  async function onSubmit(data: CheckoutFormData) {
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const result = await submitCheckout({
+      tourSlug: tour.slug,
+      name: data.name,
+      email: data.email,
+      whatsapp: data.whatsapp,
+      promotionCode: data.promotionCode || "",
+      messenger: data.messenger,
+      departureDate: selectedDate.toISOString().split("T")[0],
+      pickupPoint,
+      address,
+      tourOption: option,
+      lineItems: quantities
+        .filter((q) => q.count > 0)
+        .map((q) => ({ label: q.label, price: q.price, count: q.count })),
+      serviceItems: services
+        .filter((s) => s.count > 0)
+        .map((s) => ({ label: s.label, price: s.price, count: s.count, description: s.description })),
+    });
+
+    if (result.success && result.paymentUrl) {
+      window.location.href = result.paymentUrl;
+    } else {
+      setSubmitError(result.message);
+      setSubmitting(false);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* Back button */}
-      <Link
-        href="/tours"
-        className="inline-flex items-center gap-1.5 text-[14px] font-bold text-[var(--color-primary)] mb-4 hover:opacity-80 transition-opacity"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
+      <Link href={`/tours/${tour.slug}`}
+        className="inline-flex items-center gap-1.5 text-[14px] font-bold text-[var(--color-primary)] mb-4 hover:opacity-80 transition-opacity">
+        <ArrowLeft className="w-4 h-4" /> Back
       </Link>
+
+      {submitError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+          {submitError}
+        </div>
+      )}
 
       <div className="flex flex-col lg:flex-row gap-3 lg:gap-4">
         {/* LEFT COLUMN */}
         <div className="flex-1 flex flex-col gap-3 min-w-0">
-          <TourCheckoutInfoCard
-            title={TOUR_TITLE}
-            description={TOUR_DESCRIPTION}
-            imageUrl={TOUR_IMAGE}
-          />
+          <TourCheckoutInfoCard title={tour.title} description={tour.description} imageUrl={tour.image} />
 
-          {/* Service Detail */}
           <div className="flex flex-col gap-3">
-            <h2 className="text-[20px] font-bold leading-[1.2] text-[#1D1D1D]">
-              Service detail
-            </h2>
-
-            {/* Row 1: Dropdowns + Calendar */}
+            <h2 className="text-[20px] font-bold leading-[1.2] text-[#1D1D1D]">Service detail</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="bg-white rounded-[12px] p-4 md:p-5 shadow-[0_0_40px_rgba(0,0,0,0.06)] flex flex-col gap-2 md:gap-3">
-                <CheckoutSelect
-                  label="Pick-up point"
-                  placeholder="Select location"
-                  value={pickupPoint}
-                  onChange={setPickupPoint}
-                  options={["Hanoi Old Quarter", "Noi Bai Airport", "Ha Giang City"]}
-                />
+                <CheckoutSelect label="Pick-up point" placeholder="Select location" value={pickupPoint}
+                  onChange={setPickupPoint} options={["Hanoi Old Quarter", "Noi Bai Airport", "Ha Giang City"]} />
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[12px] text-[#828282] leading-[1.4] pl-0.5">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter your details address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className={cn(inputStyles, "!text-[14px]")}
-                  />
+                  <label className="text-[12px] text-[#828282] leading-[1.4] pl-0.5">Address</label>
+                  <input type="text" placeholder="Enter your details address" value={address}
+                    onChange={(e) => setAddress(e.target.value)} className={cn(inputStyles, "!text-[14px]")} />
                 </div>
-                <CheckoutSelect
-                  label="Option"
-                  placeholder="Select"
-                  value={option}
-                  onChange={setOption}
-                  options={["3 Days 2 Nights", "4 Days 3 Nights", "5 Days 4 Nights"]}
-                />
-                {/* Arrival date — mobile only (replaces calendar widget) */}
+                <CheckoutSelect label="Option" placeholder="Select" value={option} onChange={setOption}
+                  options={["3 Days 2 Nights", "4 Days 3 Nights", "5 Days 4 Nights"]} />
+                {/* Arrival date — mobile only */}
                 <div className="md:hidden flex flex-col gap-1.5">
-                  <label className="text-[12px] text-[#828282] leading-[1.4] pl-0.5">
-                    Arrival date
-                  </label>
+                  <label className="text-[12px] text-[#828282] leading-[1.4] pl-0.5">Arrival date</label>
                   <div className="relative">
-                    <input
-                      type="date"
+                    <input type="date"
                       value={`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`}
-                      onChange={(e) => {
-                        const d = new Date(e.target.value + "T00:00:00");
-                        if (!isNaN(d.getTime())) setSelectedDate(d);
-                      }}
-                      className={cn(inputStyles, "!text-[14px]")}
-                    />
+                      onChange={(e) => { const d = new Date(e.target.value + "T00:00:00"); if (!isNaN(d.getTime())) setSelectedDate(d); }}
+                      className={cn(inputStyles, "!text-[14px]")} />
                     <CalendarDays className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#BDBDBD] pointer-events-none" />
                   </div>
                 </div>
               </div>
-              {/* Calendar — desktop only */}
               <div className="hidden md:block">
-                <TourCheckoutCalendar
-                  selectedDate={selectedDate}
-                  currentMonth={currentMonth}
-                  onDateSelect={setSelectedDate}
-                  onMonthChange={setCurrentMonth}
-                />
+                <TourCheckoutCalendar selectedDate={selectedDate} currentMonth={currentMonth}
+                  onDateSelect={setSelectedDate} onMonthChange={setCurrentMonth} />
               </div>
             </div>
-
-            {/* Row 2: Quantity + Additional services */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <QuantitySelector
-                title="Quantity"
-                maxLabel="Please select at most is 1000"
-                items={quantities}
-                onUpdate={updateQuantity}
-              />
-              <ServiceSelector
-                title="Additional service"
-                maxLabel="Please select at most is 1"
-                items={services}
-                onUpdate={updateService}
-              />
+              <QuantitySelector title="Quantity" maxLabel="Please select at most is 1000"
+                items={quantities} onUpdate={updateQuantity} />
+              <ServiceSelector title="Additional service" maxLabel="Please select at most is 1"
+                items={services} onUpdate={updateService} />
             </div>
           </div>
-
-          {/* Information form */}
           <TourCheckoutInformationForm register={register} errors={errors} />
         </div>
 
         {/* RIGHT COLUMN — sticky sidebar */}
         <div className="w-full lg:w-[574px] shrink-0">
           <div className="lg:sticky lg:top-[80px]">
-            <TourCheckoutConfirmSidebar
-              tourTitle={TOUR_TITLE}
-              departureDate={formatDate(selectedDate)}
-              endDate={formatDate(endDate)}
-              name={watchedValues.name}
-              whatsapp={watchedValues.whatsapp}
-              email={watchedValues.email}
-              quantities={quantities}
-              messenger={watchedValues.messenger}
-              totalUsd={totalUsd}
-              totalVnd={formatVnd(totalUsd)}
-              onBookNow={() => handleSubmit(onSubmit)()}
-            />
+            <TourCheckoutConfirmSidebar tourTitle={tour.title}
+              departureDate={formatDate(selectedDate)} endDate={formatDate(endDate)}
+              name={watchedValues.name} whatsapp={watchedValues.whatsapp} email={watchedValues.email}
+              quantities={quantities} messenger={watchedValues.messenger}
+              totalUsd={totalUsd} totalVnd={formatVnd(totalUsd)}
+              submitting={submitting}
+              onBookNow={() => handleSubmit(onSubmit)()} />
           </div>
         </div>
       </div>

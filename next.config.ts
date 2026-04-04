@@ -61,6 +61,16 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // Cache uploaded media aggressively (SEO-friendly filenames are content-addressed)
+        source: "/media/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
 };

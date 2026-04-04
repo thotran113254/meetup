@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Dancing_Script, Phudu } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site-config";
+import { toAbsoluteUrl } from "@/lib/seo-utils";
 
 
 const inter = Inter({
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: [
       {
-        url: siteConfig.ogImage,
+        url: toAbsoluteUrl(siteConfig.ogImage),
         width: 1200,
         height: 630,
         alt: siteConfig.name,
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.seo.defaultTitle,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
+    images: [toAbsoluteUrl(siteConfig.ogImage)],
   },
 };
 

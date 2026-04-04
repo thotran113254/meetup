@@ -11,7 +11,7 @@ export async function fetchAdminSettings(): Promise<SettingRow[]> {
 }
 
 export async function upsertSetting(key: string, value: unknown): Promise<{ data?: SettingRow; error?: string }> {
-  if (!key) return { error: "Key khong duoc trong" };
+  if (!key) return { error: "Key không được trống" };
 
   const result = await getDb()
     .insert(siteSettings)
@@ -19,6 +19,7 @@ export async function upsertSetting(key: string, value: unknown): Promise<{ data
     .onConflictDoUpdate({ target: siteSettings.key, set: { value, updatedAt: new Date() } })
     .returning();
 
-  revalidatePath("/");
+  // Revalidate all pages using the root layout — covers all CMS-managed public pages
+  revalidatePath("/", "layout");
   return { data: result[0] };
 }

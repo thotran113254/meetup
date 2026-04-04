@@ -6,6 +6,13 @@ import { siteConfig } from "@/config/site-config";
  * Centralized so every page uses consistent patterns.
  */
 
+/** Convert relative URL to absolute using site URL (for OG/Twitter/JSON-LD) */
+export function toAbsoluteUrl(url: string): string {
+  if (!url) return `${siteConfig.url}${siteConfig.ogImage}`;
+  if (url.startsWith("http")) return url;
+  return `${siteConfig.url}${url}`;
+}
+
 type PageSeoParams = {
   title: string;
   description: string;
@@ -31,7 +38,7 @@ export function generatePageMetadata({
   authors,
 }: PageSeoParams): Metadata {
   const url = `${siteConfig.url}${path}`;
-  const ogImage = image || siteConfig.ogImage;
+  const absoluteImage = toAbsoluteUrl(image || siteConfig.ogImage);
 
   return {
     title,
@@ -48,9 +55,7 @@ export function generatePageMetadata({
       type,
       images: [
         {
-          url: ogImage.startsWith("http")
-            ? ogImage
-            : `${siteConfig.url}${ogImage}`,
+          url: absoluteImage,
           width: 1200,
           height: 630,
           alt: title,
@@ -64,7 +69,7 @@ export function generatePageMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage],
+      images: [absoluteImage],
       creator: siteConfig.seo.twitterHandle,
     },
     ...(noIndex && {
@@ -140,7 +145,7 @@ export function buildArticleJsonLd(article: {
       name: siteConfig.name,
       logo: { "@type": "ImageObject", url: `${siteConfig.url}/images/logo.png` },
     },
-    image: article.image || `${siteConfig.url}${siteConfig.ogImage}`,
+    image: toAbsoluteUrl(article.image || siteConfig.ogImage),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${siteConfig.url}/blog/${article.slug}`,

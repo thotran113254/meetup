@@ -5,11 +5,25 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
+type Props = {
+  heroImage?: string;
+  marqueeText?: string;
+  breadcrumbLabel?: string;
+};
+
+const FALLBACK_IMAGE = "/images/tours-hero-banner.jpg";
+const FALLBACK_MARQUEE = "TOUR PACKAGES";
+const FALLBACK_BREADCRUMB = "Tour Packages";
+
 /**
  * ToursHeroSection — Full-width hero banner with teal gradient overlay,
  * infinite-scrolling marquee text, and breadcrumb navigation below.
+ * Accepts optional CMS props; falls back to hardcoded values for zero regression.
  */
-export function ToursHeroSection() {
+export function ToursHeroSection({ heroImage, marqueeText, breadcrumbLabel }: Props) {
+  const imgSrc = heroImage || FALLBACK_IMAGE;
+  const marquee = marqueeText || FALLBACK_MARQUEE;
+  const crumbLabel = breadcrumbLabel || FALLBACK_BREADCRUMB;
   return (
     <section className="w-full bg-[var(--color-background)] px-4 sm:px-6 lg:px-[27px] pt-4 sm:pt-[37px]">
       {/* Hero banner with image + gradient + marquee */}
@@ -20,8 +34,8 @@ export function ToursHeroSection() {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <Image
-          src="/images/tours-hero-banner.jpg"
-          alt="Tour Packages — Explore Vietnam"
+          src={imgSrc}
+          alt={`${crumbLabel} — Explore Vietnam`}
           fill
           className="object-cover"
           priority
@@ -48,7 +62,7 @@ export function ToursHeroSection() {
                 key={i}
                 className="shrink-0 bg-clip-text text-transparent bg-gradient-to-b from-white to-[#C8FFFD] mx-6 md:mx-12"
               >
-                {i % 2 === 0 ? "TOUR PACKAGES" : "*"}
+                {i % 2 === 0 ? marquee : "*"}
               </span>
             ))}
           </div>
@@ -72,12 +86,12 @@ export function ToursHeroSection() {
           <li>
             <ChevronRight className="w-3 h-3 text-[#BDBDBD]" />
           </li>
-          <li className="text-[#1D1D1D]">Tour Packages</li>
+          <li className="text-[#1D1D1D]">{crumbLabel}</li>
         </ol>
       </nav>
 
       <h1 className="sr-only">
-        Tour Packages — Explore Vietnam with Local Experts
+        {crumbLabel} — Explore Vietnam with Local Experts
       </h1>
     </section>
   );

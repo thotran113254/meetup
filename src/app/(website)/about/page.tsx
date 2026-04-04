@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { generatePageMetadata, buildOrganizationJsonLd } from "@/lib/seo-utils";
 import { JsonLdScript } from "@/components/seo/json-ld-script";

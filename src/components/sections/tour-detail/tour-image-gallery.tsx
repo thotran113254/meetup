@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ChevronRight, Images } from "lucide-react";
 import { TourGalleryPopup } from "./tour-gallery-popup";
 
-const GALLERY_IMAGES = [
+const FALLBACK_IMAGES = [
   "/images/tour-1-floating-market.png",
   "/images/tour-2-hoi-an.png",
   "/images/tour-3-mekong.png",
@@ -22,12 +22,12 @@ const BREADCRUMB_ITEMS = [
 
 /* ── Mobile swipeable slider ── */
 
-function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => void }) {
+function MobileImageSlider({ onOpenPopup, images }: { onOpenPopup: (index: number) => void; images: string[] }) {
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef(0);
   const touchDeltaX = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const total = GALLERY_IMAGES.length;
+  const total = images.length;
 
   const goTo = useCallback(
     (index: number) => {
@@ -81,7 +81,7 @@ function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => vo
           className="flex h-full transition-transform duration-300 ease-out"
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {GALLERY_IMAGES.map((src, i) => (
+          {images.map((src, i) => (
             <div
               key={i}
               className="relative w-full h-full shrink-0 cursor-pointer"
@@ -113,7 +113,7 @@ function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => vo
 
       {/* Tab indicators */}
       <div className="flex items-center justify-center gap-1 mt-2">
-        {GALLERY_IMAGES.map((_, i) => (
+        {images.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
@@ -132,13 +132,13 @@ function MobileImageSlider({ onOpenPopup }: { onOpenPopup: (index: number) => vo
 
 /* ── Desktop grid gallery ── */
 
-function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => void }) {
+function DesktopImageGrid({ onOpenPopup, images }: { onOpenPopup: (index: number) => void; images: string[] }) {
   return (
     <div className="flex gap-[14px] h-[393px]">
       {/* Large image — left */}
       <div onClick={() => onOpenPopup(0)} className="relative flex-[1.015] rounded-xl overflow-hidden cursor-pointer" role="button" tabIndex={0}>
         <Image
-          src={GALLERY_IMAGES[0]}
+          src={images[0]}
           alt="Tour main photo"
           fill
           className="object-cover"
@@ -148,7 +148,7 @@ function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => voi
         {/* Photo count badge */}
         <div className="absolute bottom-3 right-3 bg-white/80 rounded-lg px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
           <span className="text-[14px] font-medium text-[#1D1D1D]">
-            2/{GALLERY_IMAGES.length}
+            2/{images.length}
           </span>
           <Images className="w-4 h-4 text-[#1D1D1D]" />
         </div>
@@ -156,7 +156,7 @@ function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => voi
 
       {/* 2x2 grid — right */}
       <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-[14px]">
-        {GALLERY_IMAGES.slice(1).map((src, i) => (
+        {images.slice(1).map((src, i) => (
           <div key={i} onClick={() => onOpenPopup(i + 1)} className="relative rounded-xl overflow-hidden cursor-pointer" role="button" tabIndex={0}>
             <Image
               src={src}
@@ -174,7 +174,10 @@ function DesktopImageGrid({ onOpenPopup }: { onOpenPopup: (index: number) => voi
 
 /* ── Main component ── */
 
-export function TourImageGallery() {
+type Props = { images?: string[]; tourName?: string };
+
+export function TourImageGallery({ images, tourName }: Props) {
+  const galleryImages = images && images.length > 0 ? images : FALLBACK_IMAGES;
   const [popupIndex, setPopupIndex] = useState<number | null>(null);
 
   return (
@@ -182,7 +185,7 @@ export function TourImageGallery() {
       {/* Gallery popup */}
       {popupIndex !== null && (
         <TourGalleryPopup
-          images={GALLERY_IMAGES}
+          images={galleryImages}
           initialIndex={popupIndex}
           onClose={() => setPopupIndex(null)}
         />
@@ -190,12 +193,12 @@ export function TourImageGallery() {
 
       {/* Mobile: swipeable slider */}
       <div className="md:hidden">
-        <MobileImageSlider onOpenPopup={setPopupIndex} />
+        <MobileImageSlider onOpenPopup={setPopupIndex} images={galleryImages} />
       </div>
 
       {/* Desktop: grid layout */}
       <div className="hidden md:block">
-        <DesktopImageGrid onOpenPopup={setPopupIndex} />
+        <DesktopImageGrid onOpenPopup={setPopupIndex} images={galleryImages} />
       </div>
 
       {/* Breadcrumb */}

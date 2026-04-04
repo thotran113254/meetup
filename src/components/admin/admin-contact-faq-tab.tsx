@@ -70,16 +70,16 @@ export function AdminContactFaqTab({ data, saving, onSave }: Props) {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} danh muc</p>
+        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} danh mục</p>
         <Button size="sm" variant="outline" onClick={addCategory} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them danh muc
+          Thêm danh mục
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">
-          Chua co danh muc FAQ nao
+          Chưa có danh mục FAQ nào
         </p>
       )}
 
@@ -102,7 +102,7 @@ export function AdminContactFaqTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

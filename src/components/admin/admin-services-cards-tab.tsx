@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import type { ServiceCard } from "@/lib/types/services-cms-types";
 
 type Props = {
@@ -42,16 +43,16 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} dich vu</p>
+        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} dịch vụ</p>
         <Button variant="outline" size="sm" onClick={addCard} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them moi
+          Thêm mới
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="text-center py-10 text-sm text-[var(--color-muted-foreground)]">
-          Chua co dich vu nao
+          Chưa có dịch vụ nào
         </p>
       )}
 
@@ -63,12 +64,12 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-[var(--color-muted-foreground)]">
-                Dich vu #{idx + 1}
+                Dịch vụ #{idx + 1}
               </span>
               <button
                 onClick={() => removeCard(idx)}
                 className="text-red-500 hover:text-red-600 p-1 rounded-lg hover:bg-red-50 transition-colors"
-                aria-label="Xoa"
+                aria-label="Xóa"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -85,7 +86,7 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="Ten dich vu" htmlFor={`card-name-${idx}`}>
+              <FormField label="Tên dịch vụ" htmlFor={`card-name-${idx}`}>
                 <input
                   id={`card-name-${idx}`}
                   className={inputStyles}
@@ -95,7 +96,7 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="Gia" htmlFor={`card-price-${idx}`}>
+              <FormField label="Giá" htmlFor={`card-price-${idx}`}>
                 <input
                   id={`card-price-${idx}`}
                   className={inputStyles}
@@ -105,7 +106,7 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="Duong dan (href)" htmlFor={`card-href-${idx}`}>
+              <FormField label="Đường dẫn (href)" htmlFor={`card-href-${idx}`}>
                 <input
                   id={`card-href-${idx}`}
                   className={inputStyles}
@@ -115,15 +116,14 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="URL anh" htmlFor={`card-img-${idx}`} className="sm:col-span-2">
-                <input
-                  id={`card-img-${idx}`}
-                  className={inputStyles}
+              <div className="sm:col-span-2">
+                <AdminImageField
                   value={card.image}
-                  onChange={(e) => update(idx, "image", e.target.value)}
-                  placeholder="/images/service-fast-track.png"
+                  onChange={(url) => update(idx, "image", url)}
+                  label="URL ảnh"
+                  folder="services"
                 />
-              </FormField>
+              </div>
             </div>
           </div>
         ))}
@@ -132,7 +132,7 @@ export function AdminServicesCardsTab({ data, saving, onSave }: Props) {
       {local.length > 0 && (
         <div className="flex justify-end">
           <Button onClick={() => onSave(local)} disabled={saving}>
-            {saving ? "Dang luu..." : "Luu"}
+            {saving ? "Đang lưu..." : "Lưu"}
           </Button>
         </div>
       )}

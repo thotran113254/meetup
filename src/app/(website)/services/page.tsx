@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { generatePageMetadata, buildServiceJsonLd } from "@/lib/seo-utils";
 import { siteConfig } from "@/config/site-config";

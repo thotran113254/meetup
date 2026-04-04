@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import type { VideoItem } from "@/components/sections/homepage/youtube-grid";
 
 type Props = {
@@ -16,8 +17,7 @@ type Props = {
 };
 
 export function AdminHomepageVideoDialog({ open, onOpenChange, initialData, onSave, saving }: Props) {
-  const { register, handleSubmit, reset, watch } = useForm<VideoItem>();
-  const imageUrl = watch("image");
+  const { register, handleSubmit, reset, watch, setValue } = useForm<VideoItem>();
 
   useEffect(() => {
     if (open) {
@@ -40,15 +40,13 @@ export function AdminHomepageVideoDialog({ open, onOpenChange, initialData, onSa
           <FormField label="Nhãn hiển thị" htmlFor="vd-label" required>
             <input id="vd-label" className={inputStyles} placeholder="Our team" {...register("label", { required: true })} />
           </FormField>
-          <FormField label="URL ảnh thumbnail" htmlFor="vd-img" required>
-            <input id="vd-img" className={inputStyles} placeholder="/images/yt-..." {...register("image", { required: true })} />
-          </FormField>
-          {imageUrl && (
-            <div className="h-28 rounded-lg overflow-hidden border border-[var(--color-border)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt="preview" className="w-full h-full object-cover" />
-            </div>
-          )}
+          <AdminImageField
+            value={watch("image") || ""}
+            onChange={(url) => setValue("image", url)}
+            label="Ảnh thumbnail"
+            alt={watch("label")}
+            folder="homepage"
+          />
           <FormField label="URL YouTube (tùy chọn)" htmlFor="vd-url">
             <input id="vd-url" className={inputStyles} placeholder="https://youtube.com/watch?v=..." {...register("url")} />
           </FormField>

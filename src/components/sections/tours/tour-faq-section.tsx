@@ -4,9 +4,9 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-animations";
 
-type FaqItem = { question: string; answer: string };
+type FaqItem = { id?: number; question: string; answer: string };
 
-const FAQ_ITEMS: FaqItem[] = [
+const FALLBACK_FAQ_ITEMS: FaqItem[] = [
   {
     question: "How do I book a tour with Meetup Travel?",
     answer:
@@ -93,9 +93,18 @@ function FaqAccordionItem({
   );
 }
 
-export function TourFaqSection() {
+type Props = { faqItems?: FaqItem[] };
+
+/**
+ * TourFaqSection — 2-column FAQ accordion.
+ * Accepts optional CMS props; falls back to hardcoded data for zero regression.
+ */
+export function TourFaqSection({ faqItems }: Props) {
+  const items = faqItems && faqItems.length > 0 ? faqItems : FALLBACK_FAQ_ITEMS;
+  const mid = Math.ceil(items.length / 2);
+
   /* Default: first item in each column open */
-  const [openItems, setOpenItems] = useState<Set<number>>(new Set([0, 4]));
+  const [openItems, setOpenItems] = useState<Set<number>>(new Set([0, mid]));
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) => {
@@ -106,8 +115,8 @@ export function TourFaqSection() {
     });
   };
 
-  const leftColumn = FAQ_ITEMS.slice(0, 4);
-  const rightColumn = FAQ_ITEMS.slice(4, 8);
+  const leftColumn = items.slice(0, mid);
+  const rightColumn = items.slice(mid);
 
   return (
     <section className="section-padding bg-[var(--color-background)]">

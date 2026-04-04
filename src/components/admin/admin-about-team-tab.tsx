@@ -43,17 +43,17 @@ export function AdminAboutTeamTab({ data, saving, onSave }: Props) {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <p className="text-sm text-[var(--color-muted-foreground)]">
-          {local.length} thanh vien
+          {local.length} thành viên
         </p>
         <Button size="sm" variant="outline" onClick={add} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them moi
+          Thêm mới
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">
-          Chua co thanh vien nao
+          Chưa có thành viên nào
         </p>
       )}
 
@@ -65,7 +65,7 @@ export function AdminAboutTeamTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-[var(--color-muted-foreground)]">
-                Thanh vien #{idx + 1}
+                Thành viên #{idx + 1}
               </span>
               <Button
                 size="sm"
@@ -78,7 +78,7 @@ export function AdminAboutTeamTab({ data, saving, onSave }: Props) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <FormField label="Ho ten" htmlFor={`tm-name-${member.id}`}>
+              <FormField label="Họ tên" htmlFor={`tm-name-${member.id}`}>
                 <input
                   id={`tm-name-${member.id}`}
                   className={inputStyles}
@@ -87,7 +87,7 @@ export function AdminAboutTeamTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="Vi tri" htmlFor={`tm-role-${member.id}`}>
+              <FormField label="Vị trí" htmlFor={`tm-role-${member.id}`}>
                 <input
                   id={`tm-role-${member.id}`}
                   className={inputStyles}
@@ -97,7 +97,7 @@ export function AdminAboutTeamTab({ data, saving, onSave }: Props) {
               </FormField>
             </div>
 
-            <FormField label="Tieu su (bio)" htmlFor={`tm-bio-${member.id}`}>
+            <FormField label="Tiểu sử (bio)" htmlFor={`tm-bio-${member.id}`}>
               <textarea
                 id={`tm-bio-${member.id}`}
                 rows={2}
@@ -112,7 +112,7 @@ export function AdminAboutTeamTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

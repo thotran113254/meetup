@@ -31,7 +31,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
 
   return (
     <div className="space-y-5">
-      <FormField label="Tieu de danh sach viec lam" htmlFor="rc-heading">
+      <FormField label="Tiêu đề danh sách việc làm" htmlFor="rc-heading">
         <input
           id="rc-heading"
           className={inputStyles}
@@ -41,7 +41,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta danh sach viec lam" htmlFor="rc-subheading">
+      <FormField label="Mô tả danh sách việc làm" htmlFor="rc-subheading">
         <textarea
           id="rc-subheading"
           rows={3}
@@ -51,7 +51,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Tieu de 'Connect with us'" htmlFor="rc-connectTitle">
+      <FormField label="Tiêu đề 'Connect with us'" htmlFor="rc-connectTitle">
         <input
           id="rc-connectTitle"
           className={inputStyles}
@@ -61,7 +61,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta 'Connect with us'" htmlFor="rc-connectDesc">
+      <FormField label="Mô tả 'Connect with us'" htmlFor="rc-connectDesc">
         <textarea
           id="rc-connectDesc"
           rows={3}
@@ -71,7 +71,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Tieu de 'Join our Team'" htmlFor="rc-joinTitle">
+      <FormField label="Tiêu đề 'Join our Team'" htmlFor="rc-joinTitle">
         <input
           id="rc-joinTitle"
           className={inputStyles}
@@ -81,7 +81,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta 'Join our Team'" htmlFor="rc-joinDesc">
+      <FormField label="Mô tả 'Join our Team'" htmlFor="rc-joinDesc">
         <textarea
           id="rc-joinDesc"
           rows={3}
@@ -93,7 +93,7 @@ export function AdminRecruitmentContentTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

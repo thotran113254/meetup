@@ -2,16 +2,9 @@
 
 import Image from "next/image";
 import { Minus, Plus, ChevronLeft, ChevronRight, CheckCircle2, XCircle } from "lucide-react";
+import type { ItineraryDay } from "@/lib/types/tours-cms-types";
 
-export type ItineraryDay = {
-  title: string;
-  details: string[];
-  images: string[];
-  accommodation: string;
-  meals: string;
-  included: string[];
-  excluded: string[];
-};
+export type { ItineraryDay };
 
 interface TourItineraryDayItemProps {
   day: ItineraryDay;

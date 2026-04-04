@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import type { ServiceFeature } from "@/lib/types/services-cms-types";
 
 type Props = {
@@ -42,16 +43,16 @@ export function AdminServicesFeaturesTab({ data, saving, onSave }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} tinh nang</p>
+        <p className="text-sm text-[var(--color-muted-foreground)]">{local.length} tính năng</p>
         <Button variant="outline" size="sm" onClick={addFeature} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them moi
+          Thêm mới
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="text-center py-10 text-sm text-[var(--color-muted-foreground)]">
-          Chua co tinh nang nao
+          Chưa có tính năng nào
         </p>
       )}
 
@@ -63,12 +64,12 @@ export function AdminServicesFeaturesTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-[var(--color-muted-foreground)]">
-                Tinh nang #{idx + 1}
+                Tính năng #{idx + 1}
               </span>
               <button
                 onClick={() => removeFeature(idx)}
                 className="text-red-500 hover:text-red-600 p-1 rounded-lg hover:bg-red-50 transition-colors"
-                aria-label="Xoa"
+                aria-label="Xóa"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -85,7 +86,7 @@ export function AdminServicesFeaturesTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="Tieu de" htmlFor={`feat-title-${idx}`}>
+              <FormField label="Tiêu đề" htmlFor={`feat-title-${idx}`}>
                 <input
                   id={`feat-title-${idx}`}
                   className={inputStyles}
@@ -95,24 +96,25 @@ export function AdminServicesFeaturesTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="URL icon" htmlFor={`feat-icon-${idx}`} className="sm:col-span-2">
-                <input
-                  id={`feat-icon-${idx}`}
-                  className={inputStyles}
+              <div className="sm:col-span-2">
+                <AdminImageField
                   value={feature.icon}
-                  onChange={(e) => update(idx, "icon", e.target.value)}
+                  onChange={(url) => update(idx, "icon", url)}
+                  label="URL icon"
+                  alt={feature.title}
                   placeholder="/images/feature-customized-itinerary.svg"
+                  folder="services"
                 />
-              </FormField>
+              </div>
 
-              <FormField label="Mo ta" htmlFor={`feat-desc-${idx}`} className="sm:col-span-2">
+              <FormField label="Mô tả" htmlFor={`feat-desc-${idx}`} className="sm:col-span-2">
                 <textarea
                   id={`feat-desc-${idx}`}
                   rows={3}
                   className={inputStyles}
                   value={feature.description}
                   onChange={(e) => update(idx, "description", e.target.value)}
-                  placeholder="Mo ta tinh nang..."
+                  placeholder="Mô tả tính năng..."
                 />
               </FormField>
             </div>
@@ -123,7 +125,7 @@ export function AdminServicesFeaturesTab({ data, saving, onSave }: Props) {
       {local.length > 0 && (
         <div className="flex justify-end">
           <Button onClick={() => onSave(local)} disabled={saving}>
-            {saving ? "Dang luu..." : "Luu"}
+            {saving ? "Đang lưu..." : "Lưu"}
           </Button>
         </div>
       )}

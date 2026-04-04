@@ -13,18 +13,18 @@ export default function AdminServicesPage() {
   const [tab, setTab] = useState("content");
 
   const sections: SectionNavItem[] = [
-    { key: "content", label: "Noi dung", icon: FileText },
-    { key: "cards", label: "Dich vu", icon: CreditCard, badge: cms.cards.length },
-    { key: "features", label: "Tinh nang", icon: Sparkles, badge: cms.features.length },
+    { key: "content", label: "Nội dung", icon: FileText },
+    { key: "cards", label: "Dịch vụ", icon: CreditCard, badge: cms.cards.length },
+    { key: "features", label: "Tính năng", icon: Sparkles, badge: cms.features.length },
   ];
 
   return (
     <div className="w-full">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Trang Dich vu</h1>
+          <h1 className="text-2xl font-bold">Trang Dịch vụ</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-            Quan ly noi dung, danh sach dich vu va tinh nang
+            Quản lý nội dung, danh sách dịch vụ và tính năng
           </p>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function AdminServicesPage() {
 
             {cms.loading ? (
               <p className="text-sm text-[var(--color-muted-foreground)] py-8 text-center">
-                Dang tai...
+                Đang tải...
               </p>
             ) : (
               <>

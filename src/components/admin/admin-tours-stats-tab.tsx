@@ -40,17 +40,17 @@ export function AdminToursStatsTab({ data, saving, onSave }: Props) {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <p className="text-sm text-[var(--color-muted-foreground)]">
-          {local.length} chi so
+          {local.length} chỉ số
         </p>
         <Button size="sm" variant="outline" onClick={add} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them moi
+          Thêm mới
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">
-          Chua co chi so nao
+          Chưa có chỉ số nào
         </p>
       )}
 
@@ -62,7 +62,7 @@ export function AdminToursStatsTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-[var(--color-muted-foreground)]">
-                Chi so #{idx + 1}
+                Chỉ số #{idx + 1}
               </span>
               <Button
                 size="sm"
@@ -83,7 +83,7 @@ export function AdminToursStatsTab({ data, saving, onSave }: Props) {
               />
             </FormField>
 
-            <FormField label="Mo ta" htmlFor={`st-desc-${stat.id}`}>
+            <FormField label="Mô tả" htmlFor={`st-desc-${stat.id}`}>
               <textarea
                 id={`st-desc-${stat.id}`}
                 rows={2}
@@ -98,7 +98,7 @@ export function AdminToursStatsTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

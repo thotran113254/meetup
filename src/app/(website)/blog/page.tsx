@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { generatePageMetadata } from "@/lib/seo-utils";
 import { BlogHeroSection } from "@/components/sections/blog/blog-hero-section";
 import { BlogPostsGridSection } from "@/components/sections/blog/blog-posts-grid-section";
+import { getPublishedPosts, mapDbPostToBlogPost } from "@/db/queries/post-queries";
+import { BLOG_POSTS } from "@/lib/blog-data";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Blog",
@@ -10,11 +12,18 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/blog",
 });
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  // Try DB first; fall back to static data if DB is empty or unavailable
+  let posts = BLOG_POSTS;
+  try {
+    const dbPosts = await getPublishedPosts();
+    if (dbPosts.length > 0) posts = dbPosts.map(mapDbPostToBlogPost);
+  } catch { /* DB not available — use static */ }
+
   return (
     <>
       <BlogHeroSection />
-      <BlogPostsGridSection />
+      <BlogPostsGridSection posts={posts} />
     </>
   );
 }

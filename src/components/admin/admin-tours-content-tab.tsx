@@ -29,7 +29,7 @@ export function AdminToursContentTab({ data, saving, onSave }: Props) {
 
   return (
     <div className="space-y-5">
-      <FormField label="Tieu de gioi thieu" htmlFor="tc-introTitle">
+      <FormField label="Tiêu đề giới thiệu" htmlFor="tc-introTitle">
         <input
           id="tc-introTitle"
           className={inputStyles}
@@ -38,7 +38,7 @@ export function AdminToursContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta gioi thieu" htmlFor="tc-introDesc">
+      <FormField label="Mô tả giới thiệu" htmlFor="tc-introDesc">
         <textarea
           id="tc-introDesc"
           rows={5}
@@ -50,7 +50,7 @@ export function AdminToursContentTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

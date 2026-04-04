@@ -49,17 +49,17 @@ export function AdminRecruitmentJobsTab({ data, saving, onSave }: Props) {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <p className="text-sm text-[var(--color-muted-foreground)]">
-          {local.length} vi tri tuyen dung
+          {local.length} vị trí tuyển dụng
         </p>
         <Button size="sm" variant="outline" onClick={add} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them vi tri
+          Thêm vị trí
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">
-          Chua co vi tri tuyen dung nao
+          Chưa có vị trí tuyển dụng nào
         </p>
       )}
 
@@ -71,7 +71,7 @@ export function AdminRecruitmentJobsTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-[var(--color-muted-foreground)]">
-                Vi tri #{idx + 1}
+                Vị trí #{idx + 1}
               </span>
               <Button
                 size="sm"
@@ -83,7 +83,7 @@ export function AdminRecruitmentJobsTab({ data, saving, onSave }: Props) {
               </Button>
             </div>
 
-            <FormField label="Ten vi tri" htmlFor={`job-title-${job.id}`}>
+            <FormField label="Tên vị trí" htmlFor={`job-title-${job.id}`}>
               <input
                 id={`job-title-${job.id}`}
                 className={inputStyles}
@@ -93,7 +93,7 @@ export function AdminRecruitmentJobsTab({ data, saving, onSave }: Props) {
               />
             </FormField>
 
-            <FormField label="Mo ta" htmlFor={`job-desc-${job.id}`}>
+            <FormField label="Mô tả" htmlFor={`job-desc-${job.id}`}>
               <textarea
                 id={`job-desc-${job.id}`}
                 rows={3}
@@ -114,7 +114,7 @@ export function AdminRecruitmentJobsTab({ data, saving, onSave }: Props) {
                 />
               </FormField>
 
-              <FormField label="Nhan link JD" htmlFor={`job-label-${job.id}`}>
+              <FormField label="Nhãn link JD" htmlFor={`job-label-${job.id}`}>
                 <input
                   id={`job-label-${job.id}`}
                   className={inputStyles}
@@ -130,7 +130,7 @@ export function AdminRecruitmentJobsTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

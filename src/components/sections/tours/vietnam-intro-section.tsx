@@ -34,13 +34,21 @@ const FALLBACK_DESCRIPTION =
   "Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed arcu lacus. Sed lacus semper eu lectus fermentum eu a.Lorem ipsum dolor sit amet consectetur. Scelerisque fermentum aliquet convallis turpis lectus orci arcu ultrices viverra. Vitae ut nam adipiscing nunc sed at. Arcu sem sed";
 
 type Props = {
+  introTitle?: string;
   stats?: VietnamStat[];
   description?: string;
 };
 
-export function VietnamIntroSection({ stats = FALLBACK_STATS, description = FALLBACK_DESCRIPTION }: Props) {
+export function VietnamIntroSection({ introTitle, stats = FALLBACK_STATS, description = FALLBACK_DESCRIPTION }: Props) {
   const displayStats = stats.length > 0 ? stats : FALLBACK_STATS;
   const displayDescription = description || FALLBACK_DESCRIPTION;
+  // Last word of introTitle is the big cursive title (e.g. "Vietnam")
+  // Preceding words split into 2 gold-gradient lines
+  const titleWords = (introTitle || "Introduce about Vietnam").split(" ");
+  const mainTitle = titleWords[titleWords.length - 1];
+  const preWords = titleWords.slice(0, -1);
+  const preLine1 = preWords.slice(0, Math.ceil(preWords.length / 2)).join(" ");
+  const preLine2 = preWords.slice(Math.ceil(preWords.length / 2)).join(" ");
 
   return (
     <section className="section-padding bg-[var(--color-background)]">
@@ -55,20 +63,22 @@ export function VietnamIntroSection({ stats = FALLBACK_STATS, description = FALL
                   className="text-gradient-gold text-[15px] lg:text-[37px] font-medium uppercase leading-[0.92]"
                   style={{ fontFamily: "var(--font-phudu), 'Phudu', sans-serif" }}
                 >
-                  Introduce
+                  {preLine1}
                 </p>
-                <p
-                  className="text-gradient-gold text-[15px] lg:text-[37px] font-medium leading-[0.92]"
-                  style={{ fontFamily: "var(--font-phudu), 'Phudu', sans-serif" }}
-                >
-                  about
-                </p>
+                {preLine2 && (
+                  <p
+                    className="text-gradient-gold text-[15px] lg:text-[37px] font-medium leading-[0.92]"
+                    style={{ fontFamily: "var(--font-phudu), 'Phudu', sans-serif" }}
+                  >
+                    {preLine2}
+                  </p>
+                )}
               </div>
               <h2
                 className="text-gradient-red text-[47px] lg:text-[112px] leading-[0.92] mt-1 lg:mt-4"
                 style={{ fontFamily: "var(--font-script), 'Dancing Script', cursive" }}
               >
-                Vietnam
+                {mainTitle}
               </h2>
             </div>
 

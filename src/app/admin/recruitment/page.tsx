@@ -14,17 +14,17 @@ export default function AdminRecruitmentPage() {
   const [tab, setTab] = useState<TabKey>("content");
 
   const sections: SectionNavItem[] = [
-    { key: "content", label: "Noi dung", icon: FileText },
-    { key: "jobs", label: "Vi tri tuyen dung", icon: Briefcase, badge: cms.jobs.length },
+    { key: "content", label: "Nội dung", icon: FileText },
+    { key: "jobs", label: "Vị trí tuyển dụng", icon: Briefcase, badge: cms.jobs.length },
   ];
 
   return (
     <div className="w-full">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Trang Tuyen Dung</h1>
+          <h1 className="text-2xl font-bold">Trang Tuyển dụng</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-            Quan ly noi dung trang tuyen dung
+            Quản lý nội dung trang tuyển dụng
           </p>
         </div>
       </div>

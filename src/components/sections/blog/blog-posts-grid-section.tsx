@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, ChevronDown, Calendar } from "lucide-react";
 import { useState } from "react";
-import { BLOG_POSTS, formatBlogDate, type BlogPost } from "@/lib/blog-data";
+import { formatBlogDate, type BlogPost } from "@/lib/blog-data";
 
 const POSTS_PER_PAGE = 12;
 
@@ -62,16 +62,20 @@ function PageButton({
   );
 }
 
+type Props = {
+  posts: BlogPost[];
+};
+
 /**
  * BlogPostsGridSection — Blog listing grid with search/filter bar and pagination.
  * Desktop: 4-column grid. Mobile: 1 column.
  * Matches Figma design for the blog listing page.
  */
-export function BlogPostsGridSection() {
+export function BlogPostsGridSection({ posts }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filtered = BLOG_POSTS.filter((p) =>
+  const filtered = posts.filter((p) =>
     p.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

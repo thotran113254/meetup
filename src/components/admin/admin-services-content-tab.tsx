@@ -29,7 +29,7 @@ export function AdminServicesContentTab({ data, saving, onSave }: Props) {
 
   return (
     <div className="space-y-5">
-      <FormField label="Tieu de luoi dich vu" htmlFor="sc-gridTitle">
+      <FormField label="Tiêu đề lưới dịch vụ" htmlFor="sc-gridTitle">
         <input
           id="sc-gridTitle"
           className={inputStyles}
@@ -38,7 +38,7 @@ export function AdminServicesContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta luoi dich vu" htmlFor="sc-gridDesc">
+      <FormField label="Mô tả lưới dịch vụ" htmlFor="sc-gridDesc">
         <textarea
           id="sc-gridDesc"
           rows={3}
@@ -48,7 +48,7 @@ export function AdminServicesContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Tieu de tinh nang" htmlFor="sc-featuresTitle">
+      <FormField label="Tiêu đề tính năng" htmlFor="sc-featuresTitle">
         <input
           id="sc-featuresTitle"
           className={inputStyles}
@@ -59,7 +59,7 @@ export function AdminServicesContentTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

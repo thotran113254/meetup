@@ -14,7 +14,7 @@ export default function AdminContactPage() {
   const [tab, setTab] = useState<TabKey>("info");
 
   const sections: SectionNavItem[] = [
-    { key: "info", label: "Thong tin", icon: Info },
+    { key: "info", label: "Thông tin", icon: Info },
     { key: "faq", label: "FAQ", icon: HelpCircle, badge: cms.faq.length },
   ];
 
@@ -22,9 +22,9 @@ export default function AdminContactPage() {
     <div className="w-full">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Trang Contact</h1>
+          <h1 className="text-2xl font-bold">Trang Liên hệ</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-            Quan ly noi dung trang lien he
+            Quản lý nội dung trang liên hệ
           </p>
         </div>
       </div>

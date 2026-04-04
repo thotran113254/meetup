@@ -29,7 +29,7 @@ export function AdminContactInfoTab({ data, saving, onSave }: Props) {
 
   return (
     <div className="space-y-5">
-      <FormField label="Tieu de chinh (info title)" htmlFor="ci-infoTitle">
+      <FormField label="Tiêu đề chính (info title)" htmlFor="ci-infoTitle">
         <textarea
           id="ci-infoTitle"
           rows={2}
@@ -39,7 +39,7 @@ export function AdminContactInfoTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mui gio (timezone)" htmlFor="ci-timezone">
+      <FormField label="Múi giờ (timezone)" htmlFor="ci-timezone">
         <input
           id="ci-timezone"
           className={inputStyles}
@@ -49,7 +49,7 @@ export function AdminContactInfoTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Gio hoat dong (operating hours)" htmlFor="ci-hours">
+      <FormField label="Giờ hoạt động (operating hours)" htmlFor="ci-hours">
         <input
           id="ci-hours"
           className={inputStyles}
@@ -61,7 +61,7 @@ export function AdminContactInfoTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

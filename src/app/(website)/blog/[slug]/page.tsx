@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { generatePageMetadata, buildArticleJsonLd } from "@/lib/seo-utils";
 import { JsonLdScript } from "@/components/seo/json-ld-script";
-import { BLOG_POSTS } from "@/lib/blog-data";
+import { BLOG_POSTS, type BlogPost } from "@/lib/blog-data";
+import { getPostBySlug, getAllPostSlugs, mapDbPostToBlogPost } from "@/db/queries/post-queries";
 import { BlogDetailHeroSection } from "@/components/sections/blog/blog-detail-hero-section";
 import { BlogDetailArticleSection } from "@/components/sections/blog/blog-detail-article-section";
 import { MostLikedPackageSection } from "@/components/sections/tours/most-liked-package-section";
@@ -11,6 +12,10 @@ import { NewsletterSection } from "@/components/sections/homepage/newsletter-sec
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
+  try {
+    const dbSlugs = await getAllPostSlugs();
+    if (dbSlugs.length > 0) return dbSlugs;
+  } catch { /* DB not available at build time */ }
   return BLOG_POSTS.map((post) => ({ slug: post.slug }));
 }
 
@@ -22,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: post.title,
     description: post.excerpt,
     path: `/blog/${post.slug}`,
+    image: post.image || undefined,
     type: "article",
     publishedTime: post.date,
     authors: [post.author],
@@ -30,7 +36,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+
+  // Resolve post: DB first, then static fallback
+  let post: BlogPost | undefined;
+  try {
+    const dbPost = await getPostBySlug(slug);
+    if (dbPost) post = mapDbPostToBlogPost(dbPost);
+  } catch { /* DB not available */ }
+  if (!post) post = BLOG_POSTS.find((p) => p.slug === slug);
   if (!post) notFound();
 
   const articleSchema = buildArticleJsonLd({

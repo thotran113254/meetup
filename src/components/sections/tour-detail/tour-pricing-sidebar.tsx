@@ -4,6 +4,12 @@ import { useState } from "react";
 import { AlertTriangle, Baby } from "lucide-react";
 import { TourBudgetPlanner } from "./tour-budget-planner";
 import { ContactExpertPopup } from "./tour-contact-expert-popup";
+import type { PricingGroup } from "@/lib/types/tours-cms-types";
+
+const FALLBACK_PRICING: PricingGroup[] = [
+  { title: "Group tour:", rows: [{ label: "4-Star", price: "From $1800" }, { label: "5-Star", price: "From $2000" }] },
+  { title: "Private tour:", rows: [{ label: "4-Star", price: "From $2600" }, { label: "5-Star", price: "From $2800" }] },
+];
 
 /** Price row — label left, price right */
 function PriceRow({ label, price }: { label: string; price: string }) {
@@ -39,7 +45,10 @@ function SidebarCard({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function TourPricingSidebar() {
+type Props = { pricingOptions?: PricingGroup[] };
+
+export function TourPricingSidebar({ pricingOptions }: Props) {
+  const pricing = pricingOptions && pricingOptions.length > 0 ? pricingOptions : FALLBACK_PRICING;
   const [showContact, setShowContact] = useState(false);
 
   return (
@@ -49,20 +58,9 @@ export function TourPricingSidebar() {
       <SidebarCard>
         <h3 className="text-[14px] font-bold text-[#1D1D1D]">Price</h3>
         <div className="flex flex-col gap-2">
-          <PriceGroup
-            title="Group tour:"
-            rows={[
-              { label: "4-Star", price: "From $1800" },
-              { label: "5-Star", price: "From $2000" },
-            ]}
-          />
-          <PriceGroup
-            title="Private tour:"
-            rows={[
-              { label: "4-Star", price: "From $2600" },
-              { label: "5-Star", price: "From $2800" },
-            ]}
-          />
+          {pricing.map((group, i) => (
+            <PriceGroup key={i} title={group.title} rows={group.rows} />
+          ))}
         </div>
 
         {/* Children policy */}

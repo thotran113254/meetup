@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Calendar, ChevronUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { formatBlogDate, type BlogPost, type BlogSection } from "@/lib/blog-data";
@@ -13,24 +15,27 @@ function Divider() {
 /** Desktop sticky Table of Contents sidebar (Figma node 13925:88202) */
 function TocSidebar({ sections, activeId }: { sections: BlogSection[]; activeId: string }) {
   return (
-    <aside className="bg-white rounded-xl shadow-[0px_0px_40px_0px_rgba(0,0,0,0.06)] p-5 w-full">
-      <p className="text-[16px] font-bold text-[#1D1D1D] tracking-[0.32px] mb-3">
+    <aside className="bg-white rounded-xl shadow-[0px_0px_40px_0px_rgba(0,0,0,0.06)] p-5 w-full flex flex-col max-h-[calc(100vh-130px)]">
+      <p className="text-[16px] font-bold text-[#1D1D1D] tracking-[0.32px] mb-3 shrink-0">
         Table of contents
       </p>
       <Divider />
-      {sections.map((s, i) => (
-        <div key={s.id}>
-          <a
-            href={`#${s.id}`}
-            className={`block py-3 text-[12px] font-medium leading-[1.2] transition-colors ${
-              activeId === s.id ? "text-[#3BBCB7]" : "text-[#828282] hover:text-[#3BBCB7]"
-            }`}
-          >
-            {s.subtitle}
-          </a>
-          {i < sections.length - 1 && <Divider />}
-        </div>
-      ))}
+      {/* Scrollable list when TOC exceeds viewport height */}
+      <div className="overflow-y-auto flex-1 min-h-0">
+        {sections.map((s, i) => (
+          <div key={s.id}>
+            <a
+              href={`#${s.id}`}
+              className={`block py-3 text-[12px] font-medium leading-[1.2] transition-colors ${
+                activeId === s.id ? "text-[#3BBCB7]" : "text-[#828282] hover:text-[#3BBCB7]"
+              }`}
+            >
+              {s.subtitle}
+            </a>
+            {i < sections.length - 1 && <Divider />}
+          </div>
+        ))}
+      </div>
     </aside>
   );
 }
@@ -70,9 +75,9 @@ function MobileToc({ sections, activeId }: { sections: BlogSection[]; activeId: 
       </button>
       <Divider />
 
-      {/* Expanded section list */}
+      {/* Expanded section list — max half screen height to prevent overflow on small devices */}
       {open ? (
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 max-h-[50vh] overflow-y-auto">
           {sections.map((s, i) => (
             <div key={s.id}>
               <a
@@ -129,9 +134,11 @@ export function BlogDetailArticleSection({ post }: Props) {
 
   return (
     <>
-      <section className="w-full bg-white py-6 md:py-10">
+      {/* pb-24 on mobile ensures last content isn't hidden behind the fixed bottom TOC bar */}
+      <section className="w-full bg-white py-6 md:py-10 pb-24 lg:pb-10">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-[100px]">
-          <div className="flex gap-4 items-start">
+          {/* items-stretch (default) so sidebar wrapper is as tall as article, enabling sticky to work */}
+          <div className="flex gap-4">
             {/* Article body */}
             <article className="flex-1 min-w-0 max-w-[928px] bg-white rounded-xl shadow-[0px_0px_40px_0px_rgba(0,0,0,0.06)] p-5">
               {/* Date badge */}
@@ -169,10 +176,11 @@ export function BlogDetailArticleSection({ post }: Props) {
                       sizes="(max-width: 768px) 100vw, 888px"
                     />
                   </div>
+                  {/* Render paragraphs as Markdown — works for both plain text and Markdown content */}
                   {section.paragraphs.map((para, j) => (
-                    <p key={j} className="text-[14px] text-[#828282] leading-[1.5] tracking-[0.035px]">
-                      {para}
-                    </p>
+                    <div key={j} className="prose-blog">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{para}</ReactMarkdown>
+                    </div>
                   ))}
                   {i < sections.length - 1 && <Divider />}
                 </div>

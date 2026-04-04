@@ -40,17 +40,17 @@ export function AdminAboutValuesTab({ data, saving, onSave }: Props) {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <p className="text-sm text-[var(--color-muted-foreground)]">
-          {local.length} gia tri
+          {local.length} giá trị
         </p>
         <Button size="sm" variant="outline" onClick={add} disabled={saving}>
           <Plus className="h-4 w-4 mr-1" />
-          Them moi
+          Thêm mới
         </Button>
       </div>
 
       {local.length === 0 && (
         <p className="py-8 text-center text-sm text-[var(--color-muted-foreground)]">
-          Chua co gia tri nao
+          Chưa có giá trị nào
         </p>
       )}
 
@@ -62,7 +62,7 @@ export function AdminAboutValuesTab({ data, saving, onSave }: Props) {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-[var(--color-muted-foreground)]">
-                Gia tri #{idx + 1}
+                Giá trị #{idx + 1}
               </span>
               <Button
                 size="sm"
@@ -74,7 +74,7 @@ export function AdminAboutValuesTab({ data, saving, onSave }: Props) {
               </Button>
             </div>
 
-            <FormField label="Tieu de" htmlFor={`cv-title-${value.id}`}>
+            <FormField label="Tiêu đề" htmlFor={`cv-title-${value.id}`}>
               <input
                 id={`cv-title-${value.id}`}
                 className={inputStyles}
@@ -83,7 +83,7 @@ export function AdminAboutValuesTab({ data, saving, onSave }: Props) {
               />
             </FormField>
 
-            <FormField label="Mo ta" htmlFor={`cv-desc-${value.id}`}>
+            <FormField label="Mô tả" htmlFor={`cv-desc-${value.id}`}>
               <textarea
                 id={`cv-desc-${value.id}`}
                 rows={3}
@@ -98,7 +98,7 @@ export function AdminAboutValuesTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

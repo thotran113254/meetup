@@ -5,12 +5,25 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 
+type Props = {
+  heroImage?: string;
+  marqueeText?: string;
+  breadcrumbLabel?: string;
+};
+
+const FALLBACK_IMAGE = "/images/destinations/hero-banner.png";
+const FALLBACK_MARQUEE = "DESTINATION";
+const FALLBACK_BREADCRUMB = "Destination";
+
 /**
  * DestinationHeroSection — Full-width hero banner with teal gradient overlay,
- * infinite-scrolling "DESTINATION" marquee text, and breadcrumb navigation.
- * Figma desktop: 13842:14164, mobile: 13856:60406.
+ * infinite-scrolling marquee text, and breadcrumb navigation.
+ * Accepts optional CMS props; falls back to hardcoded values for zero regression.
  */
-export function DestinationHeroSection() {
+export function DestinationHeroSection({ heroImage, marqueeText, breadcrumbLabel }: Props) {
+  const imgSrc = heroImage || FALLBACK_IMAGE;
+  const marquee = marqueeText || FALLBACK_MARQUEE;
+  const crumbLabel = breadcrumbLabel || FALLBACK_BREADCRUMB;
   return (
     <section className="w-full bg-[var(--color-background)] px-4 sm:px-6 lg:px-[27px] pt-4 sm:pt-[37px]">
       {/* Hero banner with image + gradient + marquee */}
@@ -21,8 +34,8 @@ export function DestinationHeroSection() {
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
         <Image
-          src="/images/destinations/hero-banner.png"
-          alt="Destination — Explore Vietnam"
+          src={imgSrc}
+          alt={`${crumbLabel} — Explore Vietnam`}
           fill
           className="object-cover"
           priority
@@ -49,7 +62,7 @@ export function DestinationHeroSection() {
                 key={i}
                 className="shrink-0 bg-clip-text text-transparent bg-gradient-to-b from-white to-[#C8FFFD] mx-6 md:mx-12"
               >
-                {i % 2 === 0 ? "DESTINATION" : "*"}
+                {i % 2 === 0 ? marquee : "*"}
               </span>
             ))}
           </div>
@@ -73,12 +86,12 @@ export function DestinationHeroSection() {
           <li>
             <ChevronRight className="w-3 h-3 text-[#BDBDBD]" />
           </li>
-          <li className="text-[#1D1D1D]">Destination</li>
+          <li className="text-[#1D1D1D]">{crumbLabel}</li>
         </ol>
       </nav>
 
       <h1 className="sr-only">
-        Destination — Explore Vietnam with Local Experts
+        {crumbLabel} — Explore Vietnam with Local Experts
       </h1>
     </section>
   );

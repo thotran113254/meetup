@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import type { ServiceItem } from "@/components/sections/homepage/services-carousel";
 
 type Props = {
@@ -16,8 +17,7 @@ type Props = {
 };
 
 export function AdminHomepageServiceDialog({ open, onOpenChange, initialData, onSave, saving }: Props) {
-  const { register, handleSubmit, reset, watch } = useForm<ServiceItem>();
-  const imageUrl = watch("image");
+  const { register, handleSubmit, reset, watch, setValue } = useForm<ServiceItem>();
 
   useEffect(() => {
     if (open) reset(initialData ?? { id: 0, name: "", price: "$0", image: "", slug: "" });
@@ -38,15 +38,13 @@ export function AdminHomepageServiceDialog({ open, onOpenChange, initialData, on
           <FormField label="Tên dịch vụ" htmlFor="sv-name" required>
             <input id="sv-name" className={inputStyles} {...register("name", { required: true })} />
           </FormField>
-          <FormField label="URL ảnh" htmlFor="sv-img" required>
-            <input id="sv-img" className={inputStyles} placeholder="/images/..." {...register("image", { required: true })} />
-          </FormField>
-          {imageUrl && (
-            <div className="h-24 rounded-lg overflow-hidden border border-[var(--color-border)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt="preview" className="w-full h-full object-cover" />
-            </div>
-          )}
+          <AdminImageField
+            value={watch("image") || ""}
+            onChange={(url) => setValue("image", url)}
+            label="Ảnh dịch vụ"
+            alt={watch("name")}
+            folder="services"
+          />
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Giá (vd: $30)" htmlFor="sv-price" required>
               <input id="sv-price" className={inputStyles} placeholder="$30" {...register("price", { required: true })} />

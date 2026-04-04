@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import type { AboutData } from "@/lib/types/homepage-cms-types";
 
 type Props = {
@@ -60,16 +61,18 @@ export function AdminHomepageAboutTab({ about, saving, onSave }: Props) {
         </FormField>
       </div>
 
-      {/* Image URL fields */}
+      {/* Image fields */}
       <div>
-        <p className="text-sm font-medium mb-3">URL Ảnh</p>
+        <p className="text-sm font-medium mb-3">Hình ảnh</p>
         <div className="grid grid-cols-1 gap-3">
           {IMAGE_FIELDS.map(({ key, label }) => (
-            <FormField key={key} label={label} htmlFor={`ab-${key}`}>
-              <input id={`ab-${key}`} className={inputStyles} placeholder="/images/..."
-                value={(local[key] as string) ?? ""}
-                onChange={(e) => set(key, e.target.value as AboutData[typeof key])} />
-            </FormField>
+            <AdminImageField
+              key={key}
+              value={(local[key] as string) ?? ""}
+              onChange={(url) => set(key, url as AboutData[typeof key])}
+              label={label}
+              folder="about"
+            />
           ))}
         </div>
       </div>
@@ -93,10 +96,13 @@ export function AdminHomepageAboutTab({ about, saving, onSave }: Props) {
                 </Button>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <FormField label="URL ảnh" htmlFor={`ph-src-${idx}`}>
-                  <input id={`ph-src-${idx}`} className={inputStyles} value={photo.src}
-                    onChange={(e) => setPhoto(idx, "src", e.target.value)} />
-                </FormField>
+                <AdminImageField
+                  value={photo.src}
+                  onChange={(url) => setPhoto(idx, "src", url)}
+                  label="Ảnh"
+                  alt={photo.alt}
+                  folder="about"
+                />
                 <FormField label="Alt text" htmlFor={`ph-alt-${idx}`}>
                   <input id={`ph-alt-${idx}`} className={inputStyles} value={photo.alt}
                     onChange={(e) => setPhoto(idx, "alt", e.target.value)} />

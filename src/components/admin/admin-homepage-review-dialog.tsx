@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import { cn } from "@/lib/utils";
 import type { ReviewItem } from "@/components/sections/homepage/reviews-carousel";
 
@@ -17,7 +18,7 @@ type Props = {
 };
 
 export function AdminHomepageReviewDialog({ open, onOpenChange, initialData, onSave, saving }: Props) {
-  const { register, handleSubmit, reset } = useForm<ReviewItem>();
+  const { register, handleSubmit, reset, watch, setValue } = useForm<ReviewItem>();
 
   useEffect(() => {
     if (open) {
@@ -55,14 +56,19 @@ export function AdminHomepageReviewDialog({ open, onOpenChange, initialData, onS
           <FormField label="Nội dung" htmlFor="rv-body" required>
             <textarea id="rv-body" rows={4} className={cn(inputStyles, "resize-none")} {...register("body", { required: true })} />
           </FormField>
-          <div className="grid grid-cols-2 gap-4">
-            <FormField label="URL ảnh bìa" htmlFor="rv-photo">
-              <input id="rv-photo" className={inputStyles} placeholder="/images/..." {...register("photo")} />
-            </FormField>
-            <FormField label="URL avatar" htmlFor="rv-avatar">
-              <input id="rv-avatar" className={inputStyles} placeholder="/images/..." {...register("avatar")} />
-            </FormField>
-          </div>
+          <AdminImageField
+            value={watch("photo") || ""}
+            onChange={(url) => setValue("photo", url)}
+            label="Ảnh bìa"
+            folder="homepage"
+          />
+          <AdminImageField
+            value={watch("avatar") || ""}
+            onChange={(url) => setValue("avatar", url)}
+            label="Ảnh đại diện"
+            alt={watch("name")}
+            folder="homepage"
+          />
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Hủy</Button>
             <Button type="submit" disabled={saving}>{saving ? "Đang lưu..." : initialData ? "Cập nhật" : "Thêm"}</Button>

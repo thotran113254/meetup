@@ -29,7 +29,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
 
   return (
     <div className="space-y-5">
-      <FormField label="Tieu de hero" htmlFor="ac-heroTitle">
+      <FormField label="Tiêu đề hero" htmlFor="ac-heroTitle">
         <input
           id="ac-heroTitle"
           className={inputStyles}
@@ -38,7 +38,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta hero" htmlFor="ac-heroDesc">
+      <FormField label="Mô tả hero" htmlFor="ac-heroDesc">
         <textarea
           id="ac-heroDesc"
           rows={4}
@@ -48,7 +48,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Su menh (mission)" htmlFor="ac-mission">
+      <FormField label="Sứ mệnh (mission)" htmlFor="ac-mission">
         <textarea
           id="ac-mission"
           rows={3}
@@ -59,7 +59,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
       </FormField>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <FormField label="Tieu de gia tri" htmlFor="ac-valuesHeading">
+        <FormField label="Tiêu đề giá trị" htmlFor="ac-valuesHeading">
           <input
             id="ac-valuesHeading"
             className={inputStyles}
@@ -68,7 +68,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
           />
         </FormField>
 
-        <FormField label="Tieu de doi ngu" htmlFor="ac-teamHeading">
+        <FormField label="Tiêu đề đội ngũ" htmlFor="ac-teamHeading">
           <input
             id="ac-teamHeading"
             className={inputStyles}
@@ -78,7 +78,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
         </FormField>
       </div>
 
-      <FormField label="Tieu de CTA" htmlFor="ac-ctaTitle">
+      <FormField label="Tiêu đề CTA" htmlFor="ac-ctaTitle">
         <input
           id="ac-ctaTitle"
           className={inputStyles}
@@ -87,7 +87,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
         />
       </FormField>
 
-      <FormField label="Mo ta CTA" htmlFor="ac-ctaDesc">
+      <FormField label="Mô tả CTA" htmlFor="ac-ctaDesc">
         <textarea
           id="ac-ctaDesc"
           rows={2}
@@ -99,7 +99,7 @@ export function AdminAboutContentTab({ data, saving, onSave }: Props) {
 
       <div className="flex justify-end">
         <Button onClick={() => onSave(local)} disabled={saving}>
-          {saving ? "Dang luu..." : "Luu"}
+          {saving ? "Đang lưu..." : "Lưu"}
         </Button>
       </div>
     </div>

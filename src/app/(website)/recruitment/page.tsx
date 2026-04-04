@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { generatePageMetadata } from "@/lib/seo-utils";
 import { Breadcrumbs } from "@/components/seo/breadcrumbs";

@@ -44,10 +44,10 @@ export function AdminContactFaqCategoryRow({
           #{index + 1}
         </span>
         <span className="flex-1 text-sm font-medium truncate">
-          {category.title || "(Chua dat ten)"}
+          {category.title || "(Chưa đặt tên)"}
         </span>
         <span className="text-xs text-[var(--color-muted-foreground)] shrink-0">
-          {category.questions.length} cau hoi
+          {category.questions.length} câu hỏi
         </span>
         <Button
           size="sm"
@@ -64,7 +64,7 @@ export function AdminContactFaqCategoryRow({
         <div className="p-4 space-y-4">
           <div className="flex flex-col sm:flex-row gap-3 items-start">
             <div className="flex-1">
-              <FormField label="Ten danh muc" htmlFor={`faq-title-${category.id}`}>
+              <FormField label="Tên danh mục" htmlFor={`faq-title-${category.id}`}>
                 <input
                   id={`faq-title-${category.id}`}
                   className={inputStyles}
@@ -81,7 +81,7 @@ export function AdminContactFaqCategoryRow({
                 onChange={(e) => onUpdateField("fullWidth", e.target.checked)}
                 className="rounded border-[var(--color-border)]"
               />
-              Chiem toan bo chieu rong
+              Chiếm toàn bộ chiều rộng
             </label>
           </div>
 
@@ -89,17 +89,17 @@ export function AdminContactFaqCategoryRow({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium text-[var(--color-muted-foreground)] uppercase tracking-wide">
-                Cac cau hoi ({category.questions.length})
+                Các câu hỏi ({category.questions.length})
               </p>
               <Button size="sm" variant="outline" onClick={onAddQuestion}>
                 <Plus className="h-3.5 w-3.5 mr-1" />
-                Them cau hoi
+                Thêm câu hỏi
               </Button>
             </div>
 
             {category.questions.length === 0 && (
               <p className="text-xs text-[var(--color-muted-foreground)] py-2 text-center">
-                Chua co cau hoi nao
+                Chưa có câu hỏi nào
               </p>
             )}
 
@@ -109,7 +109,7 @@ export function AdminContactFaqCategoryRow({
                   className={`${inputStyles} flex-1`}
                   value={q}
                   onChange={(e) => onUpdateQuestion(qIdx, e.target.value)}
-                  placeholder={`Cau hoi ${qIdx + 1}`}
+                  placeholder={`Câu hỏi ${qIdx + 1}`}
                 />
                 <Button
                   size="sm"

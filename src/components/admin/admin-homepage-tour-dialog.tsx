@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormField, inputStyles } from "@/components/ui/form-field";
+import { AdminImageField } from "@/components/admin/admin-image-field";
 import type { TourCardProps } from "@/components/ui/tour-card";
 
 type TourFormData = Omit<TourCardProps, "tags"> & { tagsRaw: string };
@@ -19,8 +20,7 @@ type Props = {
 
 /** Dialog for adding/editing a tour package in the homepage CMS. */
 export function AdminHomepageTourDialog({ open, onOpenChange, initialData, onSave, saving }: Props) {
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<TourFormData>();
-  const imageUrl = watch("image");
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<TourFormData>();
 
   useEffect(() => {
     if (open) {
@@ -53,15 +53,13 @@ export function AdminHomepageTourDialog({ open, onOpenChange, initialData, onSav
           <FormField label="Tiêu đề tour" htmlFor="t-title" required error={errors.title?.message}>
             <input id="t-title" className={inputStyles} {...register("title", { required: "Bắt buộc" })} />
           </FormField>
-          <FormField label="URL ảnh" htmlFor="t-image" required error={errors.image?.message}>
-            <input id="t-image" className={inputStyles} placeholder="/images/..." {...register("image", { required: "Bắt buộc" })} />
-          </FormField>
-          {imageUrl && (
-            <div className="h-28 rounded-lg overflow-hidden border border-[var(--color-border)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageUrl} alt="preview" className="w-full h-full object-cover" />
-            </div>
-          )}
+          <AdminImageField
+            value={watch("image") || ""}
+            onChange={(url) => setValue("image", url)}
+            label="Ảnh tour"
+            alt={watch("title")}
+            folder="tours"
+          />
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Giá (USD)" htmlFor="t-price" required>
               <input id="t-price" type="number" min={0} className={inputStyles} {...register("price", { required: true, valueAsNumber: true })} />

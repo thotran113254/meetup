@@ -13,18 +13,18 @@ export default function AdminAboutPage() {
   const [tab, setTab] = useState("content");
 
   const sections: SectionNavItem[] = [
-    { key: "content", label: "Noi dung chinh", icon: FileText, group: "Chinh" },
-    { key: "team", label: "Doi ngu", icon: Users, badge: cms.team.length, group: "Chinh" },
-    { key: "values", label: "Gia tri", icon: Heart, badge: cms.values.length, group: "Chinh" },
+    { key: "content", label: "Nội dung chính", icon: FileText, group: "Chính" },
+    { key: "team", label: "Đội ngũ", icon: Users, badge: cms.team.length, group: "Chính" },
+    { key: "values", label: "Giá trị", icon: Heart, badge: cms.values.length, group: "Chính" },
   ];
 
   return (
     <div className="w-full">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Trang Ve chung toi</h1>
+          <h1 className="text-2xl font-bold">Trang Về chúng tôi</h1>
           <p className="text-sm text-[var(--color-muted-foreground)] mt-1">
-            Quan ly noi dung, doi ngu va gia tri cot loi trang About
+            Quản lý nội dung, đội ngũ và giá trị cốt lõi trang About
           </p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function AdminAboutPage() {
 
             {cms.loading ? (
               <p className="py-10 text-center text-sm text-[var(--color-muted-foreground)]">
-                Dang tai...
+                Đang tải...
               </p>
             ) : (
               <>

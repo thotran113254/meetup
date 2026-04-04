@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import {
-  TourItineraryDayItem,
-  type ItineraryDay,
-} from "@/components/sections/tour-detail/tour-itinerary-day-item";
+import { TourItineraryDayItem } from "@/components/sections/tour-detail/tour-itinerary-day-item";
+import type { ItineraryDay } from "@/lib/types/tours-cms-types";
 
-const ITINERARY_DATA: ItineraryDay[] = [
+const FALLBACK_ITINERARY: ItineraryDay[] = [
   {
     title: "Destination 1",
     details: [
@@ -91,42 +89,36 @@ const ITINERARY_DATA: ItineraryDay[] = [
   },
 ];
 
-export function TourItinerarySection() {
+type Props = { itinerary?: ItineraryDay[] };
+
+export function TourItinerarySection({ itinerary }: Props) {
+  const data = itinerary && itinerary.length > 0 ? itinerary : FALLBACK_ITINERARY;
   const [openDays, setOpenDays] = useState<Set<number>>(
-    () => new Set(ITINERARY_DATA.map((_, i) => i))
+    () => new Set(data.map((_, i) => i))
   );
 
-  const allOpen = openDays.size === ITINERARY_DATA.length;
+  const allOpen = openDays.size === data.length;
 
   function toggleAll() {
-    if (allOpen) {
-      setOpenDays(new Set());
-    } else {
-      setOpenDays(new Set(ITINERARY_DATA.map((_, i) => i)));
-    }
+    if (allOpen) setOpenDays(new Set());
+    else setOpenDays(new Set(data.map((_, i) => i)));
   }
 
   function toggleDay(index: number) {
     setOpenDays((prev) => {
       const next = new Set(prev);
-      if (next.has(index)) {
-        next.delete(index);
-      } else {
-        next.add(index);
-      }
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
       return next;
     });
   }
 
   return (
     <div className="rounded-none md:rounded-xl p-4 md:p-5 shadow-[0_0_40px_rgba(0,0,0,0.06)] bg-white">
-      {/* Header */}
       <div className="flex items-center justify-between mb-4 md:mb-6">
         <h2 className="text-[20px] font-bold text-[#1D1D1D]">Itinerary</h2>
-        <button
-          onClick={toggleAll}
-          className="flex flex-col items-center text-[14px] font-bold text-[#1D1D1D] hover:text-[#2fa09b] transition-colors"
-        >
+        <button onClick={toggleAll}
+          className="flex flex-col items-center text-[14px] font-bold text-[#1D1D1D] hover:text-[#2fa09b] transition-colors">
           <span className="flex items-center gap-1">
             {allOpen ? "Collapse all" : "Expand all"}
             <ChevronDown className={`w-4 h-4 transition-transform ${allOpen ? "" : "rotate-180"}`} />
@@ -135,16 +127,15 @@ export function TourItinerarySection() {
         </button>
       </div>
 
-      {/* Timeline container — no left border on mobile */}
       <div className="relative md:pl-[12px] md:border-l-2 md:border-[#3BBCB7]">
-        {ITINERARY_DATA.map((day, i) => (
+        {data.map((day, i) => (
           <TourItineraryDayItem
             key={i}
             day={day}
             index={i}
             isOpen={openDays.has(i)}
             onToggle={() => toggleDay(i)}
-            isLast={i === ITINERARY_DATA.length - 1}
+            isLast={i === data.length - 1}
           />
         ))}
       </div>

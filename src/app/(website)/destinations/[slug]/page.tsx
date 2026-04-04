@@ -1,95 +1,60 @@
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { JsonLdScript } from "@/components/seo/json-ld-script";
-import {
-  generatePageMetadata,
-  buildOrganizationJsonLd,
-  buildBreadcrumbJsonLd,
-} from "@/lib/seo-utils";
+import { generatePageMetadata, buildOrganizationJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo-utils";
 import { DestinationDetailHero } from "@/components/sections/destination-detail/destination-detail-hero";
 import { DestinationIntroSection } from "@/components/sections/destinations/destination-intro-section";
 import { DestinationDetailTourGrid } from "@/components/sections/destination-detail/destination-detail-tour-grid";
 import { MostLikedPackageSection } from "@/components/sections/tours/most-liked-package-section";
 import { TourFaqSection } from "@/components/sections/tours/tour-faq-section";
 import { NewsletterSection } from "@/components/sections/homepage/newsletter-section";
+import { getSetting } from "@/db/queries/settings-queries";
+import { getPublishedTourPackages, getTourPackagesBySlugs } from "@/db/queries/tour-packages-queries";
+import type { DestinationItem, DestinationsPageContent } from "@/lib/types/destinations-cms-types";
+import type { MostLikedContent, TourFaqItem } from "@/lib/types/tours-cms-types";
 import type { TourCardProps } from "@/components/ui/tour-card";
 
-/**
- * Static destination data — in production this would come from DB/CMS.
- * Each destination has its own hero image, city name, and tour listings.
- */
-const DESTINATIONS: Record<
-  string,
-  { name: string; heroImage: string; description: string }
-> = {
-  hanoi: {
-    name: "Hanoi",
-    heroImage: "/images/destinations/hero-banner.png",
-    description: "Explore Hanoi's ancient streets, temples, and vibrant culture.",
-  },
-  danang: {
-    name: "Danang",
-    heroImage: "/images/destinations/danang.png",
-    description: "Discover Danang's stunning beaches and Ba Na Hills.",
-  },
-  halong: {
-    name: "Halong",
-    heroImage: "/images/destinations/halong.jpg",
-    description: "Cruise through Halong Bay's emerald waters and limestone islands.",
-  },
-  "ho-chi-minh": {
-    name: "Ho Chi Minh City",
-    heroImage: "/images/destinations/hochiminh.jpg",
-    description: "Experience the energy of Vietnam's largest city.",
-  },
-};
+type Props = { params: Promise<{ slug: string }> };
 
-/** Sample day tour cards — 8 items for 4x2 grid */
-const DAY_TOURS: TourCardProps[] = Array.from({ length: 8 }, (_, i) => ({
-  image: `/images/tour-${(i % 4) + 1}-${["floating-market", "hoi-an", "mekong", "palm-trees"][i % 4]}.png`,
-  title: "Cu Chi Tunnels and Mekong Delta Full Day Tour Small Group < pax",
-  price: 669,
-  duration: "4D3N",
-  spots: 3,
-  tags: ["Adventure", "Solo"],
-  slug: `day-tour-${i + 1}`,
-}));
+function toTourCardProps(tour: Awaited<ReturnType<typeof getPublishedTourPackages>>[number]): TourCardProps {
+  return { image: tour.image, title: tour.title, price: tour.price, duration: tour.duration, spots: tour.spots, tags: tour.tags, slug: tour.slug };
+}
 
-/** Sample tour package cards — 8 items for 4x2 grid */
-const TOUR_PACKAGES: TourCardProps[] = Array.from({ length: 8 }, (_, i) => ({
-  image: `/images/tour-${(i % 4) + 1}-${["floating-market", "hoi-an", "mekong", "palm-trees"][i % 4]}.png`,
-  title: "Cu Chi Tunnels and Mekong Delta Full Day Tour Starting from Ho Chi Minh",
-  price: 669,
-  duration: "4D3N",
-  spots: 3,
-  tags: ["Adventure", "Solo"],
-  slug: `tour-package-${i + 1}`,
-}));
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const dest = DESTINATIONS[slug];
-  const name = dest?.name ?? "Destination";
-
+  const list = await getSetting<DestinationItem[]>("destinations_list").catch(() => null);
+  const dest = list?.find((d) => d.slug === slug);
+  if (!dest) return generatePageMetadata({ title: "Destination", description: "Explore Vietnam destinations.", path: `/destinations/${slug}` });
   return generatePageMetadata({
-    title: `${name} - Explore Tours & Packages`,
-    description:
-      dest?.description ??
-      `Discover the best tours and packages in ${name}. Customized itineraries by local experts.`,
+    title: `${dest.name} - Explore Tours & Packages`,
+    description: dest.description || `Discover the best tours in ${dest.name}.`,
     path: `/destinations/${slug}`,
+    image: dest.image || undefined,
   });
 }
 
-export default async function DestinationDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function DestinationDetailPage({ params }: Props) {
   const { slug } = await params;
-  const dest = DESTINATIONS[slug] ?? DESTINATIONS.hanoi;
+
+  const [destinationList, pageContent, allTours, mostLikedSetting, faqItems] = await Promise.all([
+    getSetting<DestinationItem[]>("destinations_list").catch(() => null),
+    getSetting<DestinationsPageContent>("destinations_page_content").catch(() => null),
+    getPublishedTourPackages().catch(() => []),
+    getSetting<MostLikedContent>("tours_most_liked").catch(() => null),
+    getSetting<TourFaqItem[]>("tours_faq").catch(() => null),
+  ]);
+
+  const dest = destinationList?.find((d) => d.slug === slug);
+  if (!dest) notFound();
+
+  // Most liked tours for the section at the bottom
+  const mostLikedSlugs = mostLikedSetting?.tourSlugs ?? [];
+  const mostLikedTours = mostLikedSlugs.length > 0
+    ? await getTourPackagesBySlugs(mostLikedSlugs).catch(() => [])
+    : allTours.slice(0, 2);
+
+  // Tour grids — show published tours (max 8 per grid)
+  const tourCards = allTours.slice(0, 8).map(toTourCardProps);
 
   return (
     <>
@@ -104,28 +69,32 @@ export default async function DestinationDetailPage({
         ]}
       />
 
-      <DestinationDetailHero
-        cityName={dest.name}
-        heroImage={dest.heroImage}
-      />
+      <DestinationDetailHero cityName={dest.name} heroImage={dest.image} />
 
-      <DestinationIntroSection />
+      <DestinationIntroSection
+        introTitle={pageContent?.introTitle}
+        city={dest.name}
+        description={dest.description}
+      />
 
       <DestinationDetailTourGrid
         title={`${dest.name} day tour`}
         variant="day-tour"
-        tours={DAY_TOURS}
+        tours={tourCards}
       />
 
       <DestinationDetailTourGrid
         title={`${dest.name} tour package`}
         variant="package"
-        tours={TOUR_PACKAGES}
+        tours={tourCards}
       />
 
-      <MostLikedPackageSection />
+      <MostLikedPackageSection
+        sectionTitle={mostLikedSetting?.sectionTitle}
+        tours={mostLikedTours}
+      />
 
-      <TourFaqSection />
+      <TourFaqSection faqItems={faqItems ?? undefined} />
 
       <NewsletterSection />
     </>
